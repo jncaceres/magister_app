@@ -2,7 +2,7 @@
 lock "3.7.1"
 
 set :application, "magister_app"
-set :repo_url, "git@github.com:pmespinosa/plataforma_flip.git"
+set :repo_url, "git@github.com:haroldmuller/magister_app.git"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
