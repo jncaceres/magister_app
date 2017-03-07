@@ -285,6 +285,13 @@ ActiveRecord::Schema.define(version: 20161014045749) do
     t.float    "deeping_fb1_time"
     t.float    "deeping_fb2_time"
     t.integer  "total_time"
+    t.integer  "content_n"
+    t.integer  "interpretation_n"
+    t.integer  "analysis_n"
+    t.integer  "evaluation_n"
+    t.integer  "inference_n"
+    t.integer  "explanation_n"
+    t.integer  "selfregulation_n"
   end
 
   add_index "user_tree_performances", ["tree_id"], name: "index_user_tree_performances_on_tree_id", using: :btree
