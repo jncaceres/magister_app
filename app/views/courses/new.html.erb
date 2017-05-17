@@ -1,7 +1,7 @@
 <div style="text-align: center">
 	<h1>Nuevo Curso</h1>
 
-	<% if current_user.role? %>
+	<% if current_user.role == 'profesor' %>
 		<%= render 'form1' %>
 		<div class="row">
 			<div class="span4">

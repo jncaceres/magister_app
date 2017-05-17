@@ -137,16 +137,6 @@ ActiveRecord::Schema.define(version: 20161014045749) do
 
   add_index "ct_habilities", ["ct_question_id"], name: "index_ct_habilities_on_ct_question_id", using: :btree
 
-  create_table "ct_hability_questions", force: :cascade do |t|
-    t.integer  "ct_hability_id"
-    t.integer  "ct_question_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
-  add_index "ct_hability_questions", ["ct_hability_id"], name: "index_ct_hability_questions_on_ct_hability_id", using: :btree
-  add_index "ct_hability_questions", ["ct_question_id"], name: "index_ct_hability_questions_on_ct_question_id", using: :btree
-
   create_table "ct_questions", force: :cascade do |t|
     t.text     "question"
     t.integer  "tree_id"
@@ -193,11 +183,6 @@ ActiveRecord::Schema.define(version: 20161014045749) do
     t.datetime "image_updated_at"
   end
 
-  create_table "homeworks_questions", id: false, force: :cascade do |t|
-    t.integer "homework_id"
-    t.integer "question_id"
-  end
-
   create_table "homeworks_users", id: false, force: :cascade do |t|
     t.integer "homework_id"
     t.integer "user_id"
@@ -212,40 +197,12 @@ ActiveRecord::Schema.define(version: 20161014045749) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "reports", force: :cascade do |t|
-    t.integer  "course_id"
-    t.float    "interpretation_sc"
-    t.float    "analysis_sc"
-    t.float    "evaluation_sc"
-    t.float    "inference_sc"
-    t.float    "explanation_sc"
-    t.float    "selfregulation_sc"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.float    "content_sc"
-    t.string   "name"
-  end
-
-  add_index "reports", ["course_id"], name: "index_reports_on_course_id", using: :btree
-
-  create_table "reports_trees", id: false, force: :cascade do |t|
-    t.integer "report_id", null: false
-    t.integer "tree_id",   null: false
-  end
-
   create_table "trees", force: :cascade do |t|
     t.string   "video"
     t.integer  "iterations"
     t.integer  "course_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.float    "content_sc"
-    t.float    "interpretation_sc"
-    t.float    "analysis_sc"
-    t.float    "evaluation_sc"
-    t.float    "inference_sc"
-    t.float    "explanation_sc"
-    t.float    "selfregulation_sc"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "trees", ["course_id"], name: "index_trees_on_course_id", using: :btree
@@ -285,13 +242,6 @@ ActiveRecord::Schema.define(version: 20161014045749) do
     t.float    "deeping_fb1_time"
     t.float    "deeping_fb2_time"
     t.integer  "total_time"
-    t.integer  "content_n"
-    t.integer  "interpretation_n"
-    t.integer  "analysis_n"
-    t.integer  "evaluation_n"
-    t.integer  "inference_n"
-    t.integer  "explanation_n"
-    t.integer  "selfregulation_n"
   end
 
   add_index "user_tree_performances", ["tree_id"], name: "index_user_tree_performances_on_tree_id", using: :btree
@@ -337,12 +287,9 @@ ActiveRecord::Schema.define(version: 20161014045749) do
   add_foreign_key "contents", "trees"
   add_foreign_key "ct_choices", "ct_questions"
   add_foreign_key "ct_habilities", "ct_questions"
-  add_foreign_key "ct_hability_questions", "ct_habilities"
-  add_foreign_key "ct_hability_questions", "ct_questions"
   add_foreign_key "ct_questions", "trees"
   add_foreign_key "ct_subhabilities", "ct_habilities"
   add_foreign_key "feedbacks", "trees"
-  add_foreign_key "reports", "courses"
   add_foreign_key "trees", "courses"
   add_foreign_key "user_tree_performances", "trees"
   add_foreign_key "user_tree_performances", "users"

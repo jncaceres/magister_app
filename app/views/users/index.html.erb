@@ -7,7 +7,7 @@
 <% end %>
 
 <br></br>
-<% if current_user.role? %>
+<% if current_user.role == 'profesor' %>
   <p><%= link_to 'Crear Curso', new_course_path, :class=>"btn btn-primary", :style=>'color:white'%></p>
 <% else %>
   <p><%= link_to 'Agregar Curso', new_course_path, :class=>"btn btn-primary", :style=>'color:white'%></p>

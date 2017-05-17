@@ -107,20 +107,22 @@ class HomeworksController < ApplicationController
   end
 
   def show
-    if -(current_user.last_asistencia - DateTime.now).to_i > 1800 || @homework.id != current_user.last_homework
+    if current_user.role?
       @homework.upload = true
       current_user.last_homework = @homework.id
       current_user.last_asistencia = DateTime.now
       current_user.save
+      @homework.current = true
+      @homework.save
     end
-    @homework.current = true
-    @homework.save
     asistentes
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Actividades Colaborativas", "Realizar Actividad"]
     @homework.save
     if current_user.role?
       if @homework.actual_phase == "responder"
-        @etapa = "Responder"
+        data = Register.new(button_id:14, user_id:current_user.id)
+      	data.save
+	@etapa = "Responder"
         @siguiente = "Argumentar"
       elsif @homework.actual_phase == "argumentar"
         @etapa = "Argumentar"
@@ -152,7 +154,7 @@ class HomeworksController < ApplicationController
             (@homework.actual_phase == "argumentar" && ((answer.argumentar != nil && answer.argumentar != "") || answer.image_argumentar_1? || answer.image_argumentar_2?)) ||
             (@homework.actual_phase == "rehacer" && ((answer.rehacer != nil && answer.rehacer != "") || answer.image_rehacer_1? || answer.image_rehacer_2?)) ||
             (@homework.actual_phase == "evaluar" && ((answer.evaluar != nil && answer.evaluar != "") || answer.image_evaluar_1? || answer.image_evaluar_2?)) ||
-            (@homework.actual_phase == "integrar" && ((answer.rehaceintegrarr != nil && answer.integrar != "") || answer.image_integrar_1? || answer.image_integrar_2?))
+            (@homework.actual_phase == "integrar" && ((answer.integrar != nil && answer.integrar != "") || answer.image_integrar_1? || answer.image_integrar_2?))
             @users.append(s)
         end
       rescue
