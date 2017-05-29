@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :reset_session
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :signin_edx
+  before_action :set_videos_visible, only: [:index, :show]
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:email, :password,
@@ -48,6 +49,10 @@ class ApplicationController < ActionController::Base
     else
       @color = 'blue'
     end
+  end
+
+  def set_videos_visible
+    @videos_visible = true
   end
 
 end

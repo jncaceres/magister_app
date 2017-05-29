@@ -4,6 +4,7 @@ class UsersController < ApplicationController
   before_action :set_breadcrumbs
   before_action :set_miscursos_visible, only: :index
   before_action :set_actividades_visible, only: :show
+  before_action :set_videos_visible, only: :show
 
   def index
     @breadcrumbs = ["Mis Cursos"]

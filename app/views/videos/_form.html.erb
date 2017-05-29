@@ -1,0 +1,35 @@
+<%= simple_form_for @video, :url => @url  do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <%= f.input :url %>
+    <%= f.input :name %>
+
+    <!--<table class="table table-striped">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Evaluaciones de Video</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @course.trees.sort_by{|e| e[:created_at]}.each do |tree| %>
+          <tr>
+              <td><%= check_box_tag "tree_ids[]", tree.id %></td>
+              <% if tree.content.text.length > 30%>
+                <td><%= tree.content.text[0,40] %>...</td>
+              <% else %>
+                <td><%= tree.content.text%></td>
+              <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table> -->
+
+    <%= f.hidden_field :course_id, value: @course.id %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, :class=>"btn btn-primary" %>
+  </div>
+<% end %>

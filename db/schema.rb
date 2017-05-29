@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161014045749) do
+ActiveRecord::Schema.define(version: 20170529050613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -197,6 +197,28 @@ ActiveRecord::Schema.define(version: 20161014045749) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "course_id"
+    t.float    "interpretation_sc"
+    t.float    "analysis_sc"
+    t.float    "evaluation_sc"
+    t.float    "inference_sc"
+    t.float    "explanation_sc"
+    t.float    "selfregulation_sc"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "reports", ["course_id"], name: "index_reports_on_course_id", using: :btree
+
+  create_table "reports_trees", id: false, force: :cascade do |t|
+    t.integer "report_id", null: false
+    t.integer "tree_id",   null: false
+  end
+
+  add_index "reports_trees", ["report_id", "tree_id"], name: "index_reports_trees_on_report_id_and_tree_id", using: :btree
+
   create_table "trees", force: :cascade do |t|
     t.string   "video"
     t.integer  "iterations"
@@ -282,6 +304,19 @@ ActiveRecord::Schema.define(version: 20161014045749) do
 
   add_index "users_courses", ["user_id", "course_id"], name: "index_users_courses_on_user_id_and_course_id", using: :btree
 
+  create_table "videos", force: :cascade do |t|
+    t.string   "url"
+    t.string   "name"
+    t.integer  "course_id"
+    t.string   "final_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "tree_id"
+  end
+
+  add_index "videos", ["course_id"], name: "index_videos_on_course_id", using: :btree
+  add_index "videos", ["tree_id"], name: "index_videos_on_tree_id", using: :btree
+
   add_foreign_key "content_choices", "content_questions"
   add_foreign_key "content_questions", "trees"
   add_foreign_key "contents", "trees"
@@ -293,4 +328,6 @@ ActiveRecord::Schema.define(version: 20161014045749) do
   add_foreign_key "trees", "courses"
   add_foreign_key "user_tree_performances", "trees"
   add_foreign_key "user_tree_performances", "users"
+  add_foreign_key "videos", "courses"
+  add_foreign_key "videos", "trees"
 end

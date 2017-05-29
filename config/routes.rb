@@ -16,6 +16,10 @@ Rails.application.routes.draw do
   get 'trees/report_values', to: 'trees#set_report_values', as: 'set_report_values'
 
   resources :courses do
+    resources :videos
+  end
+
+  resources :courses do
     resources :trees do
       resources :ct_questions do
         resources :ct_habilities

@@ -10,6 +10,7 @@ class HomeworksController < ApplicationController
   before_action :set_configuraciones_visible, only: :index
   before_action :set_breadcrumbs
   before_action :set_color
+  before_action :set_videos_visible, only: :index
 
   def index
     if params["format"]

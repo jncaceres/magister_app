@@ -14,6 +14,15 @@
                 <li ><%= button_to "Mis Cursos", users_path, :disabled => true, :class => "btn btn-primary", :style => "font-size:18px; height:50px" %></li>
               </ul>
             <% end %>
+            <% if @videos_visible %> <!-- BOTON VIDEOS -->
+              <ul class="nav navbar-nav">
+                <li ><%= button_to "Videos", course_videos_path(current_user.current_course_id), :class => "btn btn-primary", :style => "font-size:18px; height:50px", method: :get %></li>
+              </ul>
+            <% else %>
+              <ul class="nav navbar-nav">
+                <li ><%= button_to "Videos", course_videos_path(current_user.current_course_id), :disabled => true, :class => "btn btn-primary", :style => "font-size:18px; height:50px", method: :get %></li>
+              </ul>
+            <% end %>
             <% if @ef_visible %> <!-- BOTON EVALUACION FORMATIVA -->
               <ul class="nav navbar-nav">
                 <li><%= button_to "Evaluación Formativa", eval_form_path(current_user.current_course_id), :class => "btn btn-primary", :style => "font-size:18px; height:50px" %></li>
@@ -58,6 +67,15 @@
             <% else %>
               <ul class="nav navbar-nav">
                 <li ><%= button_to "Mis Cursos", users_path, :class => "btn btn-primary", :style => "font-size:18px; height:50px" %></li>
+              </ul>
+            <% end %>
+            <% if @videos_visible %> <!-- BOTON VIDEOS -->
+              <ul class="nav navbar-nav">
+                <li ><%= button_to "Videos", course_videos_path(current_user.current_course_id), :class => "btn btn-primary", :style => "font-size:18px; height:50px", method: :get %></li>
+              </ul>
+            <% else %>
+              <ul class="nav navbar-nav">
+                <li ><%= button_to "Videos", course_videos_path(current_user.current_course_id), :disabled => true, :class => "btn btn-primary", :style => "font-size:18px; height:50px", method: :get %></li>
               </ul>
             <% end %>
           <% end %>
