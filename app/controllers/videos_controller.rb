@@ -13,7 +13,7 @@ class VideosController < ApplicationController
   # GET /videos.json
   def index
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos"]
-    @videos = Video.all
+    @videos = Course.find(current_user.current_course_id).videos
   end
 
   # GET /videos/1
