@@ -13,7 +13,7 @@ class VideosController < ApplicationController
   # GET /videos.json
   def index
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos"]
-    @videos = Course.find(current_user.current_course_id).videos
+    @videos = Course.find(current_user.current_course_id).videos.order('videos.created_at ASC')
   end
 
   # GET /videos/1
@@ -83,7 +83,7 @@ class VideosController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def video_params
-      params.require(:video).permit(:url, :name, :course_id, :final_url)
+      params.require(:video).permit(:url, :name, :course_id, :final_url,:tree_id,:unit)
     end
 
     def set_miscursos_visible

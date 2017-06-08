@@ -11,4 +11,8 @@
   <h3><%= @video.name %></h3>
   <h4><%= @video.course.name %></h4>
   <br>
+  <% if @video.tree_id? %>
+    <td><%= link_to 'Evaluación Formativa', [@course, Tree.find(@video.tree_id), {:type =>'initial', :state => "not_seen"}], method: :post, class:"btn btn-primary", style:'color:white'%></td>
+  <% end %>
+  <br>
 </div>
