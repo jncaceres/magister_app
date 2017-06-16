@@ -20,6 +20,7 @@ class VideosController < ApplicationController
   # GET /videos/1.json
   def show
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos", @video.name]
+    @counter = $redis.incr("video:#{@video.id}")
   end
 
   # GET /videos/new
