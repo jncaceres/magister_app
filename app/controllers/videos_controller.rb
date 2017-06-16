@@ -13,7 +13,7 @@ class VideosController < ApplicationController
   # GET /videos.json
   def index
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos"]
-    @videos = Course.find(current_user.current_course_id).videos.order('videos.created_at ASC')
+    @units = Video.where(course_id: current_user.current_course_id).order(:unit).group_by(&:unit)
   end
 
   # GET /videos/1

@@ -16,16 +16,25 @@
   </thead>
 
   <tbody>
-    <% @videos.each do |video| %>
+    <% @units.each do |unit, videos| %>
       <tr>
-        <td><%= video.name %></td>
-        <td><%= views_counter(video) %></td>
-        <td><%= link_to 'Ver Video', course_video_path(@course, video), class:"btn btn-primary btn-xs" %></td>
-        <% if current_user.role? %>
-          <td><%= link_to 'Editar', edit_course_video_path(@course, video), class:"btn btn-primary btn-xs" %></td>
-          <td><%= link_to 'Eliminar', course_video_path(@course, video),:class=>"btn btn-danger btn-xs", :style=>'color:white', method: :delete, data: { confirm: '¿Estás seguro que desesas eliminar la actividad?' } %></td>
-        <% end %>
+        <td><h3>Unidad <%= unit %></h3></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
       </tr>
+      <% videos.each do |video| %>
+        <tr>
+          <td><%= video.name %></td>
+          <td><%= views_counter(video) %></td>
+          <td><%= link_to 'Ver Video', course_video_path(@course, video), class:"btn btn-primary btn-xs" %></td>
+          <% if current_user.role? %>
+            <td><%= link_to 'Editar', edit_course_video_path(@course, video), class:"btn btn-primary btn-xs" %></td>
+            <td><%= link_to 'Eliminar', course_video_path(@course, video),:class=>"btn btn-danger btn-xs", :style=>'color:white', method: :delete, data: { confirm: '¿Estás seguro que desesas eliminar la actividad?' } %></td>
+          <% end %>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>
