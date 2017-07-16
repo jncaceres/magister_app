@@ -1,0 +1,28 @@
+button.btn.btn-primary type="button" onclick="document.getElementById('pictureInput_1').click();"
+  = image_tag 'image_file_1.png', style: 'height: 50px; width: 50px'
+
+<button type="button" class="btn btn-primary" onclick="document.getElementById('pictureInput_1').click();">
+  <%= image_tag('image_file_1.png', style: "height: 50px; width: 50px;") %>
+</button>
+<% if @answer.image_responder_1?%>
+  <div id="target_1" style: "height: 100px; width: 100px;">
+    <%= image_tag @answer.image_responder_1.url(:medium), style: "height: 100px; width: 100px" %>
+  </div>
+<% else %>
+  <div id="target_1" style: "height: 100px; width: 100px;">
+  </div>
+<% end %>
+
+<br></br>
+
+<button type="button" class="btn btn-primary" onclick="document.getElementById('pictureInput_2').click();">
+  <%= image_tag('image_file_2.png', style: "height: 50px; width: 50px;") %>
+</button>
+<% if @answer.image_responder_2?%>
+  <div id="target_2" style: "height: 100px; width: 100px;">
+    <%= image_tag @answer.image_responder_2.url(:medium), style: "height: 100px; width: 100px" %>
+  </div>
+<% else %>
+  <div id="target_2" style: "height: 100px; width: 100px;">
+  </div>
+<% end %>

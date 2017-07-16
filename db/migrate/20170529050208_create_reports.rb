@@ -9,6 +9,7 @@ class CreateReports < ActiveRecord::Migration
       t.float :inference_sc
       t.float :explanation_sc
       t.float :selfregulation_sc
+      t.float :content_sc
       t.timestamps null: false
     end
     add_index "reports", "course_id"

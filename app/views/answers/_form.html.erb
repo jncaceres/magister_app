@@ -1,4 +1,3 @@
-
 <div style="text-align: left">
     <%= form_for([@homework, @answer], html: { multipart: true, remote: true, id:"autosave" },  :authenticity_token => true) do |f| %>
       <% if @answer.errors.any? %>
@@ -42,7 +41,7 @@
               <% end %>
               <br>
             </div>
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">              
               <% if @homework.actual_phase == "responder"%>
                 <%= f.file_field :image_responder_1, style:"display: none;", type:"file", id:"pictureInput_1"%>
                 <%= f.file_field :image_responder_2, style:"display: none;", type:"file", id:"pictureInput_2"%>
