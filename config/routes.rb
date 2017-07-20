@@ -10,12 +10,15 @@ Rails.application.routes.draw do
   #resources :trees
   resources :ct_subhabilities
   resources :reports
+  resources :interactions, module: :videos, only: [:index, :show]
 
   post '/courses/:course_id/trees/:id' => 'trees#edx_view'
   get 'trees/report_values', to: 'trees#set_report_values', as: 'set_report_values'
 
   resources :courses do
-    resources :videos
+    resources :videos do
+      resources :interactions, module: :videos, only: [:index, :create]
+    end
   end
 
   resources :courses do

@@ -14,7 +14,14 @@
 //= require bootstrap-sprockets
 //= require jquery_ujs
 //= require cocoon
-//= require turbolinks
+//  require turbolinks
+//= require riot
+//= require riot_rails
+
+// Riot tags
+//= require video-tag
+//= require dyn-report
+
 //= require_tree .
 
 $(function() {
@@ -79,3 +86,7 @@ $(function() {
 function autosaveForm() {
   $('form[data-remote]').submit();
 }*/
+
+$(document).ready(() => {
+  riot.mount('*');
+});
