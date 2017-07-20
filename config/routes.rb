@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   root 'home#home'
+  get 'test' => 'home#test'
 
   resources :registers
   resources :home
