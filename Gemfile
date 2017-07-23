@@ -78,3 +78,5 @@ group :development do
 end
 
 gem 'redis'
+gem 'active_model_serializers'
+gem 'riot_js-rails'

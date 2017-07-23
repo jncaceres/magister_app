@@ -1,0 +1,16 @@
+p#notice = notice
+
+.container(style="text-align:center; background-color: black;padding:0;margin:0;")
+  br
+
+  p
+    video-tag(url=@video.extract_id user_id=current_user.id)
+
+.container
+  h3 = @video.name
+  h4 = @video.course.name
+
+  - if @video.tree_id?
+    = link_to 'Evaluación Formativa', [@course, @video.tree]
+
+script(src="https://www.youtube.com/iframe_api")
