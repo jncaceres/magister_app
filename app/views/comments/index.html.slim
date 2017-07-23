@@ -1,0 +1,24 @@
+h1 Listing comments
+
+table.table
+  thead
+    tr
+      th Video
+      th Content
+      th
+      th
+      th
+
+  tbody
+    - @comments.each do |comment|
+      tr
+        td
+          = link_to comment.video.name, comment.video
+        td = comment.content.truncate(300)
+        td = link_to 'Show', comment
+        td = link_to 'Edit', edit_comment_path(comment)
+        td = link_to 'Destroy', comment, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Comment', new_comment_path

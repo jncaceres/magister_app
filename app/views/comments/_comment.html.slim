@@ -1,0 +1,11 @@
+.comment
+  strong
+    small
+      = comment.user.full_name
+      | &nbsp;en&nbsp;
+      = l comment.created_at, format: :short
+      | &nbsp;
+      = link_to "link", comment
+
+  == markdown comment.content
+  comment-form video_id=comment.video_id user_id=current_user.id parent_id=(comment.parent_id || comment.id)

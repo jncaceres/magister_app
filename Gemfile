@@ -80,3 +80,4 @@ end
 gem 'redis'
 gem 'active_model_serializers'
 gem 'riot_js-rails'
+gem 'redcarpet'
