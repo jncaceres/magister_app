@@ -13,4 +13,11 @@ p#notice = notice
   - if @video.tree_id?
     = link_to 'Evaluación Formativa', [@course, @video.tree]
 
+.container
+  - @video.comments.each do |comment|
+    = render comment
+    .subcomment
+      - comment.children.each do |subcomment|
+        = render subcomment
+    
 script(src="https://www.youtube.com/iframe_api")

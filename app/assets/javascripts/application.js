@@ -21,6 +21,7 @@
 // Riot tags
 //= require video-tag
 //= require dyn-report
+//= require comment-form
 
 //= require_tree .
 

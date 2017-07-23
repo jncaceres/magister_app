@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170720010313) do
+ActiveRecord::Schema.define(version: 20170723033301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,6 +71,19 @@ ActiveRecord::Schema.define(version: 20170720010313) do
   end
 
   add_index "answers", ["user_id", "homework_id"], name: "index_answers_on_user_id_and_homework_id", using: :btree
+
+  create_table "comments", force: :cascade do |t|
+    t.integer  "video_id"
+    t.integer  "user_id"
+    t.integer  "parent_id"
+    t.text     "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "comments", ["parent_id"], name: "index_comments_on_parent_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+  add_index "comments", ["video_id"], name: "index_comments_on_video_id", using: :btree
 
   create_table "content_choices", force: :cascade do |t|
     t.text     "text"
@@ -331,6 +344,8 @@ ActiveRecord::Schema.define(version: 20170720010313) do
   add_index "videos", ["course_id"], name: "index_videos_on_course_id", using: :btree
   add_index "videos", ["tree_id"], name: "index_videos_on_tree_id", using: :btree
 
+  add_foreign_key "comments", "users"
+  add_foreign_key "comments", "videos"
   add_foreign_key "content_choices", "content_questions"
   add_foreign_key "content_questions", "trees"
   add_foreign_key "contents", "trees"
