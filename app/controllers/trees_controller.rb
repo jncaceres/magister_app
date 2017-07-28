@@ -1334,10 +1334,8 @@ class TreesController < ApplicationController
     @breadcrumbs = ["Mis Cursos", @course.name, "Evaluación Formativa", "Nueva evaluación de video"]
     @tree = Tree.new
 
-
     @tree.build_content
 
-   
     @tree.build_initial_content_question
     4.times { @tree.initial_content_question.content_choices.build }
 
@@ -1365,7 +1363,6 @@ class TreesController < ApplicationController
     @tree.build_recuperative_complex_feedback
     @tree.build_deeping_simple_feedback
     @tree.build_deeping_complex_feedback
-
 
   end
 

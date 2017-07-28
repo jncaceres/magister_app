@@ -1,17 +1,40 @@
 <dyn-report>
-  <a class="btn btn-primary" each="{ elems }" onclick="{ select_tag }" elem="{ name }">{ name }</a>
-
-  <h3>Selected: { selected }</h3>
-
+  <table class="table">
+    <thead>
+      <th>Contenido / Habilidad</th>
+      <th>Contenido</th>
+      <th>Interpretar</th>
+      <th>Análisis</th>
+      <th>Evaluación</th>
+      <th>Inferencia</th>
+      <th>Explicación</th>
+      <th>Autoregulación</th>
+      <th>N</th>
+    </thead>
+    <tbody>
+      <tr each="{ reports }">
+        <td>--</td>
+        <td>{ Math.round(content_sc) }%</td>
+        <td>{ Math.round(interpretation_sc) }%</td>
+        <td>{ Math.round(analysis_sc) }%</td>
+        <td>{ Math.round(evaluation_sc) }%</td>
+        <td>{ Math.round(inference_sc) }%</td>
+        <td>{ Math.round(explanation_sc) }%</td>
+        <td>{ Math.round(selfregulation_sc) }%</td>
+        <td>{ total }</td>
+      </tr>
+    </tbody>
+  </table>
   <script>
-    this.selected = "None";
-    this.elems = [{ name: "alpha" }, { name: "beta" }, { name: "gamma" }]
-
-    this.select_tag = (event) => {
-      const elem = event.target.attributes.elem.value;
-      console.log("selected:", elem);
-      
-      this.update({ selected: elem });
-    };
+    this.reports = [];
+    this.on('mount', () => {
+      $.ajax({
+        url: "/courses/1/reports/1.json",
+        success: (payload) => {
+          console.log(payload);
+          this.update({ reports: [payload.data] });
+        }
+      });
+    });
   </script>
 </dyn-report>
