@@ -17,6 +17,8 @@ class ReportsController < ApplicationController
   helper_method :getDeeping1CtSc
   helper_method :getN
 
+  respond_to :html, :json
+
   # GET /reports
   # GET /reports.json
   def index
@@ -27,6 +29,8 @@ class ReportsController < ApplicationController
   # GET /reports/1.json
   def show
     @breadcrumbs = ["Mis Cursos", @course.name, "Reportes", @report.name]
+    # render json: Reporter.new(@report).exec
+    # return
 
     @report.content_sc = nil
     @report.interpretation_sc = nil
@@ -570,7 +574,7 @@ class ReportsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_report
-      @report = Report.find(params[:id])
+      @report = Report.includes(trees: :user_tree_performances).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

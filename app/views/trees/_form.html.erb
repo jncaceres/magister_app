@@ -194,7 +194,7 @@
 </span>
 
 
-<% CtHability.all.each do |hab| %>
+<% CtHability.includes(:ct_subhabilities).all.each do |hab| %>
   <% if hab.ct_question_id == nil %>
           <div id='<%=hab.name%>' class="modal fade" role="dialog">
             <div class="modal-dialog">
