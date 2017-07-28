@@ -12,7 +12,6 @@ class Cloner
       .clone_questions
   end
 
-  # private
   def clone_homeworks
     unless self.target.homeworks.any?
       self.origin.homeworks.each do |hw|
