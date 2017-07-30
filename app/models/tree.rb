@@ -2,8 +2,8 @@ class Tree < ActiveRecord::Base
 
   belongs_to :course
   has_one :content, :dependent => :destroy
-  #has_many :content_questions, :dependent => :destroy
-  #has_many :ct_questions, :dependent => :destroy
+  has_many :content_questions, :dependent => :destroy
+  has_many :ct_questions, :dependent => :destroy
   has_one :initial_content_question, :class_name => "InitialContentQuestion", :dependent => :destroy
   has_one :initial_ct_question, :class_name => "InitialCtQuestion", :dependent => :destroy
   has_one :recuperative_content_question, :class_name => "RecuperativeContentQuestion", :dependent => :destroy
@@ -54,7 +54,5 @@ class Tree < ActiveRecord::Base
   accepts_nested_attributes_for :deeping_complex_feedback, :reject_if => lambda { |a| a[:text].blank? }, :allow_destroy => true
   accepts_nested_attributes_for :user_tree_performances, :reject_if => lambda { |a| a[:user_id].blank? }, :allow_destroy => true
 
-  def text
-    self.content.text
-  end
+  delegate :text, to: :content
 end

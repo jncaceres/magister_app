@@ -29,8 +29,8 @@ class ReportsController < ApplicationController
   # GET /reports/1.json
   def show
     @breadcrumbs = ["Mis Cursos", @course.name, "Reportes", @report.name]
-    # render json: Reporter.new(@report).exec
-    # return
+    render json: @report, include: 'trees'
+    return
 
     @report.content_sc = nil
     @report.interpretation_sc = nil
@@ -574,7 +574,7 @@ class ReportsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_report
-      @report = Report.includes(trees: :user_tree_performances).find(params[:id])
+      @report = Report.includes(trees: [:content, :user_tree_performances]).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

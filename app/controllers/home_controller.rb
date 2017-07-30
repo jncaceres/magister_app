@@ -13,7 +13,7 @@ class HomeController < ApplicationController
 
   def test
     @report = Report.first
-    respond_with @report
+    respond_with @report, include: [trees: [:content]]
   end
 
   private

@@ -1,4 +1,6 @@
 <dyn-report>
+  <h1>{ title }</h1>
+
   <table class="table">
     <thead>
       <th>Contenido / Habilidad</th>
@@ -12,29 +14,123 @@
       <th>N</th>
     </thead>
     <tbody>
-      <tr each="{ reports }">
-        <td>--</td>
-        <td>{ Math.round(content_sc) }%</td>
-        <td>{ Math.round(interpretation_sc) }%</td>
-        <td>{ Math.round(analysis_sc) }%</td>
-        <td>{ Math.round(evaluation_sc) }%</td>
-        <td>{ Math.round(inference_sc) }%</td>
-        <td>{ Math.round(explanation_sc) }%</td>
-        <td>{ Math.round(selfregulation_sc) }%</td>
+      <tr each="{ trees }">
+        <td onclick="{ selects(id) }">{ text }</td>
+        <td onclick="{ select_filter(id, 'Contenido') }">{ percent(content_sc) }%</td>
+        <td onclick="{ select_filter(id, 'Interpretación') }">{ percent(interpretation_sc) }%</td>
+        <td onclick="{ select_filter(id, 'Análisis') }">{ percent(analysis_sc) }%</td>
+        <td onclick="{ select_filter(id, 'Evaluación') }">{ percent(evaluation_sc) }%</td>
+        <td onclick="{ select_filter(id, 'Inferencia') }">{ percent(inference_sc) }%</td>
+        <td onclick="{ select_filter(id, 'Explicación') }">{ percent(explanation_sc) }%</td>
+        <td onclick="{ select_filter(id, 'Autoregulación') }">{ percent(selfregulation_sc) }%</td>
         <td>{ total }</td>
       </tr>
     </tbody>
   </table>
+
+  <question-show each="{ detail.questions }" data="{ this }"></question-show>
+  
+  <style>
+    /* The switch - the box around the slider */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    /* Hide default HTML checkbox */
+    .switch input {display:none;}
+
+    /* The slider */
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px #2196F3;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+  </style>
+
   <script>
-    this.reports = [];
+    this.detail = [];
+    this.title = "Report";
+    this.percent = (value) => {
+      return Math.round(value * 100);
+    }
+    this.trees = [];
     this.on('mount', () => {
       $.ajax({
-        url: "/courses/1/reports/1.json",
+        url: "/courses/1/reports/11.json",
         success: (payload) => {
-          console.log(payload);
-          this.update({ reports: [payload.data] });
+          var trees = payload.report.trees.sort((a,b) => a.text.localeCompare(b.text));
+          this.update({ title: payload.report.name, trees: trees });
         }
       });
     });
+
+    this.selects = (id) => {
+      return () => {
+        $.ajax({
+          url: "/courses/1/trees/" + id + ".json",
+          success: (payload) => {
+            this.update({ detail: payload.tree });
+          }
+        })
+      };
+    }
+
+    this.select_filter = (id, skill) => {
+      return () => {
+        $.ajax({
+          url: "/courses/1/trees/" + id + ".json",
+          success: (payload) => {
+            var filtered = payload.tree.questions.filter((question) => question.skills.indexOf(skill) > -1);  // ugly as hell
+            var tree     = Object.assign({}, payload.tree, { questions: filtered });
+
+            this.update({ detail: tree });
+          }
+        })
+      };
+    }
   </script>
 </dyn-report>

@@ -22,6 +22,7 @@
 //= require video-tag
 //= require dyn-report
 //= require comment-form
+//= require question-show
 
 //= require_tree .
 

@@ -6,6 +6,7 @@ class TreesController < ApplicationController
   before_action :set_ef_visible
   before_action :set_breadcrumbs
 
+  respond_to :html, :json
 
   def edx_view
     @username = params['lis_person_sourcedid']
@@ -1327,6 +1328,7 @@ class TreesController < ApplicationController
   # GET /trees/1
   # GET /trees/1.json
   def show
+    render json: @tree, include: [:content, content_questions: :content_choices, ct_questions: [:ct_choices, :ct_habilities]]
   end
 
   # GET /trees/new

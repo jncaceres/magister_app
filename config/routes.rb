@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   resources :users
   resources :content_choices
   resources :ct_choices
-  #resources :trees
+  resources :trees
   resources :ct_subhabilities
   resources :reports
   resources :interactions, module: :videos, only: [:index, :show]
