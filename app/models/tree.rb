@@ -4,6 +4,7 @@ class Tree < ActiveRecord::Base
   has_one :content, :dependent => :destroy
   has_many :content_questions, :dependent => :destroy
   has_many :ct_questions, :dependent => :destroy
+  has_many :feedbacks, dependent: :destroy
   has_one :initial_content_question, :class_name => "InitialContentQuestion", :dependent => :destroy
   has_one :initial_ct_question, :class_name => "InitialCtQuestion", :dependent => :destroy
   has_one :recuperative_content_question, :class_name => "RecuperativeContentQuestion", :dependent => :destroy

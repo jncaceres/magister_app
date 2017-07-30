@@ -16,17 +16,24 @@
     <tbody>
       <tr each="{ trees }">
         <td onclick="{ selects(id) }">{ text }</td>
-        <td onclick="{ select_filter(id, 'Contenido') }">{ percent(content_sc) }%</td>
-        <td onclick="{ select_filter(id, 'Interpretación') }">{ percent(interpretation_sc) }%</td>
-        <td onclick="{ select_filter(id, 'Análisis') }">{ percent(analysis_sc) }%</td>
-        <td onclick="{ select_filter(id, 'Evaluación') }">{ percent(evaluation_sc) }%</td>
-        <td onclick="{ select_filter(id, 'Inferencia') }">{ percent(inference_sc) }%</td>
-        <td onclick="{ select_filter(id, 'Explicación') }">{ percent(explanation_sc) }%</td>
-        <td onclick="{ select_filter(id, 'Autoregulación') }">{ percent(selfregulation_sc) }%</td>
+        <td onclick="{ selects(id) }">{ percent(content_sc) }</td>
+        <td onclick="{ select_filter(id, 'Interpretación') }">{ percent(interpretation_sc) }</td>
+        <td onclick="{ select_filter(id, 'Análisis') }">{ percent(analysis_sc) }</td>
+        <td onclick="{ select_filter(id, 'Evaluación') }">{ percent(evaluation_sc) }</td>
+        <td onclick="{ select_filter(id, 'Inferencia') }">{ percent(inference_sc) }</td>
+        <td onclick="{ select_filter(id, 'Explicación') }">{ percent(explanation_sc) }</td>
+        <td onclick="{ select_filter(id, 'Autoregulación') }">{ percent(selfregulation_sc) }</td>
         <td>{ total }</td>
+      </tr>
+
+      <tr>
+        <td></td>
+        <td each="{ averages }">{ percent(this.avg) }</td>
       </tr>
     </tbody>
   </table>
+
+  <hr>
 
   <question-show each="{ detail.questions }" data="{ this }"></question-show>
   
@@ -93,9 +100,23 @@
 
   <script>
     this.detail = [];
+    this.averages = [];
     this.title = "Report";
     this.percent = (value) => {
-      return Math.round(value * 100);
+      if (value)
+        return Math.round(value * 100) + "%";
+      else
+        return "--";
+    }
+    this.average = (list) => {
+      const avg = (elem) => {
+        var elems = list.map((t) => t[elem]).filter((x) => x);
+        return elems.reduce(((x, y) => x + y), null) / elems.length;
+      };
+
+      return ['content_sc', 'interpretation_sc', 'analysis_sc', 'evaluation_sc', 'inference_sc', 'explication_sc', 'selfregulation_sc'].map(   (elem) => {
+          return { avg: avg(elem) };
+        });
     }
     this.trees = [];
     this.on('mount', () => {
@@ -103,7 +124,7 @@
         url: "/courses/1/reports/11.json",
         success: (payload) => {
           var trees = payload.report.trees.sort((a,b) => a.text.localeCompare(b.text));
-          this.update({ title: payload.report.name, trees: trees });
+          this.update({ title: payload.report.name, trees: trees, averages: this.average(payload.report.trees) });
         }
       });
     });
