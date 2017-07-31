@@ -4,7 +4,7 @@ class TreeSerializer < ActiveModel::Serializer
   has_many :feedbacks
 
   def total
-    10
+    object.user_tree_performances.count
   end
 
   def questions

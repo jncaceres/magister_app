@@ -99,6 +99,9 @@
   </style>
 
   <script>
+    const course_id = opts.course_id;
+    const report_id = opts.report_id;
+
     this.detail = [];
     this.averages = [];
     this.title = "Report";
@@ -121,7 +124,7 @@
     this.trees = [];
     this.on('mount', () => {
       $.ajax({
-        url: "/courses/1/reports/11.json",
+        url: "/courses/" + course_id + "/reports/" + report_id + ".json",
         success: (payload) => {
           var trees = payload.report.trees.sort((a,b) => a.text.localeCompare(b.text));
           this.update({ title: payload.report.name, trees: trees, averages: this.average(payload.report.trees) });
