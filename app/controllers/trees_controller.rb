@@ -8,6 +8,15 @@ class TreesController < ApplicationController
 
   respond_to :html, :json
 
+  @@includes = [:content, :feedbacks,
+    { initial_content_question: [:content_choices] },
+    { initial_ct_question: [:ct_choices] },
+    { recuperative_content_question: [:content_choices] },
+    { recuperative_ct_question: [:ct_choices] },
+    { deeping_content_question: [:content_choices] },
+    { deeping_ct_question: [:ct_choices] }
+  ]
+
   def edx_view
     @username = params['lis_person_sourcedid']
     @showed_user = User.find(current_user.id)
@@ -1328,7 +1337,7 @@ class TreesController < ApplicationController
   # GET /trees/1
   # GET /trees/1.json
   def show
-    render json: @tree, include: [:content, content_questions: :content_choices, ct_questions: [:ct_choices, :ct_habilities]]
+    render json: @tree, include: [:content, :feedbacks, questions: :choices]
   end
 
   # GET /trees/new
@@ -1533,11 +1542,10 @@ class TreesController < ApplicationController
   end
 
   private
-  
     # Use callbacks to share common setup or constraints between actions.
     def set_tree
       @course = Course.find(params[:course_id])
-      @tree = @course.trees.find(params[:id])
+      @tree = @course.trees.includes(@@includes).find(params[:id])
 
     end
 

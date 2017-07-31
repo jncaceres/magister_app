@@ -183,6 +183,11 @@
   }
 }
 
+hr {
+  padding: 0.2em;
+  border-bottom: 1px solid #eee;
+}
+
 .comment {
   border-bottom: 1px solid #ccc;
   padding: 0.5em;
@@ -199,5 +204,5 @@
 }
 
 .correct {
-  color: darkgreen;
+  color: green;
 }
