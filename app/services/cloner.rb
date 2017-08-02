@@ -30,6 +30,8 @@ class Cloner
     origin.trees.each do |origin_tree|
       target_tree = target.trees.build
 
+      target_tree.build_content text: origin_tree.content.text
+
       build_attribs(t_types, q_types, "question").each do |att|
         origin_question = origin_tree.send(att)
         target_question = target_tree.send("build_" + att, { question: origin_question.question, type: origin_question.type })
@@ -64,8 +66,6 @@ class Cloner
         .join("_")
     end
   end
-
-  def 
 
   def save
     self.target.save
