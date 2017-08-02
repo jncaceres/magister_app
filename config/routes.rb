@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   resources :ct_choices
   resources :trees do
     namespace :replies do
+      resource :prev, only: [:show]
       resource :initial
       resource :recuperative
       resource :deeping

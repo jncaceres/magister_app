@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170801181658) do
+ActiveRecord::Schema.define(version: 20170802014318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -295,6 +295,8 @@ ActiveRecord::Schema.define(version: 20170801181658) do
     t.float    "inference_sc"
     t.float    "explanation_sc"
     t.float    "selfregulation_sc"
+    t.text     "prev"
+    t.text     "after"
   end
 
   add_index "trees", ["course_id"], name: "index_trees_on_course_id", using: :btree

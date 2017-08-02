@@ -10,8 +10,6 @@
     </div>
       
   <% end %>
-
-
     <br>
 
     <%= f.fields_for :content do |content_fields| %>
@@ -21,6 +19,9 @@
       </div>
     <% end %>
     <br>
+
+    <%= f.input :prev, label: "Mensaje previo", placeholder: "Escriba aquí un mensaje que quiera los alumnos vean antes de realizar la evaluación" %>
+    <%= f.input :after, label: "Mensaje siguiente", placeholder: "Escriba aquí un mensaje que quiera los alumnos vean una vez finalizada la evaluación" %>
 
 
 <br>
