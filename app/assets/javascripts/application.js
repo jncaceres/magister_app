@@ -89,6 +89,6 @@ function autosaveForm() {
   $('form[data-remote]').submit();
 }*/
 
-$(document).ready(() => {
+$(document).ready(function() {
   riot.mount('*');
 });
