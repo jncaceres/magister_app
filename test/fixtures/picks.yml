@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reply_id: 
+  selectable_id: 
+  selectable_type: Selectable
+
+two:
+  reply_id: 
+  selectable_id: 
+  selectable_type: Selectable

@@ -1,0 +1,2 @@
+module Replies::InitialHelper
+end
