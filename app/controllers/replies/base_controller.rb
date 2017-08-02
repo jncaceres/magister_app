@@ -9,7 +9,7 @@ class Replies::BaseController < ApplicationController
   private
   def set_tree
     @tree = Tree
-      .includes(:content, content_questions: :content_choices, ct_questions: :ct_choices)
+      .includes(:content, content_questions: :content_choices, ct_questions: [:ct_choices, :ct_habilities])
       .find params[:tree_id]
   end
 

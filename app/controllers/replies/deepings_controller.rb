@@ -28,4 +28,5 @@ class Replies::DeepingsController < Replies::BaseController
 
       render 'show'
     end
+  end
 end
