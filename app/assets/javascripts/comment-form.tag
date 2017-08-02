@@ -1,4 +1,4 @@
-comment-form
+<comment-form>
   <a href="#" if="{ !active }" onclick="{ activate }">Responder</a>
   <form onsubmit="{ send_data }" if="{ active }">
     <div class="form-group">
@@ -7,7 +7,7 @@ comment-form
     </div>
   </form>
   
-  javascript:
+  <script>
     this.active = false;
     this.expand = () => {
       this.refs.content.setAttribute("rows", 5); }
@@ -31,3 +31,5 @@ comment-form
         }
       })
     }
+  </script>
+</comment-form>

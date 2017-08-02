@@ -1,4 +1,4 @@
-dyn-report
+<dyn-report>
   <h1>{ title }</h1>
 
   <table class="table">
@@ -37,7 +37,7 @@ dyn-report
 
   <question-show each="{ detail.questions }" data="{ this }"></question-show>
   
-  css:
+  <style>
     /* The switch - the box around the slider */
     .switch {
       position: relative;
@@ -96,8 +96,9 @@ dyn-report
     .slider.round:before {
       border-radius: 50%;
     }
+  </style>
 
-  javascript:
+  <script>
     const course_id = opts.course_id;
     const report_id = opts.report_id;
 
@@ -155,3 +156,5 @@ dyn-report
         })
       };
     }
+  </script>
+</dyn-report>

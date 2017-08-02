@@ -1,7 +1,7 @@
-video-tag
+<video-tag>
   <div id="player" ref="player"></div>
 
-  javascript:
+  <script>
     this.player = null;
     const onPlayerReady = (event) => {
       event.target.playVideo();
@@ -57,3 +57,5 @@ video-tag
       
       setTimeout(timedLoad, 1000);
     });
+  </script>
+</video-tag>
