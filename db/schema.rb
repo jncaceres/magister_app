@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170723033301) do
+ActiveRecord::Schema.define(version: 20170801181658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -230,12 +230,34 @@ ActiveRecord::Schema.define(version: 20170723033301) do
   add_index "interactions", ["user_id"], name: "index_interactions_on_user_id", using: :btree
   add_index "interactions", ["video_id"], name: "index_interactions_on_video_id", using: :btree
 
+  create_table "picks", force: :cascade do |t|
+    t.integer  "reply_id"
+    t.integer  "selectable_id"
+    t.string   "selectable_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "picks", ["reply_id"], name: "index_picks_on_reply_id", using: :btree
+  add_index "picks", ["selectable_type", "selectable_id"], name: "index_picks_on_selectable_type_and_selectable_id", using: :btree
+
   create_table "registers", force: :cascade do |t|
     t.integer  "button_id"
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "replies", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "tree_id"
+    t.integer  "stage"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "replies", ["tree_id"], name: "index_replies_on_tree_id", using: :btree
+  add_index "replies", ["user_id"], name: "index_replies_on_user_id", using: :btree
 
   create_table "reports", force: :cascade do |t|
     t.string   "name"
@@ -387,6 +409,9 @@ ActiveRecord::Schema.define(version: 20170723033301) do
   add_foreign_key "feedbacks", "trees"
   add_foreign_key "interactions", "users"
   add_foreign_key "interactions", "videos"
+  add_foreign_key "picks", "replies"
+  add_foreign_key "replies", "trees"
+  add_foreign_key "replies", "users"
   add_foreign_key "trees", "courses"
   add_foreign_key "user_tree_performances", "trees"
   add_foreign_key "user_tree_performances", "users"

@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong User:
+  = @reply.user
+p
+  strong Tree:
+  = @reply.tree
+p
+  strong Stage:
+  = @reply.stage
+
+= link_to 'Edit', edit_reply_path(@reply)
+'  |
+= link_to 'Back', replies_path

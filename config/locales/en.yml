@@ -23,3 +23,6 @@ en:
   hello: "Hello world"
   errors:
     format: "%{message}"
+  initial: "Inicial"
+  recuperative: "Recuperativa"
+  deeping: "Profundización"

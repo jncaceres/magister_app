@@ -1,0 +1,2 @@
+module Replies::RecuperativeHelper
+end

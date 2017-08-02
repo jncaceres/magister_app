@@ -9,7 +9,15 @@ Rails.application.routes.draw do
   resources :users
   resources :content_choices
   resources :ct_choices
-  resources :trees
+  resources :trees do
+    namespace :replies do
+      resource :initial
+      resource :recuperative
+      resource :deeping
+      resource :finished, only: [:show]
+    end
+  end
+  resources :replies
   resources :ct_subhabilities
   resources :reports
   resources :interactions, module: :videos, only: [:index, :show]
