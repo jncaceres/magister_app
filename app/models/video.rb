@@ -1,5 +1,6 @@
 class Video < ActiveRecord::Base
   belongs_to :course
+  belongs_to :tree
   has_many :comments, inverse_of: :video
 
   before_save :embedded_url
