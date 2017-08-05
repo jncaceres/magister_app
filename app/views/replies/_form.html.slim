@@ -1,10 +1,11 @@
-- @ct.ct_habilities.actives.each do |tag|
-  span.btn.btn-faded = tag.name
+/ - @ct.ct_habilities.actives.each do |tag|
+/   span.btn.btn-faded = tag.name
 
 = simple_form_for @reply, url: send("tree_replies_#{@reply.stage}_path") do |f|
   = simple_fields_for :content_pick, @reply.picks.build do |p|
     .content-question
-      h3 = @content.question
+      .large
+        == markdown @content.question
       = p.association :selectable, collection: @content.content_choices, as: :radio_buttons, label: "Respuesta", label_method: Proc.new {|obj| format_choice(obj, @reply.picks) }
 
   = simple_fields_for :ct_pick, @reply.picks.build do |p|
