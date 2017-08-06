@@ -1,0 +1,28 @@
+.nested-fields
+	label.btn.btn-default.btnpc.nested-fields
+		= f.hidden_field :name, value: "Interpretación"
+		= f.hidden_field :description, value: "Interpretaishon"
+
+		= f.check_box :active
+/ <% if i.to_i == 0 %>
+/ 	<% hab = CtHability.find_by(name: "Interpretación") %>
+/ <% elsif i.to_i == 1 %>
+/ 	<% hab = CtHability.find_by(name: "Análisis") %>
+/ <% elsif i.to_i == 2 %>
+/ 	<% hab = CtHability.find_by(name: "Evaluación") %>
+/ <% elsif i.to_i == 3 %>
+/ 	<% hab = CtHability.find_by(name: "Inferencia") %>
+/ <% elsif i.to_i == 4 %>
+/ 	<% hab = CtHability.find_by(name: "Explicación") %>
+/ <% elsif i.to_i == 5 %>
+/ 	<% hab = CtHability.find_by(name: "Autoregulación") %>
+/ <% end %>
+
+/ <div class='nested-fields'>
+/ 	<label class="btn btn-default btnpc nested-fields">
+/       <%= f.hidden_field :name, :value => hab.name %>
+/       <%= f.hidden_field :description, :value => hab.description %>
+/       <input type="checkbox"> <%= hab.name %>
+/       <%= f.check_box :active %>
+/     </label>
+/ </div>

@@ -1403,6 +1403,7 @@ class TreesController < ApplicationController
   def create
     #@tree = Tree.new(tree_params)
     #@course = Course.find(:course_id)
+    render json: params and return
     @tree = @course.trees.new(tree_params)
 
 
