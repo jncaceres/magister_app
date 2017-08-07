@@ -1,5 +1,5 @@
 class TreeSerializer < ActiveModel::Serializer
-  attributes :id, :text, :video, :iterations, :interpretation_sc, :analysis_sc, :evaluation_sc, :inference_sc, :explanation_sc, :selfregulation_sc, :content_sc, :questions, :total
+  attributes :id, :text, :active, :video, :iterations, :interpretation_sc, :analysis_sc, :evaluation_sc, :inference_sc, :explanation_sc, :selfregulation_sc, :content_sc, :questions, :total
 
   has_many :feedbacks
 
