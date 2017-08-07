@@ -1,0 +1,7 @@
+h1.title = @tree.text
+
+- if @feedback
+  .alert.alert-warning
+    = @feedback.text
+
+= render 'replies/form'
