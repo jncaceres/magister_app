@@ -6,6 +6,43 @@ class Replies::BaseController < ApplicationController
 
   respond_to :html, :json
 
+  def show
+    redirect_to send("tree_replies_#{@reply.stage}_path", @tree) unless @reply.send(controller_name.singularize + "?")
+  end
+
+  def update
+    c_id  = params[:content_pick].try(:[], 'selectable_id')
+    p_id  = params[:ct_pick].try(:[], 'selectable_id')
+    cpick = @reply.picks.build selectable: ContentChoice.where(id: c_id).first
+    tpick = @reply.picks.build selectable: CtChoice.where(id: p_id).first
+
+    @reply.save
+
+    if cpick.right then # { OK }
+      if tpick.right then # { OK, OK } -> redirect
+        @reply.send(on_success(@reply.stage) + "!")
+
+        redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
+      elsif @reply.picks.count <= 5 # { OK, Error } -> simple feedback
+        @feedback = @tree.send("#{@reply.stage}_simple_feedback")
+
+        render 'show'
+      else # >3 errors -> redirect
+        @reply.send(on_error(@reply.stage) + "!")
+
+        redirect_to tree_replies_finished_path(@tree)
+      end
+    elsif @reply.picks.count <= 5 # { Error, any } -> complex feedback
+      @feedback = @tree.deeping_complex_feedback
+
+      render 'show'
+    else
+      @reply.finished!
+
+      redirect_to tree_replies_finished_path(@tree)
+    end
+  end
+
   private
   def set_tree
     @tree = Tree
@@ -30,5 +67,13 @@ class Replies::BaseController < ApplicationController
     @ct      = @tree.ct_questions.to_a.select do |cq|
       cq.type == @reply.stage.capitalize + "CtQuestion"
     end.first
+  end
+
+  def on_fail stage
+    stage == "initial" ? "recuperative" : "finished"
+  end
+
+  def on_success stage
+    stage == "deeping" ? "finished" : "deeping"
   end
 end
