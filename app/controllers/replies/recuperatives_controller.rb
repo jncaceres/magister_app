@@ -4,8 +4,10 @@ class Replies::RecuperativesController < Replies::BaseController
   end
 
   def update
-    cpick = @reply.picks.build selectable: ContentChoice.find(params[:content_pick]['selectable_id'])
-    tpick = @reply.picks.build selectable: CtChoice.find(params[:ct_pick]['selectable_id'])
+    c_id  = params[:content_pick].try(:[], 'selectable_id')
+    p_id  = params[:ct_pick].try(:[], 'selectable_id')
+    cpick = @reply.picks.build selectable: ContentChoice.where(id: c_id).first
+    tpick = @reply.picks.build selectable: CtChoice.where(id: p_id).first
 
     @reply.save
 
