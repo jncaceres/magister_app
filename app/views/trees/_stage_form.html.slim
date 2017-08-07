@@ -1,4 +1,5 @@
 h3 Fase #{t stage}
 
-= render 'question_form', stage: stage, type: 'content'
-= render 'question_form', stage: stage, type: 'ct'
+.container-fluid
+  = render 'question_form', f: f, stage: stage, type: 'content'
+  = render 'question_form', f: f, stage: stage, type: 'ct'

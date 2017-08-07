@@ -1342,6 +1342,7 @@ class TreesController < ApplicationController
 
   # GET /trees/new
   def new
+    @videos = @course.videos
     @breadcrumbs = ["Mis Cursos", @course.name, "Evaluación Formativa", "Nueva evaluación de video"]
     @tree = Tree.new
 
@@ -1379,6 +1380,7 @@ class TreesController < ApplicationController
 
   # GET /trees/1/edit
   def edit
+    @videos = @course.videos
     @breadcrumbs = ["Mis Cursos", @course.name, "Evaluación Formativa", "Editar evaluación de video"]
     @tree.build_content if @tree.content.nil?
     @tree.build_initial_content_question if @tree.initial_content_question.nil?

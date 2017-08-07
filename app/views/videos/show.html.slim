@@ -10,8 +10,8 @@ p#notice = notice
   h3 = @video.name
   h4 = @video.course.name
 
-  - if @video.tree_id?
-    = link_to 'Evaluación Formativa', [@course, @video.tree]
+  - if @video.tree_id? and @video.tree.active
+    = link_to 'Evaluación Formativa', tree_replies_prev_path(@video.tree), class: 'btn btn-primary'
 
 .container
   - @video.comments.each do |comment|

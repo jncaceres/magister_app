@@ -11,6 +11,10 @@
   = f.simple_fields_for :content do |cf|
       = cf.input :text, required: true, label: false, placeholder: 'Contenido'
   br
+
+  / Video
+  = f.association :video, collection: @videos
+  = f.input :active
   
   / Before eval and after eval texts
   = f.input :prev, label: false, placeholder: 'Escriba aquí un mensaje que quiera los alumnos vean antes de realizar la evaluación'

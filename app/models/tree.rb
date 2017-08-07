@@ -1,6 +1,7 @@
 class Tree < ActiveRecord::Base
 
   belongs_to :course
+  belongs_to :video, inverse_of: :tree
   has_one :content, :dependent => :destroy
   has_many :content_questions, :dependent => :destroy
   has_many :ct_questions, :dependent => :destroy

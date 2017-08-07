@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170802014318) do
+ActiveRecord::Schema.define(version: 20170806221034) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -283,11 +283,10 @@ ActiveRecord::Schema.define(version: 20170802014318) do
   add_index "reports_trees", ["report_id", "tree_id"], name: "index_reports_trees_on_report_id_and_tree_id", using: :btree
 
   create_table "trees", force: :cascade do |t|
-    t.string   "video"
     t.integer  "iterations"
     t.integer  "course_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.float    "content_sc"
     t.float    "interpretation_sc"
     t.float    "analysis_sc"
@@ -297,9 +296,12 @@ ActiveRecord::Schema.define(version: 20170802014318) do
     t.float    "selfregulation_sc"
     t.text     "prev"
     t.text     "after"
+    t.integer  "video_id"
+    t.boolean  "active",            default: false
   end
 
   add_index "trees", ["course_id"], name: "index_trees_on_course_id", using: :btree
+  add_index "trees", ["video_id"], name: "index_trees_on_video_id", using: :btree
 
   create_table "user_tree_performances", force: :cascade do |t|
     t.integer  "user_id"
@@ -415,6 +417,7 @@ ActiveRecord::Schema.define(version: 20170802014318) do
   add_foreign_key "replies", "trees"
   add_foreign_key "replies", "users"
   add_foreign_key "trees", "courses"
+  add_foreign_key "trees", "videos"
   add_foreign_key "user_tree_performances", "trees"
   add_foreign_key "user_tree_performances", "users"
   add_foreign_key "videos", "courses"

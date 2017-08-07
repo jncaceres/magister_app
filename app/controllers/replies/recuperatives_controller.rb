@@ -27,6 +27,10 @@ class Replies::RecuperativesController < Replies::BaseController
       @feedback = @tree.recuperative_complex_feedback
 
       render 'show'
+    else
+      @reply.finished!
+
+      redirect_to tree_replies_finished_path(@tree)
     end
   end
 end
