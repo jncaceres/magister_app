@@ -29,6 +29,10 @@ class Replies::DeepingsController < Replies::BaseController
       @feedback = @tree.deeping_complex_feedback
 
       render 'show'
+    else
+      @reply.finished!
+
+      redirect_to tree_replies_finished_path(@tree)
     end
   end
 end
