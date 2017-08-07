@@ -27,6 +27,10 @@ class Replies::InitialsController < Replies::BaseController
       @feedback = @tree.initial_complex_feedback
 
       render 'show'
+    else
+      @reply.recuperative!
+
+      redirect_to tree_replies_recuperative_path(@tree)
     end
   end
 end

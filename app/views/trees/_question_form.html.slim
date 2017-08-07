@@ -1,0 +1,18 @@
+.col-md-6
+  = f.simple_fields_for "#{stage}_#{type}_question" do |t|
+    label Pregunta #{t stage} de #{t type}
+    = t.input :question, required: true, label: false
+
+    = t.simple_fields_for "#{type}_choices" do |c|
+      .nested-fields
+        .input-group
+          .input-group-addon
+            = c.check_box :right, class: 'inline'
+          = c.input :text, class: 'form-control', required: true, label: false
+          
+          .input-group-btn
+            = link_to_remove_association f, class: 'btn' do
+              span.glyphicon.glyphicon-remove-sign
+    
+    - if type == "ct" and false
+      = t.association :ct_habilities, as: :check_boxes

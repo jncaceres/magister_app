@@ -1,0 +1,16 @@
+.nested-fields
+  .input-group
+    = f.text_area :question, size: "60x5", class: "form-control", required: true
+
+br
+
+  = f.fields_for :ct_choices do |c|
+    = render 'ct_choice_fields', f: c
+	
+.nested-fields
+  = link_to_add_association f, :ct_choices, class: 'btn btn-default' do
+    span.glyphicon.glyphicon-plus-sign
+
+br
+
+= f.association 

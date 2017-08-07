@@ -1,0 +1,33 @@
+= simple_form_for [@course, @tree] do |f|
+  / Errors
+  - if @tree.errors.any?
+    .alert.alert-danger
+      strong Cuidado! No se ha podido crear el árbol, revisa la información faltante.
+      ul
+        - @tree.errors.full_messages.each do |message|
+          li = message
+  
+  / Content
+  = f.simple_fields_for :content do |cf|
+      = cf.input :text, required: true, label: false, placeholder: 'Contenido'
+  br
+
+  / Video
+  = f.association :video, collection: @videos
+  = f.input :active
+  
+  / Before eval and after eval texts
+  = f.input :prev, label: false, placeholder: 'Escriba aquí un mensaje que quiera los alumnos vean antes de realizar la evaluación'
+
+  = f.input :after, label: false, placeholder: 'Escriba aquí un mensaje que quiera los alumnos vean una vez terminada la evaluación'
+
+  / Tree img
+  .image
+    = image_tag 'diagrama.png'
+  
+  / Evaluations
+  = render 'stage_form', f: f, stage: 'initial'
+  = render 'stage_form', f: f, stage: 'recuperative'
+  = render 'stage_form', f: f, stage: 'deeping'
+
+  = f.submit "Crear", class: "btn btn-primary"

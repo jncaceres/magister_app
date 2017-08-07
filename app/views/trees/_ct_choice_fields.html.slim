@@ -2,10 +2,10 @@
 	.input-group
 		span#check.input-group-addon
 			= f.check_box :right, class: 'inline'
-		= f.input :text, class: 'form-control', required: true
+		= f.input :text, as: :string, class: 'form-control', required: true, label: false
 
 		.input-group-btn
-			= link_to_remove_association f, class: btn do
+			= link_to_remove_association f, class: 'btn' do
 				span.glyphicon-remove-sign.red
-	br
+br
 
