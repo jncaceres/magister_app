@@ -17,7 +17,7 @@ class Replies::BaseController < ApplicationController
     p_id  = p_id.reject(&:empty?) if p_id.is_a? Array
 
     cpick = ContentChoice.where(id: c_id).map do |cc| @reply.picks.build selectable: cc end
-    tpick = CtChoice.where(id: c_id).map      do |ct| @reply.picks.build selectable: ct end
+    tpick = CtChoice.where(id: p_id).map      do |ct| @reply.picks.build selectable: ct end
 
     @reply.save
 
@@ -26,7 +26,7 @@ class Replies::BaseController < ApplicationController
         @reply.send(on_success(@reply.stage) + "!")
 
         redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
-      elsif @reply.picks.count <= 5 # { OK, Error } -> simple feedback
+      elsif @reply.picks.count <= ([cpick].flatten.count * 3) # { OK, Error } -> simple feedback
         @feedback = @tree.send("#{@reply.stage}_simple_feedback")
 
         render 'show'
@@ -35,7 +35,7 @@ class Replies::BaseController < ApplicationController
 
         redirect_to tree_replies_finished_path(@tree)
       end
-    elsif @reply.picks.count <= 5 # { Error, any } -> complex feedback
+    elsif @reply.picks.count <= ([cpick].flatten.count * 3) # { Error, any } -> complex feedback
       @feedback = @tree.deeping_complex_feedback
 
       render 'show'
