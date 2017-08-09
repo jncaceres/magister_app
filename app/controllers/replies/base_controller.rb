@@ -19,10 +19,12 @@ class Replies::BaseController < ApplicationController
     cpick = ContentChoice.where(id: c_id).map do |cc| @reply.picks.build selectable: cc end
     tpick = CtChoice.where(id: p_id).map      do |ct| @reply.picks.build selectable: ct end
 
+    render json: { cpick: is_right?(cpick), tpick: is_right?(tpick) } and return
+
     @reply.save
 
-    if cpick.all?(&:right) then # { OK }
-      if tpick.all?(&:right) then # { OK, OK } -> redirect
+    if is_right?(cpick) then # { OK }
+      if is_right?(tpick) then # { OK, OK } -> redirect
         @reply.send(on_success(@reply.stage) + "!")
 
         redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
@@ -78,5 +80,9 @@ class Replies::BaseController < ApplicationController
 
   def on_success stage
     stage == "deeping" ? "finished" : "deeping"
+  end
+
+  def is_right? picks
+    picks.all?(&:right) and picks.count == picks.first.selectable.question.choices.select(&:right).count
   end
 end
