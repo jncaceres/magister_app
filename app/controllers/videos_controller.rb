@@ -13,7 +13,7 @@ class VideosController < ApplicationController
   # GET /videos.json
   def index
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos"]
-    @units = Video.where(course_id: current_user.current_course_id).order(:unit, :name).group_by(&:unit)
+    @units = Video.includes(tree: :content).where(course_id: current_user.current_course_id).order(:unit, :name).group_by(&:unit)
   end
 
   # GET /videos/1
@@ -79,7 +79,7 @@ class VideosController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_video
-      @video = Video.find(params[:id])
+      @video = Video.includes(tree: :content).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

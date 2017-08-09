@@ -5,7 +5,11 @@ class RepliesController < ApplicationController
   # GET /replies
   # GET /replies.json
   def index
-    @replies = Reply.all
+    if params[:tree_id].present? then
+      @replies = Reply.where(tree_id: params[:tree_id]).includes(:user, tree: :content).all
+    else
+      @replies = Reply.includes(:user, tree: :content).all
+    end
   end
 
   # GET /replies/1
@@ -68,7 +72,7 @@ class RepliesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_reply
-      @reply = Reply.find(params[:id])
+      @reply = Reply.includes(:user, { tree: { content_questions: :choices , ct_questions: :choices }}, { tree: :content }).find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

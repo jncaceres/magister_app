@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :content_choices
   resources :ct_choices
   resources :trees do
+    resources :replies, only: [:index]
     namespace :replies do
       resource :prev, only: [:show]
       resource :initial

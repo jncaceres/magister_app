@@ -13,9 +13,9 @@ table.table
   tbody
     - @replies.each do |reply|
       tr
-        td = reply.user
-        td = reply.tree
-        td = reply.stage
+        td = reply.user.email
+        td = reply.tree.text
+        td = t reply.stage
         td = link_to 'Show', reply
         td = link_to 'Edit', edit_reply_path(reply)
         td = link_to 'Destroy', reply, data: { confirm: 'Are you sure?' }, method: :delete

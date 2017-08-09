@@ -23,8 +23,9 @@ en:
   hello: "Hello world"
   errors:
     format: "%{message}"
-  initial: "Inicial"
-  recuperative: "Recuperativa"
-  deeping: "Profundización"
-  content: "contenido"
-  ct: "justificación"
+  initial: Inicial
+  recuperative: Recuperativa
+  deeping: Profundización
+  finished: Finalizado
+  content: contenido
+  ct: justificación

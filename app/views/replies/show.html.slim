@@ -1,14 +1,25 @@
 p#notice = notice
 
-p
-  strong User:
-  = @reply.user
-p
-  strong Tree:
-  = @reply.tree
-p
-  strong Stage:
-  = @reply.stage
+h1.title
+  = @reply.tree.text
+  | &nbsp;
+  small = @reply.user.full_name
+h4.subtitle = t @reply.stage
+
+- %w(initial recuperative deeping).each do |stage|
+  .container
+    h3 = t stage
+    - content = @reply.tree.send "#{stage}_content_question"
+    - ct      = @reply.tree.send "#{stage}_ct_question"
+
+    .col-md-6
+      = render 'question', question: content, picks: @reply.picks
+
+    .col-md-6
+      = render 'question', question: ct,      picks: @reply.picks
+
+
+br
 
 = link_to 'Edit', edit_reply_path(@reply)
 '  |
