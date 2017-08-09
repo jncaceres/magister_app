@@ -12,14 +12,17 @@ class Replies::BaseController < ApplicationController
 
   def update
     c_id  = params[:content_pick].try(:[], 'selectable_id')
+    c_id  = c_id.reject(&:empty?) if c_id.is_a? Array
     p_id  = params[:ct_pick].try(:[], 'selectable_id')
-    cpick = @reply.picks.build selectable: ContentChoice.where(id: c_id).first
-    tpick = @reply.picks.build selectable: CtChoice.where(id: p_id).first
+    p_id  = p_id.reject(&:empty?) if p_id.is_a? Array
+
+    cpick = ContentChoice.where(id: c_id).map do |cc| @reply.picks.build selectable: cc end
+    tpick = CtChoice.where(id: c_id).map      do |ct| @reply.picks.build selectable: ct end
 
     @reply.save
 
-    if cpick.right then # { OK }
-      if tpick.right then # { OK, OK } -> redirect
+    if cpick.all?(&:right) then # { OK }
+      if tpick.all?(&:right) then # { OK, OK } -> redirect
         @reply.send(on_success(@reply.stage) + "!")
 
         redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
@@ -69,7 +72,7 @@ class Replies::BaseController < ApplicationController
     end.first
   end
 
-  def on_fail stage
+  def on_error stage
     stage == "initial" ? "recuperative" : "finished"
   end
 

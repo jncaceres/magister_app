@@ -6,4 +6,8 @@ module RepliesHelper
       content_tag :span, obj.text
     end
   end
+
+  def choice_mode obj
+    obj.choices.select(&:right).count > 1 ? :check_boxes : :radio_buttons
+  end
 end
