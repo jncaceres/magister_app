@@ -19,8 +19,6 @@ class Replies::BaseController < ApplicationController
     cpick = ContentChoice.where(id: c_id).map do |cc| @reply.picks.build selectable: cc end
     tpick = CtChoice.where(id: p_id).map      do |ct| @reply.picks.build selectable: ct end
 
-    render json: { cpick: is_right?(cpick), tpick: is_right?(tpick) } and return
-
     @reply.save
 
     if is_right?(cpick) then # { OK }

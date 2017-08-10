@@ -29,7 +29,6 @@ class RepliesController < ApplicationController
   # POST /replies
   # POST /replies.json
   def create
-    render json: params and return
     @reply = Reply.new(reply_params)
 
     respond_to do |format|

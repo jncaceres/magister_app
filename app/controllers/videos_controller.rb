@@ -33,7 +33,6 @@ class VideosController < ApplicationController
   # GET /videos/1/edit
   def edit
     @url = course_video_path
-    @video = Video.find(params[:id])
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos", "Editar Video"]
   end
 
