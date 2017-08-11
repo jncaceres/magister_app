@@ -304,7 +304,7 @@ class HomeworksController < ApplicationController
 
   private
     def set_homework
-      @homework = Homework.find(params[:id])
+      @homework = Homework.includes(:answers).find(params[:id])
     end
 
     def set_course

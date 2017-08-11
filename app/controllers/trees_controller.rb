@@ -1,7 +1,7 @@
 
 class TreesController < ApplicationController
-  before_action :set_tree, only: [:show, :edit, :update, :destroy]
   before_action :set_course # , only: [:create, :new]
+  before_action :set_tree, only: [:show, :edit, :update, :destroy]
   before_action :set_tree_edx, only: [:edx_view, :set_report_values]
   before_action :set_ef_visible
   before_action :set_breadcrumbs
@@ -1327,7 +1327,7 @@ class TreesController < ApplicationController
   # GET /trees
   # GET /trees.json
   def index
-    @trees = Tree.all
+    @trees = Tree.includes(:content).joins(:content).order('contents.text').all
   end
 
   # GET /trees/1
