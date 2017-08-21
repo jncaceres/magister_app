@@ -104,7 +104,7 @@ class CoursesController < ApplicationController
 
   def eval_form
     @breadcrumbs = ["Mis Cursos", @course.name, "Evaluación Formativa"]
-    render "eval_form"
+    @trees = @course.trees.includes(:content).joins(:content).order('contents.text').all
   end
 
   def reportes

@@ -15,7 +15,7 @@
         <th></th>
       </tr>
     </thead>
-      <% @course.trees.sort_by{|e| e[:created_at]}.each do |tree| %>
+      <% @trees.each do |tree| %>
         <tr>
             <% if tree.content.text.length > 30%>
               <td><%= tree.content.text[0,40] %>...</td>
