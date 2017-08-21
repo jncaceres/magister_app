@@ -1,6 +1,8 @@
 / - @ct.ct_habilities.actives.each do |tag|
 /   span.btn.btn-faded = tag.name
 
+span.btn.btn-faded = @reply.attempts.at_stage(@reply.stage).count
+
 = simple_form_for @reply, url: send("tree_replies_#{@reply.stage}_path") do |f|
   = simple_fields_for :content_pick, @reply.picks.build do |p|
     .content-question

@@ -18,28 +18,34 @@ class Replies::BaseController < ApplicationController
 
     cpick = ContentChoice.where(id: c_id).map do |cc| @reply.picks.build selectable: cc end
     tpick = CtChoice.where(id: p_id).map      do |ct| @reply.picks.build selectable: ct end
+    @reply.attempts.build stage: @reply.stage
 
     @reply.save
 
     if is_right?(cpick) then # { OK }
       if is_right?(tpick) then # { OK, OK } -> redirect
+        logger.warn "#{@reply.stage} is a success"
         @reply.send(on_success(@reply.stage) + "!")
 
         redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
-      elsif @reply.picks.count <= ([cpick].flatten.count * 3) # { OK, Error } -> simple feedback
+      elsif @reply.attempts.count < 3 # { OK, Error } -> simple feedback
+        logger.warn "#{@reply.stage} giving feedback on error"
         @feedback = @tree.send("#{@reply.stage}_simple_feedback")
 
         render 'show'
       else # >3 errors -> redirect
+        logger.warn "#{@reply.stage} redirects to #{on_error @reply.stage}"
         @reply.send(on_error(@reply.stage) + "!")
 
         redirect_to tree_replies_finished_path(@tree)
       end
-    elsif @reply.picks.count <= ([cpick].flatten.count * 3) # { Error, any } -> complex feedback
+    elsif @reply.attempts.count < 3 # { Error, any } -> complex feedback
+      logger.warn "#{@reply.stage} giving complex feedback on error"
       @feedback = @tree.deeping_complex_feedback
 
       render 'show'
     else
+      logger.warn "#{@reply.stage} finishing up"
       @reply.finished!
 
       redirect_to tree_replies_finished_path(@tree)
@@ -54,7 +60,7 @@ class Replies::BaseController < ApplicationController
   end
 
   def set_reply
-    @reply = Reply.includes(:picks).find_or_create_by(tree_id: @tree.id, user_id: current_user.id)
+    @reply = Reply.includes(:picks, :attempts).find_or_create_by(tree_id: @tree.id, user_id: current_user.id)
     @reply.initial! unless @reply.stage
   end
 

@@ -38,6 +38,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
   has_and_belongs_to_many :activities
   has_many :answers
+  has_many :replies
+  has_many :picks, through: :replies
   has_many :questions, through: :answers
   has_and_belongs_to_many :courses
   has_many :user_tree_performances, :dependent => :destroy

@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  namespace :replies do
+  get 'interactions/show'
+  end
+
   resources :comments
   root 'home#home'
   get 'test' => 'home#test'
@@ -17,6 +21,7 @@ Rails.application.routes.draw do
       resource :recuperative
       resource :deeping
       resource :finished, only: [:show]
+      resource :interactions, only: [:show]
     end
   end
   resources :replies

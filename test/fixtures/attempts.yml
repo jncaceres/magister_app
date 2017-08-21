@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  reply_id: 
+  stage: 1
+
+two:
+  reply_id: 
+  stage: 1

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170806221034) do
+ActiveRecord::Schema.define(version: 20170821051445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,6 +71,15 @@ ActiveRecord::Schema.define(version: 20170806221034) do
   end
 
   add_index "answers", ["user_id", "homework_id"], name: "index_answers_on_user_id_and_homework_id", using: :btree
+
+  create_table "attempts", force: :cascade do |t|
+    t.integer  "reply_id"
+    t.integer  "stage"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "attempts", ["reply_id"], name: "index_attempts_on_reply_id", using: :btree
 
   create_table "comments", force: :cascade do |t|
     t.integer  "video_id"
@@ -399,6 +408,7 @@ ActiveRecord::Schema.define(version: 20170806221034) do
   add_index "videos", ["course_id"], name: "index_videos_on_course_id", using: :btree
   add_index "videos", ["tree_id"], name: "index_videos_on_tree_id", using: :btree
 
+  add_foreign_key "attempts", "replies"
   add_foreign_key "comments", "users"
   add_foreign_key "comments", "videos"
   add_foreign_key "content_choices", "content_questions"

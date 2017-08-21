@@ -1,0 +1,13 @@
+h1 Replies::Interactions#show
+p Find me in app/views/replies/interactions/show.html.slim
+
+table.table
+  thead
+    th User
+    th Stage
+  
+  tbody
+    - @replies.each do |reply|
+      tr
+        td = reply.user.full_name
+        td = t reply.stage
