@@ -81,6 +81,14 @@ gem 'redis'
 gem 'active_model_serializers'
 gem 'riot_js-rails'
 gem 'redcarpet'
+gem 'showdown-rails'
 
 gem 'unicorn'
 gem 'unicorn-rails'
+
+group :test do
+  gem 'rspec'
+  gem 'rspec-rails'
+  gem 'factory_girl'
+  gem 'factory_girl_rails'
+end

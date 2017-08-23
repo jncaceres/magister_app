@@ -15,6 +15,7 @@
 //= require jquery_ujs
 //= require cocoon
 //  require turbolinks
+//= require showdown
 //= require riot
 //= require riot_rails
 
@@ -25,6 +26,8 @@
 //= require question-show
 
 //= require_tree .
+
+window.md_converter = new showdown.Converter();
 
 $(function() {
   $('#pictureInput_1').on('change', function(event) {

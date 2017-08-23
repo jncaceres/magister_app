@@ -12,7 +12,7 @@ class HomeController < ApplicationController
   end
 
   def test
-    @report = Report.first
+    @report = Report.find(22)
     respond_with @report, include: [trees: [:content]]
   end
 
