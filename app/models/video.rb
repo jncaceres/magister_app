@@ -1,7 +1,8 @@
 class Video < ActiveRecord::Base
   belongs_to :course
   belongs_to :tree
-  has_many :comments, inverse_of: :video
+  has_many :comments, inverse_of: :video, dependent: :destroy
+  has_many :interactions, inverse_of: :video, dependent: :destroy
 
   before_save :embedded_url
 
