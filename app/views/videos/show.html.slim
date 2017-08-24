@@ -11,9 +11,10 @@ p#notice = notice
   h4 = @video.course.name
 
   - if @video.tree_id? and @video.tree.active
-    = link_to 'Evaluación Formativa', tree_replies_prev_path(@video.tree), class: 'btn btn-primary'
+    = link_to 'Evaluación Formativa', tree_replies_prev_path(@video.tree), class: 'btn btn-success'
 
 .container
+  = render 'comments/form', comment: Comment.new(video_id: @video.id)
   - @video.comments.each do |comment|
     = render comment
     .subcomment

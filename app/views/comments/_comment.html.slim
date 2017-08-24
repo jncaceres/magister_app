@@ -1,7 +1,7 @@
 .comment
   strong
     small
-      = comment.user.full_name
+      = comment.user.try :full_name
       | &nbsp;en&nbsp;
       = l comment.created_at, format: :short
       | &nbsp;
