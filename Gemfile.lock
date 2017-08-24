@@ -49,6 +49,7 @@ GEM
     arel (6.0.3)
     autoprefixer-rails (6.4.0.3)
       execjs
+    axios_rails (0.14.0)
     bcrypt (3.1.11)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
@@ -296,6 +297,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers
   annotate
+  axios_rails
   better_errors
   bootstrap-sass (~> 3.3.6)
   byebug

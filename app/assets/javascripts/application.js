@@ -15,6 +15,7 @@
 //= require jquery_ujs
 //= require cocoon
 //  require turbolinks
+//= require axios
 //= require showdown
 //= require riot
 //= require riot_rails

@@ -1,4 +1,5 @@
 = form_for comment do |f|
   .field
+    = f.hidden_field :video_id, value: comment.video_id
     = f.text_area :content, placeholder: 'Escribe un comentario'
   .actions = f.submit "Enviar", class: 'btn btn-primary'

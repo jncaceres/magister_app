@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   has_many :replies
   has_many :picks, through: :replies
   has_many :questions, through: :answers
+  has_many :comments, inverse_of: :user, dependent: :nullify
   has_and_belongs_to_many :courses
   has_many :user_tree_performances, :dependent => :destroy
 

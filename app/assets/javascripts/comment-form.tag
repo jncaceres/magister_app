@@ -20,16 +20,13 @@
       event.preventDefault(); 
       const data = Object.assign({}, opts, { content: this.refs.content.value });
 
-      $.ajax({
-        url: '/comments',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ comment: data }),
-        success: (payload) => {
-          console.log(payload);
+      axios.post('/comments', { comment: data })
+        .then((payload) => {
           location.reload();
-        }
-      })
-    }
+        })
+        .catch((payload) => {
+          console.log(payload);
+        })
+    };
   </script>
 </comment-form>
