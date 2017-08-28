@@ -11,7 +11,7 @@ class Scorer
       .map { |r| rate(r) }
       .reduce do |agg, r|
         {
-          n:              agg[:n]              + 1,
+          n:              agg[:n].to_i         + 1,
           content:        agg[:content]        + r[:content],
           interpretation: agg[:interpretation] + r[:interpretation],
           analysis:       agg[:analysis]       + r[:analysis],
@@ -24,15 +24,16 @@ class Scorer
   end
 
   def rate reply
-    # TODO: implement    
+    # return {} if reply.attempts.count == 0
+    p, a = reply.picks, reply.attempts
     {
-      content:        0,
-      interpretation: 0,
-      analysis:       0,
-      evaluation:     0,
-      inference:      0,
-      explication:    0,
-      selfregulation: 0
+      content:        p.content.correct.count.to_f / [a.count, 1].max,
+      interpretation: p.of_type("Interpretación").select(&:right).count.to_f / [a.count, 1].max,
+      analysis:       p.of_type("Análisis").select(&:right).count.to_f / [a.count, 1].max,
+      evaluation:     p.of_type("Evaluación").select(&:right).count.to_f / [a.count, 1].max,
+      inference:      p.of_type("Inferencia").select(&:right).count.to_f / [a.count, 1].max,
+      explication:    p.of_type("Explicación").select(&:right).count.to_f / [a.count, 1].max,
+      selfregulation: p.of_type("Autoregulación").select(&:right).count.to_f / [a.count, 1].max,
     }
   end
 end

@@ -1,5 +1,7 @@
 
 class TreesController < ApplicationController
+  include CtHabilitiesHelper
+
   before_action :set_course # , only: [:create, :new]
   before_action :set_tree, only: [:show, :edit, :update, :destroy]
   before_action :set_tree_edx, only: [:edx_view, :set_report_values]
@@ -1327,7 +1329,7 @@ class TreesController < ApplicationController
   # GET /trees
   # GET /trees.json
   def index
-    @trees = Tree.includes(:content).joins(:content).order('contents.text').all
+    @trees = Tree.includes(:content, :course, :video, :replies).joins(:content).where(course_id: params[:course_id]).order('contents.text').all
   end
 
   # GET /trees/1
@@ -1349,21 +1351,24 @@ class TreesController < ApplicationController
 
     @tree.build_initial_ct_question
     4.times { @tree.initial_ct_question.ct_choices.build }
-    6.times { @tree.initial_ct_question.ct_habilities.build }
+    #6.times { @tree.initial_ct_question.ct_habilities.build }
+    build_habilities @tree.initial_ct_question
     
     @tree.build_recuperative_content_question
     4.times { @tree.recuperative_content_question.content_choices.build }
 
     @tree.build_recuperative_ct_question
     4.times { @tree.recuperative_ct_question.ct_choices.build }
-    6.times { @tree.recuperative_ct_question.ct_habilities.build }
+    # 6.times { @tree.recuperative_ct_question.ct_habilities.build }
+    build_habilities @tree.recuperative_ct_question
 
     @tree.build_deeping_content_question
     4.times { @tree.deeping_content_question.content_choices.build }
 
     @tree.build_deeping_ct_question
     4.times { @tree.deeping_ct_question.ct_choices.build }
-    6.times { @tree.deeping_ct_question.ct_habilities.build }
+    # 6.times { @tree.deeping_ct_question.ct_habilities.build }
+    build_habilities @tree.deeping_ct_question
 
     @tree.build_initial_simple_feedback
     @tree.build_initial_complex_feedback

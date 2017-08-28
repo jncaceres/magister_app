@@ -15,4 +15,5 @@
               span.glyphicon.glyphicon-remove-sign
     
     - if type == "ct"
-      = t.association :ct_habilities, as: :check_boxes
+      = t.fields_for :ct_habilities do |ct|
+        = ct.input :active, label: ct.object.name
