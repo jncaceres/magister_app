@@ -14,7 +14,7 @@ module CtHabilitiesHelper
  
 
   def build_habilities question
-    if question.ct_habilities.empty? then
+    unless question.ct_habilities.length > 0 then
       @@habilities.map do |hab|
         question.ct_habilities.build name: hab.first, description: hab.last, active: false
       end

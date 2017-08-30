@@ -16,4 +16,5 @@
     
     - if type == "ct"
       = t.fields_for :ct_habilities do |ct|
+        = ct.hidden_field :name, value: ct.object.name
         = ct.input :active, label: ct.object.name
