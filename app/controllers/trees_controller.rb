@@ -1466,9 +1466,10 @@ class TreesController < ApplicationController
   # PATCH/PUT /trees/1
   # PATCH/PUT /trees/1.json
   def update
-
+    # render json: tree_params and return
     respond_to do |format|
       if @tree.update(tree_params)
+        logger.warn "Tree was updated"
         format.html { redirect_to @course, notice: 'Tree was successfully updated.' }
         format.json { render :show, status: :ok, location: @tree }
       else
@@ -1566,11 +1567,11 @@ class TreesController < ApplicationController
     def tree_params
       params.require(:tree).permit(:video_id, :active, content_attributes: [:id, :text],
         initial_content_question_attributes: [:id, :question, :_destroy, content_choices_attributes: [:id, :text, :right, :content_question_id, :_destroy]],
-        initial_ct_question_attributes: [:id, :question, :_destroy, ct_habilities_attributes: [:id, :name, :description, :active, :ct_question_id, :_destroy, ct_subhabilities_attributes: [:id, :name, :description, :_destroy]], ct_choices_attributes: [:id, :text, :right, :ct_question_id, :_destroy]],
+        initial_ct_question_attributes: [:id, :question, :_destroy, ct_habilities_attributes: [:id, :name, :description, :active, :ct_question_id, :_destroy], ct_choices_attributes: [:id, :text, :right, :ct_question_id, :_destroy]],
         recuperative_content_question_attributes: [:id, :question, :_destroy, content_choices_attributes: [:id, :text, :right, :content_question_id, :_destroy]],
-        recuperative_ct_question_attributes: [:id, :question, :_destroy, ct_habilities_attributes: [:id, :name, :description, :active, :ct_question_id, :_destroy, ct_subhabilities_attributes: [:id, :name, :description, :_destroy]], ct_choices_attributes: [:id, :text, :right, :ct_question_id, :_destroy]],
+        recuperative_ct_question_attributes: [:id, :question, :_destroy, ct_habilities_attributes: [:id, :name, :description, :active, :ct_question_id, :_destroy], ct_choices_attributes: [:id, :text, :right, :ct_question_id, :_destroy]],
         deeping_content_question_attributes: [:id, :question, :_destroy, content_choices_attributes: [:id, :text, :right, :content_question_id, :_destroy]],
-        deeping_ct_question_attributes: [:id, :question, :_destroy, ct_habilities_attributes: [:id, :name, :description, :active, :ct_question_id, :_destroy, ct_subhabilities_attributes: [:id, :name, :description, :_destroy]], ct_choices_attributes: [:id, :text, :right, :ct_question_id, :_destroy]],
+        deeping_ct_question_attributes: [:id, :question, :_destroy, ct_habilities_attributes: [:id, :name, :description, :active, :ct_question_id, :_destroy], ct_choices_attributes: [:id, :text, :right, :ct_question_id, :_destroy]],
         initial_simple_feedback_attributes: [:id, :text, :_destroy],
         initial_complex_feedback_attributes: [:id, :text, :_destroy],
         recuperative_simple_feedback_attributes: [:id, :text, :_destroy],
