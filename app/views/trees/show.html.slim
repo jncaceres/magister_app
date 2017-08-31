@@ -1,0 +1,35 @@
+h1 = @tree.text
+button.btn(class="#{@tree.active ? 'btn-primary' : 'btn-faded'}") = @tree.active ? 'Active' : 'Inactive'
+
+h2 Before
+== markdown (@tree.prev  || "")
+h2 After
+== markdown (@tree.after || "")
+hr
+
+- %w(initial recuperative deeping).each do |stage|
+  h2 = t stage
+
+  .container
+    .col-md-6
+      - question = @tree.send("#{stage}_content_question")
+      h3 Contenido
+      .large
+        == markdown question.question
+      ul
+        - question.content_choices.each do |choice| 
+          li(class="#{choice.right ? 'correct' : 'incorrect'}") = choice.text
+    
+
+    .col-md-6
+      - question = @tree.send("#{stage}_ct_question")
+      h3 Ct
+      - question.ct_habilities.select(&:active).each do |hability|
+        button.btn.btn-faded(style="margin-right: 0.5em;") = hability.name
+      .large
+        == markdown question.question
+      ul
+        - question.ct_choices.each do |choice| 
+          li(class="#{choice.right ? 'correct' : 'incorrect'}") = choice.text
+
+= link_to 'Editar', edit_course_tree_path(@tree.course, @tree), class: 'btn btn-primary'
