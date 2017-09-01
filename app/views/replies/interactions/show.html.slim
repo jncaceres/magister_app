@@ -1,13 +1,16 @@
-h1 Replies::Interactions#show
-p Find me in app/views/replies/interactions/show.html.slim
+h1 Replies::Interactions
 
 table.table
   thead
-    th User
-    th Stage
+    th Usuario
+    th Etapa
+    th Iniciado
+    th Última Interacción
   
   tbody
     - @replies.each do |reply|
       tr
         td = reply.user.full_name
         td = t reply.stage
+        td = l reply.created_at.in_time_zone('America/Santiago'), format: :short
+        td = l reply.updated_at.in_time_zone('America/Santiago'), format: :short

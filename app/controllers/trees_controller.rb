@@ -12,11 +12,11 @@ class TreesController < ApplicationController
 
   @@includes = [:content, :feedbacks,
     { initial_content_question: [:content_choices] },
-    { initial_ct_question: [:ct_choices] },
+    { initial_ct_question: [:ct_choices, :ct_habilities] },
     { recuperative_content_question: [:content_choices] },
-    { recuperative_ct_question: [:ct_choices] },
+    { recuperative_ct_question: [:ct_choices, :ct_habilities] },
     { deeping_content_question: [:content_choices] },
-    { deeping_ct_question: [:ct_choices] }
+    { deeping_ct_question: [:ct_choices, :ct_habilities] }
   ]
 
   def edx_view
@@ -1335,7 +1335,7 @@ class TreesController < ApplicationController
   # GET /trees/1
   # GET /trees/1.json
   def show
-    render json: @tree, include: [:content, :feedbacks, questions: :choices]
+    respond_with @tree
   end
 
   # GET /trees/new
@@ -1411,16 +1411,7 @@ class TreesController < ApplicationController
 
     respond_to do |format|
       if @tree.save
-
-        puts "cooooooooooooooosicossssssssa"
-        @tree.initial_ct_question.ct_habilities.each do |hab|
-          puts hab.name.to_s
-          hab.ct_subhabilities.each do |subhab|
-            puts subhab.name.to_s
-          end
-        end
-        
-        format.html { redirect_to @course, notice: 'Tree was successfully created.' }
+        format.html { redirect_to @tree, notice: 'Tree was successfully created.' }
         format.json { render :show, status: :created, location: @tree }
       else
         format.html { render :new }
@@ -1435,8 +1426,7 @@ class TreesController < ApplicationController
     # render json: tree_params and return
     respond_to do |format|
       if @tree.update(tree_params)
-        logger.warn "Tree was updated"
-        format.html { redirect_to @course, notice: 'Tree was successfully updated.' }
+        format.html { redirect_to @tree, notice: 'Tree was successfully updated.' }
         format.json { render :show, status: :ok, location: @tree }
       else
         format.html { render :edit }
