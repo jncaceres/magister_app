@@ -1,3 +1,60 @@
 // Place all the styles related to the replies controller here.
 // They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+// You can use Sass (SCSS) here: http://sass-lang.com
+$primary-color: #8c9ec9;
+$secondary-color: #5c6b8d;
+
+@font-face {
+  font-family: "Caviar Dreams";
+  src: url(font-path('caviar_dreams/CaviarDreams.ttf')) format("truetype");
+}
+*{
+  font-family: "Caviar Dreams";
+}
+
+.blue_class{
+  padding-top: 60px;
+  nav.navbar{
+    background-color: $primary-color;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid $secondary-color;
+    left: 0;
+    .navbar-header{
+      input.btn.btn-primary{
+        text-decoration: underline;
+      }
+    }
+    .nav_link{
+      color: white;
+      background-color: transparent;
+      border: none;
+      text-decoration: underline;
+    }
+  }
+  .btn{
+    border: none;
+    &.btn-primary{ background: $primary-color; }
+    &.btn-primary:hover{ background: $secondary-color; }
+  }
+}
+
+main{
+  margin-bottom: 30px;
+  .radio{ font-size: 1.2em; }
+  p{ margin-bottom: 20px; }
+  .control-label.radio_buttons.optional{ font-size: 1.3em; }
+  .content-question{ text-align: justify }
+  form{
+    input[type="submit"]{
+      margin: 0 auto;
+      display: block;
+      width: 40%;
+      max-width: 300px;
+      font-size: 1.3em;
+    }
+  }
+}
