@@ -16,7 +16,7 @@ table.table
         td = tree.video.try :name
         td = tree.replies.length
         td = tree.text
-        td = link_to 'Ver', tree
+        td = link_to 'Ver', course_tree_path(tree.course, tree)
         td = link_to 'Editar', edit_course_tree_path(tree.course, tree)
         td = link_to 'Eliminar', tree, method: :delete, data: { confirm: '¿Seguro de eliminar el árbol?' }
 

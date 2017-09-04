@@ -25,6 +25,7 @@
 //= require dyn-report
 //= require comment-form
 //= require question-show
+//= require timer-tag
 
 //= require_tree .
 

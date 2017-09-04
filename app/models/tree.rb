@@ -58,4 +58,5 @@ class Tree < ActiveRecord::Base
   accepts_nested_attributes_for :user_tree_performances, :allow_destroy => true
 
   delegate :text, to: :content
+  delegate :to_s, to: :content
 end
