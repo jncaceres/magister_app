@@ -1,0 +1,26 @@
+- if current_user.role?
+  h1 Evaluación Formativa
+
+  br
+  = link_to 'Agregar evaluación de video', new_course_tree_path(@course), :class=>"btn btn-primary"
+
+  br
+
+  table.table.table-striped
+    thead
+      tr
+        th Evaluaciones de Video
+        th
+        th
+        th
+        th
+    tbody
+      - @trees.each do |tree|
+        tr
+          td = tree.content.text.truncate 50
+          td = link_to 'Vista previa', [@course, tree], class:"btn btn-primary btn-xs"
+          td = link_to 'Despeño de evaluación', tree_performance_path({:course_id => @course.id ,:tree_id => tree.id}), method: :post, class:"btn btn-primary btn-xs"
+          td = link_to 'Ver/Editar', edit_course_tree_path(@course, tree), class:"btn btn-primary btn-xs"
+          td = link_to 'Eliminar', [@course, tree], method: :delete, data: { confirm: '¿Seguro que deseas eliminar el arbol?' },:class=>"btn btn-danger btn-xs"
+
+
