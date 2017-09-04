@@ -5,8 +5,7 @@
     <%= f.input :url %>
     <%= f.input :name %>
     <%= f.input :unit %>
-    <%= f.label :evaluacion_formativa%><br>
-    <%= f.collection_select :tree_id, @course.trees.sort_by{|e| e[:created_at]},:id, :text, include_blank: true %>
+    <%= f.input :tree_id, collection: @trees, label: "Evaluación Formativa", include_blank: true %>
     <%= f.hidden_field :course_id, value: @course.id %>
   </div>
   <br>

@@ -28,12 +28,14 @@ class VideosController < ApplicationController
     @url = course_videos_path
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos", "Agregar Video"]
     @video = Video.new
+    @trees = @course.trees.includes(:content).joins(:content).order('contents.text')
   end
 
   # GET /videos/1/edit
   def edit
     @url = course_video_path
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos", "Editar Video"]
+    @trees = @course.trees.includes(:content).joins(:content).order('contents.text')
   end
 
   # POST /videos

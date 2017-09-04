@@ -1,7 +1,13 @@
 / - @ct.ct_habilities.actives.each do |tag|
 /   span.btn.btn-faded = tag.name
 
-span.btn.btn-faded = @reply.attempts.at_stage(@reply.stage).count
+.container
+  .col-md-4
+    span.btn.btn-faded = @reply.attempts.at_stage(@reply.stage).count
+  .col-md-4
+    timer-tag(title="Actual" start="#{Time.now - @reply.updated_at}")
+  .col-md-4
+    timer-tag(title="Total"  start="#{Time.now - @reply.created_at}")
 
 = simple_form_for @reply, url: send("tree_replies_#{@reply.stage}_path") do |f|
   = simple_fields_for :content_pick, @reply.picks.build do |p|
