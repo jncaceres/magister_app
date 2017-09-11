@@ -14,3 +14,5 @@ table.table
         td = t reply.stage
         td = l reply.created_at.in_time_zone('America/Santiago'), format: :short
         td = l reply.updated_at.in_time_zone('America/Santiago'), format: :short
+
+= link_to 'Volver', eval_form_path(@tree.course), class: 'btn btn-primary'

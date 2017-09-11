@@ -36,3 +36,4 @@ hr
           li(class="#{choice.right ? 'correct' : 'incorrect'}") = choice.text
 
 = link_to 'Editar', edit_course_tree_path(@tree.course, @tree), class: 'btn btn-primary'
+= link_to 'Volver', eval_form_path(@tree.course), class: 'btn'

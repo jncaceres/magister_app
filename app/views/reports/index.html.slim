@@ -1,0 +1,26 @@
+h1
+  | Reportes - 
+  = @course.name
+
+table.table.table-striped
+  thead
+    th Nombre
+    th Evaluaciones
+    th
+    th
+    th
+  
+  tbody
+    - @reports.each do |report|
+      tr
+        td = report.name
+        td
+          ul
+            - report.trees.each do |tree|
+              li = tree.text
+        
+        td = link_to "Ver", [@course, report]
+        td = link_to "Editar", edit_course_report_path(@course, report)
+        td = link_to "Borrar", report, method: :delete, data: { confirm: 'Are you sure?' }
+
+= link_to "Crear reporte", new_course_report_path(@course), class: 'btn btn-primary'

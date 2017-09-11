@@ -108,8 +108,9 @@ class CoursesController < ApplicationController
   end
 
   def reportes
-    @breadcrumbs = ["Mis Cursos", @course.name, "Reportes"]
-    render "reports"
+    # @breadcrumbs = ["Mis Cursos", @course.name, "Reportes"]
+    # render "reports"
+    redirect_to course_reports_path(@course)
   end
 
   def students_report

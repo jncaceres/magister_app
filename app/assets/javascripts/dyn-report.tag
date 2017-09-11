@@ -16,14 +16,14 @@
     <tbody>
       <tr each="{ trees }">
         <td onclick="{ selects(id) }">{ text }</td>
-        <td onclick="{ selects(id) }">{ percent(content_sc) }</td>
-        <td onclick="{ select_filter(id, 'Interpretación') }">{ percent(interpretation_sc) }</td>
-        <td onclick="{ select_filter(id, 'Análisis') }">{ percent(analysis_sc) }</td>
-        <td onclick="{ select_filter(id, 'Evaluación') }">{ percent(evaluation_sc) }</td>
-        <td onclick="{ select_filter(id, 'Inferencia') }">{ percent(inference_sc) }</td>
-        <td onclick="{ select_filter(id, 'Explicación') }">{ percent(explanation_sc) }</td>
-        <td onclick="{ select_filter(id, 'Autoregulación') }">{ percent(selfregulation_sc) }</td>
-        <td>{ total }</td>
+        <td onclick="{ selects(id) }">{ percent(score.content) }</td>
+        <td onclick="{ select_filter(id, 'Interpretación') }">{ percent(score.interpretation) }</td>
+        <td onclick="{ select_filter(id, 'Análisis') }">{ percent(score.analysis) }</td>
+        <td onclick="{ select_filter(id, 'Evaluación') }">{ percent(score.evaluation) }</td>
+        <td onclick="{ select_filter(id, 'Inferencia') }">{ percent(score.inference) }</td>
+        <td onclick="{ select_filter(id, 'Explicación') }">{ percent(score.explanation) }</td>
+        <td onclick="{ select_filter(id, 'Autoregulación') }">{ percent(score.selfregulation) }</td>
+        <td>{ score.n }</td>
       </tr>
 
       <tr>
@@ -107,7 +107,7 @@
     this.title = "Report";
     this.percent = (value) => {
       if (value)
-        return Math.round(value * 100) + "%";
+        return Math.round(value) + "%";
       else
         return "--";
     }
@@ -117,7 +117,7 @@
         return elems.reduce(((x, y) => x + y), null) / elems.length;
       };
 
-      return ['content_sc', 'interpretation_sc', 'analysis_sc', 'evaluation_sc', 'inference_sc', 'explication_sc', 'selfregulation_sc'].map(   (elem) => {
+      return ['content', 'interpretation', 'analysis', 'evaluation', 'inference', 'explication', 'selfregulation'].map(   (elem) => {
           return { avg: avg(elem) };
         });
     }
@@ -135,7 +135,7 @@
     this.selects = (id) => {
       return () => {
         $.ajax({
-          url: "/courses/1/trees/" + id + ".json",
+          url: "/courses/" + course_id + "/trees/" + id + ".json",
           success: (payload) => {
             this.update({ detail: payload.tree });
           }
@@ -146,9 +146,10 @@
     this.select_filter = (id, skill) => {
       return () => {
         $.ajax({
-          url: "/courses/1/trees/" + id + ".json",
+          url: "/courses/" + course_id + "trees/" + id + ".json",
           success: (payload) => {
-            var filtered = payload.tree.questions.filter((question) => question.skills.indexOf(skill) > -1);  // ugly as hell
+            console.log(payload);
+            var filtered = payload.tree.ct_questions.filter((question) => question.skills.indexOf(skill) > -1);  // ugly as hell
             var tree     = Object.assign({}, payload.tree, { questions: filtered });
 
             this.update({ detail: tree });

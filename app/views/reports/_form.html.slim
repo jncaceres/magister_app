@@ -1,0 +1,5 @@
+= simple_form_for [@course, @report] do |f|
+  = f.input :name
+  = f.association :trees, collection: @trees, as: :check_boxes
+
+  = f.submit "Guardar", class: 'btn btn-primary'

@@ -1335,7 +1335,7 @@ class TreesController < ApplicationController
   # GET /trees/1
   # GET /trees/1.json
   def show
-    respond_with @tree
+    respond_with [@tree.course, @tree]
   end
 
   # GET /trees/new
@@ -1426,7 +1426,7 @@ class TreesController < ApplicationController
     # render json: tree_params and return
     respond_to do |format|
       if @tree.update(tree_params)
-        format.html { redirect_to @tree, notice: 'Tree was successfully updated.' }
+        format.html { redirect_to [@tree.course, @tree], notice: 'Tree was successfully updated.' }
         format.json { render :show, status: :ok, location: @tree }
       else
         format.html { render :edit }

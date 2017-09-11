@@ -59,4 +59,8 @@ class Tree < ActiveRecord::Base
 
   delegate :text, to: :content
   delegate :to_s, to: :content
+
+  def score
+    Scorer.new(self).call
+  end
 end

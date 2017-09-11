@@ -1,3 +1,3 @@
 class ContentChoiceSerializer < ActiveModel::Serializer
-  attributes :id, :text, :right, :total
+  attributes :id, :text, :right
 end

@@ -1,2 +1,0 @@
-json.extract! report, :id, :course_id, :interpretation_sc, :analysis_sc, :evaluation_sc, :inference_sc, :explanation_sc, :selfregulation_sc, :created_at, :updated_at
-json.url report_url(report, format: :json)
