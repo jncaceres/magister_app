@@ -146,10 +146,9 @@
     this.select_filter = (id, skill) => {
       return () => {
         $.ajax({
-          url: "/courses/" + course_id + "trees/" + id + ".json",
+          url: "/courses/" + course_id + "/trees/" + id + ".json",
           success: (payload) => {
-            console.log(payload);
-            var filtered = payload.tree.ct_questions.filter((question) => question.skills.indexOf(skill) > -1);  // ugly as hell
+            var filtered = payload.tree.questions.filter((question) => question.skills.indexOf(skill) > -1);  // ugly as hell
             var tree     = Object.assign({}, payload.tree, { questions: filtered });
 
             this.update({ detail: tree });

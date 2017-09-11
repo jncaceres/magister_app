@@ -1335,7 +1335,7 @@ class TreesController < ApplicationController
   # GET /trees/1
   # GET /trees/1.json
   def show
-    respond_with [@tree.course, @tree]
+    respond_with @tree, include: '**'
   end
 
   # GET /trees/new

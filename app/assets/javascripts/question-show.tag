@@ -1,15 +1,17 @@
 <question-show>
-  <h3 class="title"><strong>{ type }</strong> <span ref="question"></span> <small class="tag">{ skills.join() }</small></h3>
+  <h4 class="title"><strong>{ type }</strong> <span ref="question"></span> <small class="tag">{ skills.join() }</small></h4>
 
-  <ol>
-    <li each="{ content.choices }" class="{ correct: right }">{ text } { total }</li>
-  </ol>
+  <div each="{ content.choices }" class="container { correct: right }">
+    <div class="col-md-6">{ text }</div>
+    <div class="col-md-6">{ n }</div>
+  </div>
 
-  <h4>{ ct.question }</h4>
+  <h5>{ ct.question }</h5>
 
-  <ul>
-    <li each="{ ct.choices }" class="{ correct: right }">{ text } { total }</li>
-  </ul>
+  <div each="{ ct.choices }" class="container { correct: right }">
+    <div class="col-md-6">{ text }</div>
+    <div class="col-md-6">{ n }</div>
+  </div>
 
   <script>
     this.on('mount', () => {

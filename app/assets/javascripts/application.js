@@ -29,7 +29,7 @@
 
 //= require_tree .
 
-window.md_converter = new showdown.Converter();
+window.md_converter = new showdown.Converter({ simplifiedAutoLink: true });
 
 $(function() {
   $('#pictureInput_1').on('change', function(event) {
