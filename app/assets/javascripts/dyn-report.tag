@@ -35,6 +35,7 @@
 
   <hr>
 
+  <h3>{ tree_title }</h3>
   <question-show each="{ detail.questions }" data="{ this }"></question-show>
   
   <style>
@@ -105,6 +106,7 @@
     this.detail = [];
     this.averages = [];
     this.title = "Report";
+    this.tree_title = "";
     this.percent = (value) => {
       if (value)
         return Math.round(value) + "%";
@@ -113,13 +115,13 @@
     }
     this.average = (list) => {
       const avg = (elem) => {
-        var elems = list.map((t) => t[elem]).filter((x) => x);
+        var elems = list.map((t) => t.score[elem]).filter((x) => x);
         return elems.reduce(((x, y) => x + y), null) / elems.length;
       };
 
-      return ['content', 'interpretation', 'analysis', 'evaluation', 'inference', 'explication', 'selfregulation'].map(   (elem) => {
-          return { avg: avg(elem) };
-        });
+      return ['content', 'interpretation', 'analysis', 'evaluation', 'inference', 'explication', 'selfregulation'].map((elem) => {
+        return { avg: avg(elem) };
+      });
     }
     this.trees = [];
     this.on('mount', () => {
@@ -137,7 +139,7 @@
         $.ajax({
           url: "/courses/" + course_id + "/trees/" + id + ".json",
           success: (payload) => {
-            this.update({ detail: payload.tree });
+            this.update({ detail: payload.tree, tree_title: payload.tree.text });
           }
         })
       };
@@ -151,7 +153,7 @@
             var filtered = payload.tree.questions.filter((question) => question.skills.indexOf(skill) > -1);  // ugly as hell
             var tree     = Object.assign({}, payload.tree, { questions: filtered });
 
-            this.update({ detail: tree });
+            this.update({ detail: tree, tree_title: tree.text });
           }
         })
       };
