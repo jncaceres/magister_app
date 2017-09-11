@@ -1411,7 +1411,7 @@ class TreesController < ApplicationController
 
     respond_to do |format|
       if @tree.save
-        format.html { redirect_to @tree, notice: 'Tree was successfully created.' }
+        format.html { redirect_to [@course, @tree], notice: 'Tree was successfully created.' }
         format.json { render :show, status: :created, location: @tree }
       else
         format.html { render :new }

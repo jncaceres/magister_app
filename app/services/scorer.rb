@@ -5,11 +5,24 @@ class Scorer
     @tree = tree
   end
 
+  def base
+    {
+      n:              0,
+      content:        0,
+      interpretation: 0,
+      analysis:       0,
+      evaluation:     0,
+      inference:      0,
+      explication:    0,
+      selfregulation: 0
+    }
+  end
+
   def call
     @tree
       .replies
       .map { |r| rate(r) }
-      .reduce do |agg, r|
+      .reduce(base) do |agg, r|
         {
           n:              agg[:n]              + 1,
           content:        agg[:content]        + r[:content],
