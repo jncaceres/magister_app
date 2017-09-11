@@ -4,7 +4,7 @@ button.btn(class="#{@tree.active ? 'btn-primary' : 'btn-faded'}") = @tree.active
 p
   button.btn.btn-default = link_to "Interacciones", tree_replies_interactions_path(@tree)
 
-h2 Before
+h2 Previous
 == markdown (@tree.prev  || "")
 h2 After
 == markdown (@tree.after || "")

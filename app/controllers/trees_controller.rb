@@ -1521,7 +1521,7 @@ class TreesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tree_params
-      params.require(:tree).permit(:video_id, :active, content_attributes: [:id, :text],
+      params.require(:tree).permit(:video_id, :active, :prev, :after, content_attributes: [:id, :text],
         initial_content_question_attributes: [:id, :question, :_destroy, content_choices_attributes: [:id, :text, :right, :content_question_id, :_destroy]],
         initial_ct_question_attributes: [:id, :question, :_destroy, ct_habilities_attributes: [:id, :name, :description, :active, :ct_question_id, :_destroy], ct_choices_attributes: [:id, :text, :right, :ct_question_id, :_destroy]],
         recuperative_content_question_attributes: [:id, :question, :_destroy, content_choices_attributes: [:id, :text, :right, :content_question_id, :_destroy]],
