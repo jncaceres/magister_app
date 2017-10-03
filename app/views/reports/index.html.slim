@@ -2,6 +2,8 @@ h1
   | Reportes - 
   = @course.name
 
+= link_to "Crear reporte", new_course_report_path(@course), class: 'btn btn-primary'
+
 table.table.table-striped
   thead
     th Nombre
@@ -22,5 +24,3 @@ table.table.table-striped
         td = link_to "Ver", [@course, report]
         td = link_to "Editar", edit_course_report_path(@course, report)
         td = link_to "Borrar", report, method: :delete, data: { confirm: 'Are you sure?' }
-
-= link_to "Crear reporte", new_course_report_path(@course), class: 'btn btn-primary'

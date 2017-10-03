@@ -28,18 +28,18 @@ class Replies::BaseController < ApplicationController
         @reply.send(on_success(@reply.stage) + "!")
 
         redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
-      elsif @reply.attempts.send(@reply.stage).count < 3 # { OK, Error } -> simple feedback
+      elsif @reply.attempts.send(@reply.stage).count < 2 # { OK, Error } -> simple feedback
         logger.warn "#{@reply.stage} giving feedback on error"
         @feedback = @tree.send("#{@reply.stage}_simple_feedback")
 
         render 'show'
-      else # >3 errors -> redirect
+      else # >2 errors -> redirect
         logger.warn "#{@reply.stage} redirects to #{on_error @reply.stage}"
         @reply.send(on_error(@reply.stage) + "!")
 
         redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
       end
-    elsif @reply.attempts.send(@reply.stage).count < 3 # { Error, any } -> complex feedback
+    elsif @reply.attempts.send(@reply.stage).count < 2 # { Error, any } -> complex feedback
       logger.warn "#{@reply.stage} giving complex feedback on error"
       @feedback = @tree.deeping_complex_feedback
 

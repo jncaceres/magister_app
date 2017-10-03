@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :signin_edx
   before_action :set_videos_visible, only: [:index, :show]
+  before_action :set_visible_for_admins
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:email, :password,
@@ -55,4 +56,14 @@ class ApplicationController < ActionController::Base
     @videos_visible = true
   end
 
+  def set_visible_for_admins
+    unless current_user.alumno? then
+      @miscursos_visible       = true
+      @videos_visible          = true
+      @ef_visible              = true
+      @reporte_visible         = true
+      @actividades_visible     = true
+      @Configuraciones_visible = true
+    end
+  end
 end
