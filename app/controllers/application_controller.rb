@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_visible_for_admins
-    unless current_user.alumno? then
+    unless current_user.try :alumno? then
       @miscursos_visible       = true
       @videos_visible          = true
       @ef_visible              = true
