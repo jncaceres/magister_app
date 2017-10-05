@@ -21,6 +21,6 @@ table.table.table-striped
             - report.trees.each do |tree|
               li = tree.text
         
-        td = link_to "Ver", [@course, report]
-        td = link_to "Editar", edit_course_report_path(@course, report)
+        td = link_to "Ver", [report.course, report]
+        td = link_to "Editar", edit_course_report_path(report.course, report)
         td = link_to "Borrar", report, method: :delete, data: { confirm: 'Are you sure?' }
