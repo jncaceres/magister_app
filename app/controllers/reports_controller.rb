@@ -13,7 +13,7 @@ class ReportsController < ApplicationController
 
   def new
     @report  = @course.reports.build
-    @trees   = @course.trees
+    @trees   = @course.trees.includes(:content)
   end
 
   def create
@@ -32,7 +32,7 @@ class ReportsController < ApplicationController
   end
 
   def edit
-    @trees   = @course.trees
+    @trees   = @course.trees.includes(:content)
   end
 
   def update
