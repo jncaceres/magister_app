@@ -5,6 +5,8 @@ class Comment < ActiveRecord::Base
 
   has_many :children, class_name: "Comment", foreign_key: :parent_id, inverse_of: :parent
 
+  scope :parentless, -> { where(parent_id: nil) }
+
   validates :video,
     presence: true
 end

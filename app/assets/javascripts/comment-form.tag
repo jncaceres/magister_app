@@ -2,8 +2,8 @@
   <a href="#" if="{ !active }" onclick="{ activate }">Responder</a>
   <form onsubmit="{ send_data }" if="{ active }">
     <div class="form-group">
-      <textarea ref="content" placeholder="Escribe tu comentario" rows="1" cols="40" onclick="{ expand }" onblur="{ collapse }"></textarea>
-      <input type="submit" class="btn btn-primary" value="Enviar">
+      <textarea class="form-control" ref="content" placeholder="Escribe tu respuesta" rows="1" cols="40" onclick="{ expand }" onblur="{ collapse }"></textarea>
+      <input type="submit" class="btn btn-primary force-left" value="Enviar">
     </div>
   </form>
   

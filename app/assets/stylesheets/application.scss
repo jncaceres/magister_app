@@ -189,7 +189,8 @@
 }
 
 .comment {
-  border-bottom: 1px solid #ccc;
+  background: #fafafa;
+  border-radius: 0.5em;
   padding: 0.5em;
   margin-bottom: 0.5em;
 }
@@ -211,3 +212,4 @@
 .incorrect {
   color: darkred;
 }
+

@@ -15,7 +15,8 @@ p#notice = notice
 
 .container
   = render 'comments/form', comment: Comment.new(video_id: @video.id)
-  - @video.comments.each do |comment|
+  br
+  - @video.comments.parentless.each do |comment|
     = render comment
     .subcomment
       - comment.children.each do |subcomment|
