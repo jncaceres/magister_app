@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :signin_edx
   before_action :set_videos_visible, only: [:index, :show]
   before_action :set_visible_for_admins
+  before_action :check_for_bogus_current_course
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) {|u| u.permit(:email, :password,
@@ -64,6 +65,12 @@ class ApplicationController < ActionController::Base
       @reporte_visible         = true
       @actividades_visible     = true
       @Configuraciones_visible = true
+    end
+  end
+
+  def check_for_bogus_current_course
+    if params[:course_id] == '11111' or params[:id] == '11111'
+      redirect_to users_path
     end
   end
 end

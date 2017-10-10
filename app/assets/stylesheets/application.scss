@@ -19,7 +19,9 @@
  @import 'jquery.fileupload';
  @import 'jquery.fileupload-ui';
 
-
+.navbar {
+    z-index: 100 !important;
+}
 
 .blue_class {
   .navbar{
@@ -213,3 +215,7 @@
   color: darkred;
 }
 
+.buttonify {
+  float: right;
+  margin: 20px 0;
+}

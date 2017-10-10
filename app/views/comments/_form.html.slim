@@ -3,4 +3,4 @@
     = f.hidden_field :user_id,  value: current_user.try(:id)
     = f.hidden_field :video_id, value: comment.video_id
     = f.text_area :content, placeholder: 'Escribe un comentario', class: 'form-control'
-  .actions.force-left = f.submit "Enviar", class: 'btn btn-primary'
+  .actions = f.submit "Enviar", class: 'btn btn-primary buttonify'

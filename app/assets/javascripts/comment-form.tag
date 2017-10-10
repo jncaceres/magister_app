@@ -3,7 +3,7 @@
   <form onsubmit="{ send_data }" if="{ active }">
     <div class="form-group">
       <textarea class="form-control" ref="content" placeholder="Escribe tu respuesta" rows="1" cols="40" onclick="{ expand }" onblur="{ collapse }"></textarea>
-      <input type="submit" class="btn btn-primary force-left" value="Enviar">
+      <input type="submit" class="btn btn-primary buttonify" value="Enviar">
     </div>
   </form>
   

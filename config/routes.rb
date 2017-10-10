@@ -78,6 +78,10 @@ Rails.application.routes.draw do
   post 'homework/:id/asistencia',to:'homeworks#asistencia'
   post 'homework/:id/edit',to:'homeworks#edit'
   get 'homework/:id/edit',to:'homeworks#edit'
+
+  post 'homework/:id/favorite', to: 'homeworks#favorite', as: :favorite_homework
+  delete 'homework/:id/favorite', to: 'homeworks#favorite'
+  
   resources :courses do
     resources :reports
     resources :users do
