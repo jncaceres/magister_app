@@ -4,6 +4,7 @@ class HomeController < ApplicationController
   respond_to :html, :json
   def home
     if user_signed_in?
+      current_user.update(current_course_id: nil)
       redirect_to users_path
     end
   end

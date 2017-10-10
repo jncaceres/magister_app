@@ -1,0 +1,27 @@
+
+h2
+  | Bienvenido,
+  = current_user.full_name
+p
+  | Correo:
+  = current_user.email
+
+.row
+  .col-md-2
+    - if current_user.profesor?
+      p = link_to 'Crear Curso', new_course_path, :class=>"btn btn-primary"
+  .col-md-2
+    p = link_to 'Agregar Curso', new_course_path, :class=>"btn btn-primary"
+
+br
+
+- @courses.sort_by{|e| e[:name]}.each do |course|
+  .row-md-6
+    .col-md-3.col-md-4
+      .thumbnail(style="height:200px; width:350px")
+        .caption
+          h3 = course.name
+        p
+          strong Código: &nbsp;
+          = course.course_code
+        p = link_to 'Ingresar', course_path(course, "Ingresar"), :class=>"btn btn-primary"
