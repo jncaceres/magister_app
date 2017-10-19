@@ -23,7 +23,7 @@
               <td><%= homework.content%></td>
             <% end -%>
 
-            <td><%= button_to "Comenzar Actividad", homework_path(homework), class:"btn btn-primary btn-xs", style:'color:white'%></td>
+            <td><%= link_to "Comenzar Actividad", homework_path(homework), method: :post, class:"btn btn-primary btn-xs", style:'color:white'%></td>
             <td><%= link_to "Ver/Editar", edit_homework_path(homework), class:"btn btn-primary btn-xs", style:'color:white'%></td>
             <td><%= link_to 'Ver Respuestas', full_answers_path(homework),:class=>"btn btn-primary btn-xs", :style=>'color:white'%></td>
             <td><%= link_to 'Eliminar', homework,:class=>"btn btn-danger btn-xs", :style=>'color:white', method: :delete, data: { confirm: '¿Estás seguro que desesas eliminar la actividad?' } %></td>

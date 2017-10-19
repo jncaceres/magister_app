@@ -55,6 +55,7 @@ Rails.application.routes.draw do
   post 'homeworks/:id/answers/:id/generate_pdf', to:"answers#generate_pdf", as:"generate_pdf"
 
   post 'courses/new' => 'courses#agregate'
+  post 'courses/:id/archive' => 'courses#archive', as: :archive_course
   post 'courses/:id/edit' => 'courses#edit'
   patch 'courses/:id/edit'=> 'courses#edit'
   get 'courses/:id/users'=> 'courses#students'

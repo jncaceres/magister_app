@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170821051445) do
+ActiveRecord::Schema.define(version: 20171019043300) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,8 +26,8 @@ ActiveRecord::Schema.define(version: 20170821051445) do
     t.text     "rehacer"
     t.text     "evaluar"
     t.text     "integrar"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.string   "image_responder_1_file_name"
     t.string   "image_responder_1_content_type"
     t.integer  "image_responder_1_file_size"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20170821051445) do
     t.string   "image_integrar_2_content_type"
     t.integer  "image_integrar_2_file_size"
     t.datetime "image_integrar_2_updated_at"
+    t.boolean  "favorite",                        default: false
   end
 
   add_index "answers", ["user_id", "homework_id"], name: "index_answers_on_user_id_and_homework_id", using: :btree
@@ -134,6 +135,7 @@ ActiveRecord::Schema.define(version: 20170821051445) do
   create_table "courses_users", id: false, force: :cascade do |t|
     t.integer "course_id"
     t.integer "user_id"
+    t.boolean "archived"
   end
 
   add_index "courses_users", ["course_id", "user_id"], name: "index_courses_users_on_course_id_and_user_id", using: :btree

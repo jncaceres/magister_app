@@ -32,8 +32,6 @@ class User < ActiveRecord::Base
     self.role ||= :alumno
   end
 
-
-
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
   has_and_belongs_to_many :activities
@@ -42,7 +40,9 @@ class User < ActiveRecord::Base
   has_many :picks, through: :replies
   has_many :questions, through: :answers
   has_many :comments, inverse_of: :user, dependent: :nullify
-  has_and_belongs_to_many :courses
+  # has_and_belongs_to_many :courses
+  has_many :course_users, -> { where(archived: false) }
+  has_many :courses, through: :course_users
   has_many :user_tree_performances, :dependent => :destroy
 
   def full_name

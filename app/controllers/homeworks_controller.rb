@@ -302,6 +302,13 @@ class HomeworksController < ApplicationController
     render 'full-answers'
   end
 
+  def favorite
+    @homework = Homework.find params[:id]
+    @homework.update(favorite: (params[:_method] == 'create'))
+
+    redirect_to homework_path(@homework)
+  end
+
   private
     def set_homework
       @homework = Homework.includes(:answers).find(params[:id])

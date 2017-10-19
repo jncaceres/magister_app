@@ -24,4 +24,7 @@ br
         p
           strong Código: &nbsp;
           = course.course_code
-        p = link_to 'Ingresar', course_path(course, "Ingresar"), :class=>"btn btn-primary"
+        
+        .row-md-6
+          .col-md-6 = link_to 'Ingresar', course_path(course, "Ingresar"), class: 'btn btn-primary'
+          .col-md-6 = link_to 'Archivar', archive_course_path(course, 'Archivar'), method: :post, class: 'btn btn-primary'
