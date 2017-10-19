@@ -38,6 +38,7 @@ class Scorer
 
   def rate reply
     p, a = reply.picks, reply.attempts
+
     {
       n:              1,
       content:        p.content.correct.count.to_f / [a.count, 1].max,

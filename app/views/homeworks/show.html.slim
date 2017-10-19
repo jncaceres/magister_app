@@ -12,10 +12,14 @@ h3(align='justify') Pregunta
 = simple_format @homework.content, { style:"font-size:20px; line-height:1.5", align:"justify" }
 
 = form_tag controller: 'homeworks', action: 'change_phase', method: :post do
-  - if @homework.actual_phase == 'responder'
-    = link_to 'Volver a Actividades', homeworks_path('volver'), class: 'btn btn-primary'
-  - else
-    = submit_tag "Etapa Anterior", name: 'previous', class: "btn btn-primary"
+  .row
+    .col-md-6
+      - if @homework.actual_phase == 'responder'
+        = link_to 'Volver a Actividades', homeworks_path('volver'), class: 'btn btn-primary'
+      - else
+        = submit_tag "Etapa Anterior", name: 'previous', class: "btn btn-primary"
+    .col-md-6
+      = button_to "Cerrar Actividad", homeworks_path, :class => "btn btn-primary", :style => "background-color: #822;", method: :get
   
   .column
     .col-sm-70.col-md-5(style="align:center")
