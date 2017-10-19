@@ -1,0 +1,16 @@
+h1 Cursos archivados
+
+table.table.table-striped
+  thead
+    th Nombre
+    th Código
+    th Fecha de creación
+    th
+  
+  tbody
+    - @courses.each do |course|
+      tr
+        td = course.name
+        td = course.course_code
+        td = l course.created_at, format: :short
+        td = link_to 'Desarchivar', archive_course_path(course), method: :delete, class: 'btn btn-primary'

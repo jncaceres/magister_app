@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :comments
   root 'home#home'
   get 'test' => 'home#test'
+  get 'courses/archived' => 'courses#archived', as: :archived_courses
 
   resources :registers
   resources :home
@@ -56,6 +57,7 @@ Rails.application.routes.draw do
 
   post 'courses/new' => 'courses#agregate'
   post 'courses/:id/archive' => 'courses#archive', as: :archive_course
+  delete 'courses/:id/archive' => 'courses#archive'
   post 'courses/:id/edit' => 'courses#edit'
   patch 'courses/:id/edit'=> 'courses#edit'
   get 'courses/:id/users'=> 'courses#students'

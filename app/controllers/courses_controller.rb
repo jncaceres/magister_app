@@ -16,6 +16,10 @@ class CoursesController < ApplicationController
     @courses = Course.all
   end
 
+  def archived
+    @courses = Course.where(id: CourseUser.where(user_id: current_user.id, archived: true).pluck(:course_id))
+  end
+
   def show
     @breadcrumbs = ["Mis Cursos", @course.name]
     @courses = Course.all
@@ -109,10 +113,10 @@ class CoursesController < ApplicationController
   end
 
   def archive
-    current_user
-      .course_users
+    CourseUser
+      .where(user_id: current_user.id)
       .where(course_id: @course.id)
-      .update_all(archived: true)
+      .update_all(archived: params[:_method] == "post")
 
     redirect_to root_path
   end
