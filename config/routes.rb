@@ -90,6 +90,8 @@ Rails.application.routes.draw do
   get 'homeworks/:id/studentanswer', to:"homeworks#answers", as: "studentanswer"
 
   get 'homeworks/:id/full-answer', to:"homeworks#full_answers", as: "full_answers"
+  post 'answers/favorite', to: 'answers#favorite', as: :favorite_answer
+  delete 'answers/favorite', to: 'answers#favorite'
 
   post  'homeworks/:id' => 'homeworks#change_phase'
   resources :homeworks do
