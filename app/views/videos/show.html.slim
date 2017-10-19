@@ -12,6 +12,8 @@ p#notice = notice
 
   - if @video.tree_id? and @video.tree.active
     = link_to 'Evaluación Formativa', tree_replies_prev_path(@video.tree), class: 'btn btn-success'
+    br
+    hr
 
 .container
   = render 'comments/form', comment: Comment.new(video_id: @video.id)
