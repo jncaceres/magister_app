@@ -1,7 +1,7 @@
 class CoursesController < ApplicationController
 
 
-  before_action :set_course, only: [:asistencia, :students, :show, :edit, :update, :destroy, :eval_form, :reportes, :students_report, :st_report]
+  before_action :set_course, only: [:asistencia, :students, :show, :edit, :update, :destroy, :archive, :eval_form, :reportes, :students_report, :st_report]
   before_action :set_miscursos_visible, only: [:show, :edit, :new, :eval_form, :reportes, :students_report, :st_report]
   before_action :set_ef_visible, only: [:show, :edit, :eval_form, :reportes]
   before_action :set_reporte_visible, only: [:show, :edit, :eval_form, :reportes, :students_report, :st_report]
@@ -106,6 +106,15 @@ class CoursesController < ApplicationController
 
     current_user.courses << @course
     current_user.save
+  end
+
+  def archive
+    current_user
+      .course_users
+      .where(course_id: @course.id)
+      .update_all(archived: true)
+
+    redirect_to root_path
   end
 
   def eval_form

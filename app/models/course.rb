@@ -1,5 +1,6 @@
 class Course < ActiveRecord::Base
-  has_and_belongs_to_many :users
+  has_many :course_users, inverse_of: :course
+  has_many :users, through: :course_users
   has_many :homeworks
   has_many :trees
   has_many :user_tree_performances, through: :trees

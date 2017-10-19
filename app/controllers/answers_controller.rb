@@ -112,6 +112,13 @@ class AnswersController < ApplicationController
     end
   end
 
+  def favorite
+    @answer = Answer.find_by homework_id: params[:homework_id], user_id: params[:user_id]
+    @answer.update(favorite: params[:favorite])
+
+    redirect_to studentanswer_path(params[:homework_id], homework_id: params[:homework_id], user_id: params[:user_id])
+  end
+
   def destroy
     @answer.destroy
     respond_to do |format|
