@@ -3,18 +3,16 @@
     label Pregunta #{t stage} de #{t type}
     = t.input :question, required: true, label: false
 
-    = t.simple_fields_for "#{type}_choices" do |c|
-      .nested-fields
-        .input-group
-          .input-group-addon
-            = c.check_box :right, class: 'inline'
-          = c.input :text, class: 'form-control', required: true, label: false
-          
-          .input-group-btn
-            = link_to_remove_association f, class: 'btn' do
-              span.glyphicon.glyphicon-remove-sign
+    .options
+      = t.simple_fields_for "#{type}_choices" do |c|
+        = render "#{type}_choice_fields", f: c
+
+      = link_to_add_association t, "#{type}_choices", class: 'btn' do
+        span.glyphicon.glyphicon-plus
     
     - if type == "ct"
-      = t.fields_for :ct_habilities do |ct|
-        = ct.hidden_field :name, value: ct.object.name
-        = ct.input :active, label: ct.object.name
+      .row
+        = t.fields_for :ct_habilities do |ct|
+          .col-md-4
+            = ct.hidden_field :name, value: ct.object.name
+            = ct.input :active, label: ct.object.name
