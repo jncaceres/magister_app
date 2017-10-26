@@ -23,5 +23,5 @@ div(onload="JavaScript:timedRefresh(30000);")
             td = user.last_name
             td = user.first_name
             td = bool_tag did_answer(answer, @homework.actual_phase) ? 'check' : 'cross'
-            td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary"}
+            td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"}
             td = fav_tag answer.favorite

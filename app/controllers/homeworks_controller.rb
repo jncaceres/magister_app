@@ -54,10 +54,10 @@ class HomeworksController < ApplicationController
   end
 
   def close_activity
-    @homework
-      .course
-      .users
-      .update_all(partner_id: nil, corrector: nil, corregido: nil)
+    # @homework
+    #   .course
+    #   .users
+    #   .update_all(partner_id: nil, corrector: nil, corregido: nil)
     
     redirect_to homeworks_path
   end
