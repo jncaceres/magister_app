@@ -19,7 +19,7 @@ class Scorer
   end
 
   def call
-    @tree
+    temp = @tree
       .replies
       .map { |r| rate(r) }
       .reduce(base) do |agg, r|
@@ -34,6 +34,17 @@ class Scorer
           selfregulation: agg[:selfregulation] + r[:selfregulation]
         }
       end
+    
+    n = temp[:n]
+    {
+      n:              n,
+      content:        temp[:content]        / n,
+      interpretation: temp[:interpretation] / n,
+      evaluation:     temp[:evaluation]     / n,
+      inference:      temp[:inference]      / n,
+      explication:    temp[:explication]    / n,
+      selfregulation: temp[:selfregulation] / n,
+    }
   end
 
   def rate reply

@@ -6,6 +6,7 @@
       <input type="submit" class="btn btn-primary buttonify" value="Enviar">
     </div>
   </form>
+  <br>
   
   <script>
     this.active = false;

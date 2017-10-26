@@ -109,7 +109,7 @@
     this.tree_title = "";
     this.percent = (value) => {
       if (value)
-        return Math.round(value) + "%";
+        return Math.round(value * 100) + "%";
       else
         return "--";
     }
