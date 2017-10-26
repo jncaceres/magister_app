@@ -1,5 +1,5 @@
 class HomeworksController < ApplicationController
-  before_action :set_homework, only: [:show, :edit, :update, :destroy, :change_phase, :asistencia, :full_answers]
+  before_action :set_homework, only: [:show, :edit, :update, :close_activity, :destroy, :change_phase, :asistencia, :full_answers]
   before_action :set_course
   before_action :set_unavailable
   skip_before_action :set_unavailable, only: [:show, :change_phase, :answers]
@@ -51,6 +51,15 @@ class HomeworksController < ApplicationController
         end
       end
     end
+  end
+
+  def close_activity
+    @homework
+      .course
+      .users
+      .update_all(partner_id: nil, corrector: nil, corregido: nil)
+    
+    redirect_to homeworks_path
   end
 
   def change_phase

@@ -81,6 +81,7 @@ Rails.application.routes.draw do
   post 'homework/:id/asistencia',to:'homeworks#asistencia'
   post 'homework/:id/edit',to:'homeworks#edit'
   get 'homework/:id/edit',to:'homeworks#edit'
+  get 'homework/:id/close', to: 'homeworks#close_activity', as: :close_homework
 
   post 'homework/:id/favorite', to: 'homeworks#favorite', as: :favorite_homework
   delete 'homework/:id/favorite', to: 'homeworks#favorite'
