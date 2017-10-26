@@ -19,7 +19,7 @@ h3(align='justify') Pregunta
       - else
         = submit_tag "Etapa Anterior", name: 'previous', class: "btn btn-primary"
     .col-md-6
-      = link_to "Cerrar Actividad", close_homework_path(@homework), :class => "btn btn-primary", :style => "background-color: #822;", method: :get
+      = link_to "Cerrar Actividad", close_homework_path(@homework), class: "btn btn-primary", style: "background-color: #822;", method: :get, data: { confirm: "¿Está seguro de cerrar la actividad?" }
   
   .column
     .col-sm-70.col-md-5(style="align:center")
