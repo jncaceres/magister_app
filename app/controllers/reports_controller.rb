@@ -1,6 +1,6 @@
 class ReportsController < ApplicationController
   before_action :set_course
-  before_action :set_report, only: [:show, :edit, :update]
+  before_action :set_report, only: [:show, :edit, :update, :destroy]
   before_action :set_breadcrumbs
 
   respond_to :html, :json
@@ -39,6 +39,12 @@ class ReportsController < ApplicationController
     @report.update report_params
 
     respond_with [@course, @report]
+  end
+
+  def destroy
+    @report.destroy
+
+    redirect_to course_reports_path(@report.course)
   end
 
   private
