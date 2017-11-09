@@ -13,7 +13,7 @@ p
   .col-md-2
     p = link_to 'Agregar Curso', new_course_path, :class=>"btn btn-primary"
   .col-md-2
-    p = link_to 'Cursos Archivados', archived_courses_path, class: 'btn btn-primary'
+    p = link_to 'Cursos Archivados', archived_courses_path, class: 'btn btn-warning'
 
 br
 
@@ -29,4 +29,4 @@ br
         
         .row-md-6
           .col-md-6 = link_to 'Ingresar', course_path(course, "Ingresar"), class: 'btn btn-primary'
-          .col-md-6 = link_to 'Archivar', archive_course_path(course, 'Archivar'), method: :post, class: 'btn btn-primary', data: { confirm: 'Are you sure?' }
+          .col-md-6 = link_to 'Archivar', archive_course_path(course, 'Archivar'), method: :post, class: 'btn btn-warning', data: { confirm: 'Are you sure?' }

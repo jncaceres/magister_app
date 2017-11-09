@@ -21,7 +21,7 @@ describe Scorer do
     end
 
     it "supports the queries I need" do
-      expect(@reply.picks.of_type("interpretation").to_a).not_to be_empty
+      expect(@reply.picks.of_type("interpretation")).not_to be_empty
     end
   end
 end

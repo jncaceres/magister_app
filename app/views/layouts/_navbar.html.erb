@@ -3,7 +3,7 @@
     <!-- Brand and toggle get grouped for better mobile display -->
 
       <div class="navbar-header">
-        <% if user_signed_in? %> <!-- SIGN IN -->
+        <% if user_signed_in? and (params[:id] or params[:course_id]) %> <!-- SIGN IN -->
           <% if current_user.role? %> <!-- ##VISTA PROFESOR## -->
             <% if @miscursos_visible %> <!-- BOTON MIS CURSOS -->
               <ul class="nav navbar-nav">
@@ -79,6 +79,10 @@
               </ul>
             <% end %>
           <% end %>
+        <% else %>
+          <ul class="nav navbar-nav">
+            <li ><%= button_to "Mis Cursos", users_path, :class => "btn btn-primary", :style => "font-size:18px; height:50px" %></li>
+          </ul>
         <% end %>
       </div>
 

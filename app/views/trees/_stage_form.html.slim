@@ -2,9 +2,9 @@ h3 Fase #{t stage}
 
 .container-fluid
   = f.simple_fields_for "#{stage}_simple_feedback" do |f|
-    = f.input :text, class: 'form-control', required: false, label: "Feedback simple"
+    = f.input :text, class: 'form-control', required: false, label: "Feedback de contenido"
   = f.simple_fields_for "#{stage}_complex_feedback" do |f|
-    = f.input :text, class: 'form-control', required: false, label: "Feedback complejo"
+    = f.input :text, class: 'form-control', required: false, label: "Feedback de justificación"
 
   = render 'question_form', f: f, stage: stage, type: 'content'
   = render 'question_form', f: f, stage: stage, type: 'ct'

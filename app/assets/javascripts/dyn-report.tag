@@ -1,6 +1,4 @@
 <dyn-report>
-  <h1>{ title }</h1>
-
   <table class="table">
     <thead>
       <th>Contenido / Habilidad</th>

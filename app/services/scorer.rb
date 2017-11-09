@@ -38,27 +38,28 @@ class Scorer
     n = temp[:n]
     {
       n:              n,
-      content:        temp[:content]        / n,
-      interpretation: temp[:interpretation] / n,
-      evaluation:     temp[:evaluation]     / n,
-      inference:      temp[:inference]      / n,
-      explication:    temp[:explication]    / n,
-      selfregulation: temp[:selfregulation] / n,
+      content:        temp[:content]        / n.next,
+      interpretation: temp[:interpretation] / n.next,
+      evaluation:     temp[:evaluation]     / n.next,
+      inference:      temp[:inference]      / n.next,
+      explication:    temp[:explication]    / n.next,
+      selfregulation: temp[:selfregulation] / n.next,
     }
   end
 
   def rate reply
-    p, a = reply.picks, reply.attempts
+    p, a = reply.picks, reply.attempts.count
+    a    = a.zero? ?  reply.picks.select("distinct date_trunc('second', created_at)").length.next : a
 
     {
       n:              1,
-      content:        p.content.correct.count.to_f / [a.count, 1].max,
-      interpretation: p.of_type("Interpretación").select(&:right).count.to_f / [a.count, 1].max,
-      analysis:       p.of_type("Análisis"      ).select(&:right).count.to_f / [a.count, 1].max,
-      evaluation:     p.of_type("Evaluación"    ).select(&:right).count.to_f / [a.count, 1].max,
-      inference:      p.of_type("Inferencia"    ).select(&:right).count.to_f / [a.count, 1].max,
-      explication:    p.of_type("Explicación"   ).select(&:right).count.to_f / [a.count, 1].max,
-      selfregulation: p.of_type("Autoregulación").select(&:right).count.to_f / [a.count, 1].max,
+      content:        p.content.correct.count.to_f / a,
+      interpretation: p.of_type("Interpretación").select(&:right).count.to_f / a,
+      analysis:       p.of_type("Análisis"      ).select(&:right).count.to_f / a,
+      evaluation:     p.of_type("Evaluación"    ).select(&:right).count.to_f / a,
+      inference:      p.of_type("Inferencia"    ).select(&:right).count.to_f / a,
+      explication:    p.of_type("Explicación"   ).select(&:right).count.to_f / a,
+      selfregulation: p.of_type("Autoregulación").select(&:right).count.to_f / a,
     }
   end
 end
