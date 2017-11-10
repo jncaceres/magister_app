@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   before_action :set_videos_visible, only: :show
 
   def index
+    @sroute = true
     @breadcrumbs = ["Mis Cursos"]
     current_user.current_course_id = 11111 # CAMBIE NIL => numero para que no se caiga cuando activa o desactiva navbar
     current_user.save

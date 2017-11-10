@@ -17,6 +17,7 @@ class CoursesController < ApplicationController
   end
 
   def archived
+    @sroute = true
     @courses = Course.where(id: CourseUser.where(user_id: current_user.id, archived: true).pluck(:course_id))
   end
 
