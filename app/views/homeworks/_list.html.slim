@@ -17,7 +17,7 @@ div(onload="JavaScript:timedRefresh(30000);")
         th Favoritos
     tbody
       - @users.sort_by{|e| e[:last_name]}.each do |user|
-        - if user.role == "alumno"
+        - if user.role != "alumno"
           - answer = Answer.find_by(homework_id: @homework.id, user_id: user.id)
           tr
             td = user.last_name
