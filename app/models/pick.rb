@@ -6,8 +6,16 @@ class Pick < ActiveRecord::Base
   has_many :ct_options,      source: :selectable, source_type: "CtChoice"
 
   delegate :right, to: :selectable, allow_nil: true
-  scope :correct, -> ()     { joins(:selectable).where(right: true)  }
-  scope :incorrect, -> ()   { joins(:selectable).where(right: false) }
+  scope :correct, -> ()     {
+    joins("INNER JOIN content_choices cc on picks.selectable_type = 'ContentChoice' and cc.id = picks.selectable_id")
+    .joins("INNER JOIN ct_choices ct on picks.selectable_type = 'CtChoice' and ct.id = picks.selectable_id")
+    .where('cc.right or ct.right')
+  }
+  scope :incorrect, -> ()   {
+    joins("INNER JOIN content_choices cc on picks.selectable_type = 'ContentChoice' and cc.id = picks.selectable_id")
+    .joins("INNER JOIN ct_choices ct on picks.selectable_type = 'CtChoice' and ct.id = picks.selectable_id")
+    .where('not (cc.right or ct.right)')
+  }
   scope :content, -> ()     { where(selectable_type: "ContentChoice" ) }
   scope :of_type, -> (type) {
     where(selectable_type: "CtChoice")
