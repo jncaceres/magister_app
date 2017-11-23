@@ -6,7 +6,8 @@ class Pick < ActiveRecord::Base
   has_many :ct_options,      source: :selectable, source_type: "CtChoice"
 
   delegate :right, to: :selectable, allow_nil: true
-  scope :correct, -> ()     { includes(:selectable).select(&:right) }
+  scope :correct, -> ()     { joins(:selectable).where(right: true)  }
+  scope :incorrect, -> ()   { joins(:selectable).where(right: false) }
   scope :content, -> ()     { where(selectable_type: "ContentChoice" ) }
   scope :of_type, -> (type) {
     where(selectable_type: "CtChoice")

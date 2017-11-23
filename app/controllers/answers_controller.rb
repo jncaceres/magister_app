@@ -41,6 +41,10 @@ class AnswersController < ApplicationController
   def show
   end
 
+  def check_answer answer, phase
+    !(answer.send(phase).blank?) or answer.send("image_#{phase}_1?") or answer.send("image_#{phase}_2?")
+  end
+
   def new
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Realizar Actividad"]
     @answer = Answer.new

@@ -155,26 +155,36 @@ class HomeworksController < ApplicationController
   end
 
   def asistentes
+    # @users   = []
+    # @current = 0
+    # @total   = 0
+
+    # @students = Course.find(current_user.current_course_id).users.where(role:0)
+    # @students.each do |s|
+    #   answer = Answer.where(homework_id: @homework.id, user_id: s.id)[0]
+    #   begin
+    #     @total += 1
+    #     if (@homework.actual_phase == "responder" && ((answer.responder.blank?) || answer.image_responder_1? || answer.image_responder_2?)) ||
+    #         (@homework.actual_phase == "argumentar" && ((answer.argumentar != nil && answer.argumentar != "") || answer.image_argumentar_1? || answer.image_argumentar_2?)) ||
+    #         (@homework.actual_phase == "rehacer" && ((answer.rehacer != nil && answer.rehacer != "") || answer.image_rehacer_1? || answer.image_rehacer_2?)) ||
+    #         (@homework.actual_phase == "evaluar" && ((answer.evaluar != nil && answer.evaluar != "") || answer.image_evaluar_1? || answer.image_evaluar_2?)) ||
+    #         (@homework.actual_phase == "integrar" && ((answer.integrar != nil && answer.integrar != "") || answer.image_integrar_1? || answer.image_integrar_2?))
+    #         @users.append(s)
+    #         @current += 1
+    #     end
+    #   rescue
+    #   end
+    # end
+
     @users   = []
     @current = 0
     @total   = 0
 
     @students = Course.find(current_user.current_course_id).users.where(role:0)
-    @students.each do |s|
-      answer = Answer.where(homework_id: @homework.id, user_id: s.id)[0]
-      begin
-        @total += 1
-        if (@homework.actual_phase == "responder" && ((answer.responder.blank?) || answer.image_responder_1? || answer.image_responder_2?)) ||
-            (@homework.actual_phase == "argumentar" && ((answer.argumentar != nil && answer.argumentar != "") || answer.image_argumentar_1? || answer.image_argumentar_2?)) ||
-            (@homework.actual_phase == "rehacer" && ((answer.rehacer != nil && answer.rehacer != "") || answer.image_rehacer_1? || answer.image_rehacer_2?)) ||
-            (@homework.actual_phase == "evaluar" && ((answer.evaluar != nil && answer.evaluar != "") || answer.image_evaluar_1? || answer.image_evaluar_2?)) ||
-            (@homework.actual_phase == "integrar" && ((answer.integrar != nil && answer.integrar != "") || answer.image_integrar_1? || answer.image_integrar_2?))
-            @users.append(s)
-            @current += 1
-        end
-      rescue
-      end
-    end
+    @answers  = Answer.includes(:user).where(homework_id: @homework.id)
+    @users    = @answers.map(&:user)
+    @total    = @students.count
+    @current  = @users.count
   end
 
   def new

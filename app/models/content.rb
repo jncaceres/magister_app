@@ -3,6 +3,6 @@ class Content < ActiveRecord::Base
 
   delegate :to_s, to: :text
 
-  validates :name,
+  validates :text,
     presence: true
 end

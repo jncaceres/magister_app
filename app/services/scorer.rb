@@ -49,7 +49,7 @@ class Scorer
 
   def rate reply
     p, a = reply.picks, reply.attempts.count
-    a    = a.zero? ?  reply.picks.select("distinct date_trunc('second', created_at)").length.next : a
+    a    = a.zero? ? (reply.picks.incorrect.select("distinct date_trunc('second', created_at)") + 3) : a
 
     {
       n:              1,
