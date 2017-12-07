@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171019043300) do
+ActiveRecord::Schema.define(version: 20171207074550) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -247,8 +247,10 @@ ActiveRecord::Schema.define(version: 20171019043300) do
     t.string   "selectable_type"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.integer  "attempt_id"
   end
 
+  add_index "picks", ["attempt_id"], name: "index_picks_on_attempt_id", using: :btree
   add_index "picks", ["reply_id"], name: "index_picks_on_reply_id", using: :btree
   add_index "picks", ["selectable_type", "selectable_id"], name: "index_picks_on_selectable_type_and_selectable_id", using: :btree
 
@@ -425,6 +427,7 @@ ActiveRecord::Schema.define(version: 20171019043300) do
   add_foreign_key "feedbacks", "trees"
   add_foreign_key "interactions", "users"
   add_foreign_key "interactions", "videos"
+  add_foreign_key "picks", "attempts"
   add_foreign_key "picks", "replies"
   add_foreign_key "replies", "trees"
   add_foreign_key "replies", "users"

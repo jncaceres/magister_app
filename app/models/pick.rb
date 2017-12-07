@@ -1,5 +1,6 @@
 class Pick < ActiveRecord::Base
   belongs_to :reply
+  belongs_to :attempt
   belongs_to :selectable, polymorphic: true
 
   has_many :content_options, source: :selectable, source_type: "ContentChoice"

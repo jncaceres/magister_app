@@ -16,9 +16,9 @@ class Replies::BaseController < ApplicationController
     p_id  = params[:ct_pick].try(:[], 'selectable_id')
     p_id  = p_id.reject(&:empty?) if p_id.is_a? Array
 
-    cpick = ContentChoice.where(id: c_id).map do |cc| @reply.picks.build selectable: cc end
-    tpick = CtChoice.where(id: p_id).map      do |ct| @reply.picks.build selectable: ct end
-    @reply.attempts.build stage: @reply.stage
+    attp  = @reply.attempts.build stage: @reply.stage
+    cpick = ContentChoice.where(id: c_id).map do |cc| @reply.picks.build selectable: cc, attempt: attp end
+    tpick = CtChoice.where(id: p_id).map      do |ct| @reply.picks.build selectable: ct, attempt: attp end
 
     @reply.save
 
