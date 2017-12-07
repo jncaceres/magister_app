@@ -34,12 +34,12 @@ Rails.application.routes.draw do
   get 'trees/report_values', to: 'trees#set_report_values', as: 'set_report_values'
 
   resources :courses do
+    get 'join', on: :collection
+
     resources :videos do
       resources :interactions, module: :videos, only: [:index, :create]
     end
-  end
 
-  resources :courses do
     resources :trees do
       resources :ct_questions do
         resources :ct_habilities

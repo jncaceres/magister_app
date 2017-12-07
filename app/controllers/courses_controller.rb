@@ -46,6 +46,10 @@ class CoursesController < ApplicationController
     @course = Course.new
   end
 
+  def join
+    @breadcrumbs = ["Mis Cursos", "Unirse a Curso"]
+  end
+
   def edit
     if params["tag"]
       if params["tag"] == "configuraciones"
