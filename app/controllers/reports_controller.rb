@@ -38,7 +38,7 @@ class ReportsController < ApplicationController
   def update
     @report.update report_params
 
-    respond_with [@course, @report]
+    redirect_to [@course, @report]
   end
 
   def destroy
