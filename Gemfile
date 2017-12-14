@@ -41,8 +41,6 @@ gem "paperclip", "~> 5.0.0"
 
 gem 'prawn'
 
-gem 'wkhtmltopdf-binary'
-
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -93,3 +91,7 @@ group :test do
   gem 'factory_girl'
   gem 'factory_girl_rails'
 end
+
+gem 'wicked_pdf'
+gem 'wkhtmltopdf-binary'
+gem 'svg-graph'

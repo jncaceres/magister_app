@@ -7,6 +7,7 @@ class CoursesController < ApplicationController
   before_action :set_reporte_visible, only: [:show, :edit, :eval_form, :reportes, :students_report, :st_report]
   before_action :set_actividades_visible, only: [:show, :edit, :eval_form, :reportes]
   before_action :set_configuraciones_visible, only: [:show, :edit, :eval_form, :reportes]
+  before_action :set_menu_visible, only: [:new, :join]
   before_action :set_breadcrumbs
   before_action :set_videos_visible, only: [:index, :show, :eval_form, :reportes]
 
@@ -405,6 +406,10 @@ class CoursesController < ApplicationController
 
     def set_configuraciones_visible
       @Configuraciones_visible = true
+    end
+
+    def set_menu_visible
+      @sroute = true
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
