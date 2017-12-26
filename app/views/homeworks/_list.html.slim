@@ -16,12 +16,12 @@ div(onload="JavaScript:timedRefresh(30000);")
         th Ver
         th Favoritos
     tbody
-      - @users.sort_by{|e| e[:last_name]}.each do |user|
+      - @students.sort_by{|e| e[:last_name]}.each do |user|
         - if user.alumno?
           - answer = @answers.select do |a| a.user_id == user.id end.first
           tr
             td = user.last_name
             td = user.first_name
-            td = bool_tag did_answer(answer, @homework.actual_phase) ? 'check' : 'cross'
-            td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"}
-            td = fav_tag answer.favorite
+            td = bool_tag did_answer(answer, @homework.actual_phase)
+            td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if answer
+            td = fav_tag answer.try :favorite

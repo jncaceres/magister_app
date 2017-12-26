@@ -4,7 +4,7 @@ module ApplicationHelper
   end
 
   def bool_tag bool
-    tag "span", class: "glyphicon glyphicon-#{bool ? 'ok' : 'remove'}"
+    tag "span", class: "glyphicon glyphicon-ok" if bool
   end
 
   def fav_tag bool, empty=false
