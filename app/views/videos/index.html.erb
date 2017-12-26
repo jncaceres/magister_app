@@ -17,12 +17,8 @@
 
   <tbody>
     <% @units.each do |unit, videos| %>
-      <tr>
-        <td><h3>Unidad <%= unit %></h3></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+      <tr class="info">
+        <td colspan="5"><h3>Unidad <%= unit %></h3></td>
       </tr>
       <% videos.each do |video| %>
         <tr>

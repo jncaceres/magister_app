@@ -129,7 +129,7 @@ class CoursesController < ApplicationController
 
   def eval_form
     @breadcrumbs = ["Mis Cursos", @course.name, "Evaluación Formativa"]
-    @trees = @course.trees.includes(:content).joins(:content).order('contents.text').all
+    @units = @course.trees.includes(:content, :course, :video, :replies).joins(:content).order('contents.text').all.group_by(&:unit)
   end
 
   def reportes

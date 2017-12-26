@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171207074550) do
+ActiveRecord::Schema.define(version: 20171226151813) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -311,6 +311,7 @@ ActiveRecord::Schema.define(version: 20171207074550) do
     t.text     "after"
     t.integer  "video_id"
     t.boolean  "active",            default: false
+    t.integer  "unit"
   end
 
   add_index "trees", ["course_id"], name: "index_trees_on_course_id", using: :btree
@@ -369,8 +370,8 @@ ActiveRecord::Schema.define(version: 20171207074550) do
     t.integer  "role"
     t.boolean  "asistencia"
     t.integer  "partner_id"
-    t.integer  "corrector"
-    t.integer  "corregido"
+    t.integer  "corrector",              default: 0
+    t.integer  "corregido",              default: 0
     t.integer  "current_course_id",      default: 0
     t.datetime "last_asistencia",        default: '2016-01-01 12:00:00'
     t.integer  "last_homework"

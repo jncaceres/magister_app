@@ -11,14 +11,16 @@ table.table
       th(colspan="3")
   
   tbody
-    - @trees.each do |tree|
-      tr
-        td = tree.video.try :name
-        td = tree.replies.length
-        td = tree.text
-        td = link_to 'Ver', course_tree_path(tree.course, tree)
-        td = link_to 'Editar', edit_course_tree_path(tree.course, tree)
-        td = link_to 'Eliminar', tree, method: :delete, data: { confirm: '¿Seguro de eliminar el árbol?' }
+    - @units.each do |unit, trees|
+      h2 = unit.inspect
+      - trees.each do |tree|
+        tr
+          td = tree.video.try :name
+          td = tree.replies.length
+          td = tree.text
+          td = link_to 'Ver', course_tree_path(tree.course, tree)
+          td = link_to 'Editar', edit_course_tree_path(tree.course, tree)
+          td = link_to 'Eliminar', tree, method: :delete, data: { confirm: '¿Seguro de eliminar el árbol?' }
 
 br
 = link_to 'Crear árbol', new_tree_path
