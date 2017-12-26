@@ -56,6 +56,8 @@ Rails.application.routes.draw do
   post 'homeworks/:id/answers/:id/generate_pdf', to:"answers#generate_pdf", as:"generate_pdf"
 
   post 'courses/new' => 'courses#agregate'
+  get 'courses/:id/clone' => 'courses#clone', as: :clone_course
+  post 'courses/:id/cloner' => 'courses#cloner', as: :cloner
   post 'courses/:id/archive' => 'courses#archive', as: :archive_course
   delete 'courses/:id/archive' => 'courses#archive'
   post 'courses/:id/edit' => 'courses#edit'

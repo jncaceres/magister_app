@@ -51,6 +51,23 @@ class CoursesController < ApplicationController
     @breadcrumbs = ["Mis Cursos", "Unirse a Curso"]
   end
 
+  def clone
+    @target  = Course.find params[:id]
+    @courses = Course.where.not(id: params[:id])
+  end
+
+  def cloner
+    @origin = Course.find params[:clone][:origin_id]
+    @target = Course.find params[:clone][:target_id]
+    @cloner = Cloner.new(@origin.id, @target.id).exec.save
+
+    @message = "Creado exitosamente" unless @cloner.error
+
+    @courses = Course.where.not(id: @target.id)
+
+    render 'clone'
+  end
+
   def edit
     if params["tag"]
       if params["tag"] == "configuraciones"

@@ -2,6 +2,7 @@
 
 <% if current_user.role?%>
   <h4><%="Código: " %><%= @course.course_code %></h4>
+  <%= link_to 'Clonar desde...', clone_course_path(@course), class: 'btn btn-primary' %>
 <% end %>
 
 

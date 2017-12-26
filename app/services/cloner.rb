@@ -1,15 +1,22 @@
 class Cloner
-  attr_accessor :origin, :target
+  attr_accessor :origin, :target, :error
 
   def initialize(origin, target)
-    self.origin = Course.find origin
-    self.target = Course.find target
+    @origin = Course.find origin
+    @target = Course.find target
   end
 
   def exec
-    self
-      .clone_homeworks
-      .clone_questions
+    if self.target.trees.any? or self.target.homeworks.any?
+      @error = "Curso #{@target.name} no está vacío"
+
+      self
+    else
+      self
+        .clone_homeworks
+        .clone_questions
+        .clone_videos
+    end
   end
 
   def clone_homeworks
@@ -53,6 +60,16 @@ class Cloner
 
       build_attribs(t_types, f_types, "feedback").each do |att|
         target_tree.send("build_" + att, { text: origin_tree.send(att).text, type: origin_tree.send(att).type })
+      end
+    end
+
+    self
+  end
+
+  def clone_videos
+    unless self.target.videos.any?
+      self.origin.videos.each do |v|
+        self.target.videos.build url: v.url, name: v.name, final_url: v.final_url, unit: v.unit
       end
     end
 
