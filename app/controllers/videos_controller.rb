@@ -26,7 +26,7 @@ class VideosController < ApplicationController
   # GET /videos/new
   def new
     @url = course_videos_path
-    @breadcrumbs = ["Mis Cursos", @course.name.name, "Videos", "Agregar Video"]
+    @breadcrumbs = ["Mis Cursos", @course.name, "Videos", "Agregar Video"]
     @video = Video.new
     @trees = @course.trees.includes(:content).joins(:content).order('contents.text')
   end
@@ -34,7 +34,7 @@ class VideosController < ApplicationController
   # GET /videos/1/edit
   def edit
     @url = course_video_path
-    @breadcrumbs = ["Mis Cursos", @course.name.name, "Videos", "Editar Video"]
+    @breadcrumbs = ["Mis Cursos", @course.name, "Videos", "Editar Video"]
     @trees = @course.trees.includes(:content).joins(:content).order('contents.text')
   end
 
