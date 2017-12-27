@@ -10,4 +10,8 @@ module RepliesHelper
   def choice_mode obj
     obj.choices.select(&:right).count > 1 ? :check_boxes : :radio_buttons
   end
+
+  def is_right? picks
+    !picks.empty? and picks.all?(&:right) and picks.count == picks.map(&:selectable).map(&:question).map(&:choices).flatten.select(&:right).count
+  end
 end

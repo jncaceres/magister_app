@@ -1,4 +1,8 @@
-h3 Pregunta #{t stage}
+h1.title Pregunta #{t stage}
+h3.subtitle
+  | Tu respuesta es&nbsp;
+  - right = is_right? @reply.attempts.at_stage(stage).last.picks
+  span(class="#{right ? 'correct' : 'incorrect'}") = right ? 'Correcta' : 'Incorrecta'
 
 .container
   .col-md-6
