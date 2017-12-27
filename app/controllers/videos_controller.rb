@@ -44,7 +44,7 @@ class VideosController < ApplicationController
     @video = Video.new(video_params)
     respond_to do |format|
       if @video.save
-        format.html { redirect_to course_videos_path(@video.id), notice: 'Video was successfully created.' }
+        format.html { redirect_to course_videos_path(@video.course), notice: 'Video was successfully created.' }
         format.json { render :show, status: :created, location: @video }
       else
         format.html { render :new }
@@ -58,7 +58,7 @@ class VideosController < ApplicationController
   def update
     respond_to do |format|
       if @video.update(video_params)
-        format.html { redirect_to course_videos_path(@video.id), notice: 'Video was successfully updated.' }
+        format.html { redirect_to course_videos_path(@video.course), notice: 'Video was successfully updated.' }
         format.json { render :show, status: :ok, location: @video }
       else
         format.html { render :edit }
