@@ -20,36 +20,31 @@ class Replies::BaseController < ApplicationController
     cpick = ContentChoice.where(id: c_id).map do |cc| @reply.picks.build selectable: cc, attempt: attp end
     tpick = CtChoice.where(id: p_id).map      do |ct| @reply.picks.build selectable: ct, attempt: attp end
 
+    render 'show' and return if cpick.empty? or tpick.empty?
+
     @reply.save
+    @oldstage = @reply.stage
 
     if is_right?(cpick) then # { OK }
       if is_right?(tpick) then # { OK, OK } -> redirect
         logger.warn "#{@reply.stage} is a success"
         @reply.send(on_success(@reply.stage) + "!")
-
-        redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
       elsif @reply.attempts.send(@reply.stage).count < 1 # { OK, Error } -> simple feedback
         logger.warn "#{@reply.stage} giving feedback on error"
         @feedback = @tree.send("#{@reply.stage}_simple_feedback")
-
-        render 'show'
       else # >2 errors -> redirect
         logger.warn "#{@reply.stage} redirects to #{on_error @reply.stage}"
         @reply.send(on_error(@reply.stage) + "!")
-
-        redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
       end
     elsif @reply.attempts.send(@reply.stage).count < 1 # { Error, any } -> complex feedback
       logger.warn "#{@reply.stage} giving complex feedback on error"
       @feedback = @tree.deeping_complex_feedback
-
-      render 'show'
     else
       logger.warn "#{@reply.stage} redirects to #{on_error @reply.stage}"
       @reply.send(on_error(@reply.stage) + "!")
-
-      redirect_to send("tree_replies_#{@reply.stage}_path", @tree)
     end
+
+    redirect_to tree_replies_between_path(@tree, stage: @oldstage)
   end
 
   private
@@ -79,7 +74,12 @@ class Replies::BaseController < ApplicationController
   end
 
   def on_error stage
-    stage == "initial" ? "recuperative" : "finished"
+    case stage
+      when 'initial' then 'recuperative'
+      when 'recuperative' then 'deeping'
+      when 'deeping' then 'finished'
+      else 'finished'
+    end
   end
 
   def on_success stage
@@ -87,6 +87,6 @@ class Replies::BaseController < ApplicationController
   end
 
   def is_right? picks
-    picks.all?(&:right) and picks.count == picks.first.selectable.question.choices.select(&:right).count
+    !picks.empty? and picks.all?(&:right) and picks.count == picks.first.selectable.question.choices.select(&:right).count
   end
 end

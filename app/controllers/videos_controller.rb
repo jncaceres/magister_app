@@ -12,21 +12,21 @@ class VideosController < ApplicationController
   # GET /videos
   # GET /videos.json
   def index
-    @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos"]
-    @units = Video.includes(tree: :content).where(course_id: current_user.current_course_id).order(:unit, :name).group_by(&:unit)
+    @breadcrumbs = ["Mis Cursos", @course.name, "Videos"]
+    @units = Video.includes(tree: :content).where(course_id: @course.id).order(:unit, :name).group_by(&:unit)
   end
 
   # GET /videos/1
   # GET /videos/1.json
   def show
-    @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos", @video.name]
+    @breadcrumbs = ["Mis Cursos", @course.name, "Videos", @video.name]
     @counter = $redis.incr("video:#{@video.id}")
   end
 
   # GET /videos/new
   def new
     @url = course_videos_path
-    @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos", "Agregar Video"]
+    @breadcrumbs = ["Mis Cursos", @course.name.name, "Videos", "Agregar Video"]
     @video = Video.new
     @trees = @course.trees.includes(:content).joins(:content).order('contents.text')
   end
@@ -34,7 +34,7 @@ class VideosController < ApplicationController
   # GET /videos/1/edit
   def edit
     @url = course_video_path
-    @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Videos", "Editar Video"]
+    @breadcrumbs = ["Mis Cursos", @course.name.name, "Videos", "Editar Video"]
     @trees = @course.trees.includes(:content).joins(:content).order('contents.text')
   end
 
@@ -113,6 +113,6 @@ class VideosController < ApplicationController
     end
 
     def set_course
-      @course = Course.find_by_id(current_user.current_course_id)
+      @course = Course.find_by_id(params[:course_id] || current_user.current_course_id)
     end
 end

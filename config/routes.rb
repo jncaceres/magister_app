@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     resources :replies, only: [:index]
     namespace :replies do
       resource :prev, only: [:show]
+      resource :between
       resource :initial
       resource :recuperative
       resource :deeping
