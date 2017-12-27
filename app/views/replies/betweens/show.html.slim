@@ -1,0 +1,8 @@
+h1 Fase #{t @stage}
+
+.alert.alert-info
+  = @tree.send @stage + "_complex_feedback"
+
+= render 'stage', stage: @stage, tree: @tree, reply: @reply
+
+= link_to (@reply.stage == 'finished' ? 'Finalizar' : 'Siguiente'), send("tree_replies_#{@reply.stage}_path"), class: 'btn btn-primary'

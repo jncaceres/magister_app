@@ -1,9 +1,6 @@
 h1 Evaluación finalizada
 
-.alert.alert-info
-  p
-    strong Time:
-    | &nbsp;
-    = distance_of_time_in_words @reply.updated_at, @reply.created_at
+- %w(initial recuperative deeping).each do |stage|
+  = render partial: 'stage', locals: { stage: stage, reply: @reply, tree: @tree }
 
-== markdown @tree.after || "¡Gracias por responder!"
+== markdown @tree.after || "## ¡Gracias por responder!"

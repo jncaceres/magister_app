@@ -1,0 +1,8 @@
+h3 Pregunta #{t stage}
+
+.container
+  .col-md-6
+    = render 'question', question: @tree.send("#{stage}_content_question"), reply: reply, type: 'content'
+  
+  .col-md-6
+    = render 'question', question: @tree.send("#{stage}_ct_question"), reply: reply, type: 'ct'
