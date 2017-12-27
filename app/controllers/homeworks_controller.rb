@@ -291,21 +291,23 @@ class HomeworksController < ApplicationController
   end
 
   def generate_partner
+    users = @users.to_a
+
     if !@homework.partners
-      i = rand(@users.length)
-      cabeza = @users[i]
-      anterior = @users[i]
-      @users.delete_at(i)
-      while @users.length > 1
-        i = rand(@users.length)
-        actual = @users[i]
+      i = rand(users.length)
+      cabeza = users[i]
+      anterior = users[i]
+      users.delete_at(i)
+      while users.length > 1
+        i = rand(users.length)
+        actual = users[i]
         actual.corrector = anterior.id
         anterior.corregido = actual.id
         anterior.save
         anterior = actual
-        @users.delete_at(i)
+        users.delete_at(i)
       end
-      actual = @users[0]
+      actual = users[0]
       actual.corrector = anterior.id
       anterior.corregido = actual.id
       cabeza.corrector = actual.id
@@ -313,7 +315,7 @@ class HomeworksController < ApplicationController
       anterior.save
       actual.save
       cabeza.save
-      @users.delete_at(0)
+      users.delete_at(0)
       @homework.upload = true
       @homework.current = true
       @homework.partners = true
