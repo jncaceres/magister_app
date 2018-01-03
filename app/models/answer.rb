@@ -37,4 +37,9 @@ class Answer < ActiveRecord::Base
   validates_attachment_content_type :image_evaluar_2, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf"]
   validates_attachment_content_type :image_integrar_1, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf"]
   validates_attachment_content_type :image_integrar_2, content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf"]
+
+  scope :has_answered, -> (phase) { where("
+    answers.#{phase} is not null or
+    answers.image_#{phase}_1_file_name is not null or
+    answers.image_#{phase}_2_file_name is not null") }
 end

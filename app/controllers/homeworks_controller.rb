@@ -181,7 +181,7 @@ class HomeworksController < ApplicationController
     @total   = 0
 
     @students = Course.find(current_user.current_course_id).users.where(role:0)
-    @answers  = Answer.includes(:user).where(homework_id: @homework.id)
+    @answers  = Answer.includes(:user).where(homework_id: @homework.id).has_answered(@homework.actual_phase)
     @users    = User.where(id: @answers.map(&:user_id))
     @total    = @students.count
     @current  = @users.count
