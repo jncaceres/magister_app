@@ -9,31 +9,36 @@ class AnswersController < ApplicationController
 
   def index
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Realizar Actividad"]
+
     @corregido = User.find_by_id(current_user.corregido)
     @corrector = User.find_by_id(current_user.corrector)
-    if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
-      @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-      @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
-    elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
-      @my_answer = current_user.answers.find_by_homework_id(@homework.id)
-      @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
-    else
-      @my_answer = current_user.answers.find_by_homework_id(@homework.id)
-    end
-    @answer = current_user.answers.find_by_homework_id(@homework.id)
-    if @homework.upload == true && @answer == nil
-      redirect_to new_homework_answer_path(@homework)
-    elsif @homework.upload == true && @answer != nil
-      if @homework.actual_phase == "argumentar" && @answer.argumentar == nil
-        redirect_to edit_homework_answer_path(@homework, @answer)
-      elsif @homework.actual_phase == "rehacer" && @answer.rehacer == nil
-        redirect_to edit_homework_answer_path(@homework, @answer)
-      elsif @homework.actual_phase == "evaluar" && @answer.evaluar == nil
-        redirect_to edit_homework_answer_path(@homework, @answer)
-      elsif @homework.actual_phase == "integrar" && @answer.integrar == nil
-        redirect_to edit_homework_answer_path(@homework, @answer)
+
+    own_answer = current_user.answers.find_by(homework_id: @homework.id)
+
+    if @homework.responder? or (own_answer and own_answer.responder?) then
+      if @homework.argumentar? or @homework.evaluar?
+        @my_answer      = @corregido.answers.find_by(homework_id: @homework.id) || @homework.answers.build
+        @partner_answer = own_answer
+        @answer         = @partner_answer
+      elsif @homework.rehacer? or @homework.integrar?
+        @my_answer      = own_answer
+        @partner_answer = @corrector.answers.find_by(homework_id: @homework.id) || @homework.answers.build
+        @answer         = @my_answer
+      else
+        @my_answer      = own_answer
+        @answer         = @my_answer
       end
-    elsif @homework.current == false
+    else
+      render 'late' and return
+    end
+
+    if @homework.upload
+      if @answer.nil?
+        redirect_to new_homework_answer_path @homework
+      elsif @answer.send(@homework.actual_phase).nil?
+        redirect_to edit_homework_answer_path @homework, @answer
+      end
+    else
       redirect_to users_path
     end
   end

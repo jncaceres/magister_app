@@ -1,0 +1,33 @@
+.text-left
+	h1 = @homework.name
+	h2
+		| Etapa:
+		= @etapa
+	
+	br
+	
+	.row
+		.col-md-11
+			= button_to 'Volver',[@homework], class: "btn btn-primary"
+		
+		.col-md-1
+			= button_to favorite_answer_path(homework_id: @homework.id, user_id: @my_answer.user_id, favorite: !@my_answer.favorite), class: "btn btn-primary" do
+				= fav_tag @my_answer.favorite, true
+		
+	br
+	.thumbnail
+		= render 'part0_pregunta'
+	
+	br
+	- if @my_answer and @partner_answer then
+		.thumbnail
+			= render 'part1_responder'
+			br
+
+			- unless @homework.responder?
+				= render 'part2_argumentar'
+				br
+
+				- unless @homework.argumentar?
+					= render 'part3_rehacer'
+					br

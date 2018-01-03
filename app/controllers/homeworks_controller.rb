@@ -206,17 +206,7 @@ class HomeworksController < ApplicationController
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Actividades Colaborativas", "Realizar Actividad", "Respuesta Alumno"]
     @homework = Homework.where(id:params["homework_id"].to_i)[0]
 
-    if @homework.actual_phase == "responder"
-      @etapa = "Responder"
-    elsif @homework.actual_phase == "argumentar"
-      @etapa = "Argumentar"
-    elsif @homework.actual_phase == "rehacer"
-      @etapa = "Rehacer"
-    elsif @homework.actual_phase == "evaluar"
-      @etapa = "Evaluar"
-    elsif @homework.actual_phase == "integrar"
-      @etapa = "Integrar"
-    end
+    @etapa = @homework.actual_phase.capitalize
 
     @user = User.find_by_id(params["user_id"])
     @corregido = User.find_by_id(@user.corregido)
