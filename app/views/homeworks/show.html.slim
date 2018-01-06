@@ -17,7 +17,7 @@ h3(align='justify') Pregunta
       - if @homework.actual_phase == 'responder'
         = link_to 'Volver a Actividades', homeworks_path('volver'), class: 'btn btn-primary'
       - else
-        = submit_tag "Etapa Anterior", name: 'previous', class: "btn btn-primary"
+        = submit_tag "Etapa Anterior", name: 'previous', class: "btn btn-primary", data: { confirm: "¿Está seguro de volver a la etapa anterior?" }
     .col-md-6
       = link_to "Cerrar Actividad", close_homework_path(@homework), class: "btn btn-primary", style: "background-color: #822;", method: :get, data: { confirm: "¿Está seguro de cerrar la actividad?" }
   
@@ -33,19 +33,15 @@ h3(align='justify') Pregunta
             - if current_user.role? && @homework.actual_phase != "integrar"
               .actions(style="text-align: center")
                 - if @homework.upload == true
-                  = submit_tag @siguiente, name: 'next', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px"
-                  / = submit_tag "Discusión", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px"
+                  = submit_tag @siguiente, name: 'next', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de avanzar a la siguiente etapa? alumnos que no hayan respondido la etapa actual no podrán participar" }
                 - else
-                  = submit_tag @siguiente, name: 'next', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px"
-                  / = submit_tag "Discusión", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", disabled:"disabled"
+                  = submit_tag @siguiente, name: 'next', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de avanzar a la siguiente etapa? alumnos que no hayan respondido la etapa actual no podrán participar" }
             - elsif current_user.role? && @homework.actual_phase == "integrar"
               .actions(style="text-align: center")
                 - if @homework.upload == true
                   = submit_tag "Fin Actividad", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", disabled:"disabled"
-                  / = submit_tag "Discusión", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px"
                 - else
-                  = submit_tag "Fin Actividad", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px"
-                  / = submit_tag "Discusión", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", disabled:"disabled"
+                  = submit_tag "Fin Actividad", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de cerrar la actividad?" }
             br
             br
 
