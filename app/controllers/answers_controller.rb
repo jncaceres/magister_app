@@ -53,6 +53,8 @@ class AnswersController < ApplicationController
   def new
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Realizar Actividad"]
     @answer = Answer.new
+
+    render 'late' and return unless @homework.responder?
   end
 
   def edit
