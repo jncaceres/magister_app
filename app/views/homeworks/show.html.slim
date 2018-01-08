@@ -25,24 +25,17 @@ h3(align='justify') Pregunta
     .col-sm-70.col-md-5(style="align:center")
       br
       .thumbnail
-        .caption
-          br
-          br
-          = fields_for :phase, @homework do |p|
-            = p.hidden_field :phase, value: @homework.actual_phase
-            - if current_user.role? && @homework.actual_phase != "integrar"
-              .actions(style="text-align: center")
-                - if @homework.upload == true
-                  = submit_tag @siguiente, name: 'next', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de avanzar a la siguiente etapa? alumnos que no hayan respondido la etapa actual no podrán participar" }
-                - else
-                  = submit_tag @siguiente, name: 'next', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de avanzar a la siguiente etapa? alumnos que no hayan respondido la etapa actual no podrán participar" }
-            - elsif current_user.role? && @homework.actual_phase == "integrar"
-              .actions(style="text-align: center")
-                - if @homework.upload == true
-                  = submit_tag "Fin Actividad", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", disabled:"disabled"
-                - else
-                  = submit_tag "Fin Actividad", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de cerrar la actividad?" }
+        - if current_user.role?
+          .caption
             br
-            br
+            = fields_for :phase, @homework do |p|
+              = p.hidden_field :phase, value: @homework.actual_phase
+              - if @homework.rehacer?
+                .actions(style="text-align: center")
+                    = submit_tag "Fin Actividad", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de cerrar la actividad?" }, disabled: !@homework.upload
+              - else
+                .actions(style="text-align: center")
+                    = submit_tag @siguiente, name: 'next', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de avanzar a la siguiente etapa? alumnos que no hayan respondido la etapa actual no podrán participar" }
+              br
 
 = render 'list'

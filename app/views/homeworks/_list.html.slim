@@ -14,7 +14,6 @@ div(onload="JavaScript:timedRefresh(30000);")
         th Nombre
         th Respuesta
         th Ver
-        th Favoritos
     tbody
       - @students.sort_by{|e| e[:last_name]}.each do |user|
         - if user.alumno?
@@ -24,4 +23,3 @@ div(onload="JavaScript:timedRefresh(30000);")
             td = user.first_name
             td = bool_tag did_answer(answer, @homework.actual_phase)
             td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if answer
-            td = fav_tag answer.try :favorite

@@ -11,8 +11,8 @@
 			= button_to 'Volver',[@homework], class: "btn btn-primary"
 		
 		.col-md-1
-			= button_to favorite_answer_path(homework_id: @homework.id, user_id: @my_answer.user_id, favorite: !@my_answer.favorite), class: "btn btn-primary" do
-				= fav_tag @my_answer.favorite, true
+			/ = button_to favorite_answer_path(homework_id: @homework.id, user_id: @my_answer.user_id, favorite: !@my_answer.favorite), class: "btn btn-primary" do
+			/ 	= fav_tag @answer.favorite, true
 		
 	br
 	.thumbnail

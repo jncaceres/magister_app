@@ -183,12 +183,15 @@ class HomeworksController < ApplicationController
     if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
       @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
       @partner_answer = @user.answers.find_by_homework_id(@homework.id)
+      @answer = @partner_answer
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
       @my_answer = @user.answers.find_by_homework_id(@homework.id)
       @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
+      @answer = @my_answer
     else
       @my_answer = @user.answers.find_by_homework_id(@homework.id)
       @partner_answer = @corregido.answers.find_by_homework_id(@homework.id)
+      @answer = @my_answer
     end
     data = Register.new(button_id:33, user_id:current_user.id)
     data.save
