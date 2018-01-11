@@ -32,7 +32,7 @@ h3(align='justify') Pregunta
               = p.hidden_field :phase, value: @homework.actual_phase
               - if @homework.rehacer?
                 .actions(style="text-align: center")
-                    = submit_tag "Fin Actividad", name: 'discussion', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de cerrar la actividad?" }, disabled: !@homework.upload
+                  = link_to 'Última etapa', @homework, class: 'btn btn-lg', style: 'background-color: #eee; border: 0px; color: #777; padding: 1em;', disabled: true
               - else
                 .actions(style="text-align: center")
                     = submit_tag @siguiente, name: 'next', class: "btn btn-primary", style:"height:75px; width:150px; font-size:20px", data: { confirm: "¿Está seguro de avanzar a la siguiente etapa? alumnos que no hayan respondido la etapa actual no podrán participar" }

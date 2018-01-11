@@ -2,7 +2,7 @@ script.
   function timedRefresh(timeoutPeriod) {
     setTimeout("location.reload(true);",timeoutPeriod);
 
-div(onload="JavaScript:timedRefresh(30000);")
+div(onload="JavaScript:timedRefresh(3000);")
   br
   br
   br
@@ -22,4 +22,4 @@ div(onload="JavaScript:timedRefresh(30000);")
             td = user.last_name
             td = user.first_name
             td = bool_tag did_answer(answer, @homework.actual_phase)
-            td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if answer
+            td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase)
