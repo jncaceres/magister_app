@@ -15,7 +15,7 @@ class AnswersController < ApplicationController
 
     own_answer = current_user.answers.find_by(homework_id: @homework.id)
 
-    if @homework.responder? or (own_answer and own_answer.responder?) then
+    if @homework.responder? or (own_answer and check_answer(own_answer, 'responder')) then
       if @homework.argumentar? or @homework.evaluar?
         @my_answer      = @corregido.answers.find_by(homework_id: @homework.id) || @homework.answers.build
         @partner_answer = own_answer
@@ -47,6 +47,7 @@ class AnswersController < ApplicationController
   end
 
   def check_answer answer, phase
+    return false unless answer
     !(answer.send(phase).blank?) or answer.send("image_#{phase}_1?") or answer.send("image_#{phase}_2?")
   end
 
@@ -220,5 +221,4 @@ class AnswersController < ApplicationController
        :image_argumentar_1, :image_argumentar_2, :image_rehacer_1,  :image_rehacer_2,
        :image_evaluar_1, :image_evaluar_2, :image_integrar_1, :image_integrar_2, :corrector_id)
     end
-
 end
