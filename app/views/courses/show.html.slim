@@ -1,0 +1,15 @@
+- if flash.alert
+  .alert.alert-danger = flash.alert
+- if flash.notice
+  .alert.alert-info   = flash.notice
+
+h2 = @course.name
+
+- if current_user.role? then
+  h4
+    | Código:&nbsp;
+    = @course.course_code
+  = link_to 'Clonar desde...', clone_course_path(@course), class: 'btn btn-primary'
+
+
+

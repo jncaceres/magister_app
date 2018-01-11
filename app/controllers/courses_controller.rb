@@ -59,13 +59,16 @@ class CoursesController < ApplicationController
   def cloner
     @origin = Course.find params[:clone][:origin_id]
     @target = Course.find params[:clone][:target_id]
-    @cloner = Cloner.new(@origin.id, @target.id).exec.save
+    @cloner = Cloner.new(@origin.id, @target.id).exec
+    @cloner.save
 
-    @message = "Creado exitosamente" unless @cloner.error
+    if @cloner.error then
+      flash.alert  = @cloner.error
+    else
+      flash.notice = "Creado exitosamente"
+    end
 
-    @courses = Course.where.not(id: @target.id)
-
-    render 'clone'
+    redirect_to @target
   end
 
   def edit
