@@ -53,7 +53,7 @@ class CoursesController < ApplicationController
 
   def clone
     @target  = Course.find params[:id]
-    @courses = Course.where.not(id: params[:id])
+    @courses = Course.where.not(id: params[:id]).order([:course_code, :name])
   end
 
   def cloner

@@ -8,4 +8,8 @@ class Course < ActiveRecord::Base
   has_many :videos, dependent: :destroy
   has_many :feedbacks, through: :trees
   #accepts_nested_attributes_for :trees, :reject_if => lambda { |a| a[:content].blank? }, :allow_destroy => true
+
+  def full_name
+    "[#{course_code}] #{name}"
+  end
 end

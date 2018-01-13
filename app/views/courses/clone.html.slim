@@ -10,7 +10,7 @@ h3.subtitle Clonar tareas y evaluaciones desde curso...
 
 = simple_form_for :clone, url: cloner_path(@target) do |f|
   = f.hidden_field :target_id, value: @target.id
-  = f.input :origin_id, collection: @courses, label: 'Curso'
+  = f.input :origin_id, collection: @courses, label: 'Curso', label_method: :full_name
 
   = f.submit 'Clonar', class: 'btn btn-primary'
 
