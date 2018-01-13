@@ -13,12 +13,14 @@ h3(align='justify') Pregunta
 
 = form_tag controller: 'homeworks', action: 'change_phase', method: :post do
   .row
-    .col-md-6
+    .col-md-4
       - if @homework.actual_phase == 'responder'
         = link_to 'Volver a Actividades', homeworks_path('volver'), class: 'btn btn-primary'
       - else
         = submit_tag "Etapa Anterior", name: 'previous', class: "btn btn-primary", data: { confirm: "¿Está seguro de volver a la etapa anterior?" }
-    .col-md-6
+    .col-md-4
+      a.btn.btn-primary(onclick="location.reload(true)") Refrescar
+    .col-md-4
       = link_to "Cerrar Actividad", close_homework_path(@homework), class: "btn btn-primary", style: "background-color: #822;", method: :get, data: { confirm: "¿Está seguro de cerrar la actividad?" }
   
   .column
