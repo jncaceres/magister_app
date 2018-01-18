@@ -14,19 +14,19 @@
     <tbody>
       <tr each="{ trees }">
         <td onclick="{ selects(id) }">{ text }</td>
-        <td onclick="{ selects(id) }">{ percent(score.content) }</td>
-        <td onclick="{ select_filter(id, 'Interpretación') }">{ percent(score.interpretation) }</td>
-        <td onclick="{ select_filter(id, 'Análisis') }">{ percent(score.analysis) }</td>
-        <td onclick="{ select_filter(id, 'Evaluación') }">{ percent(score.evaluation) }</td>
-        <td onclick="{ select_filter(id, 'Inferencia') }">{ percent(score.inference) }</td>
-        <td onclick="{ select_filter(id, 'Explicación') }">{ percent(score.explanation) }</td>
-        <td onclick="{ select_filter(id, 'Autoregulación') }">{ percent(score.selfregulation) }</td>
+        <td onclick="{ selects(id) }"><percentage-box value="{ score.content }" /></td>
+        <td onclick="{ select_filter(id, 'Interpretación') }"><percentage-box value="{ score.interpretation }" /></td>
+        <td onclick="{ select_filter(id, 'Análisis') }"><percentage-box value="{ score.analysis }" /></td>
+        <td onclick="{ select_filter(id, 'Evaluación') }"><percentage-box value="{ score.evaluation }" /></td>
+        <td onclick="{ select_filter(id, 'Inferencia') }"><percentage-box value="{ score.inference }" /></td>
+        <td onclick="{ select_filter(id, 'Explicación') }"><percentage-box value="{ score.explanation }" /></td>
+        <td onclick="{ select_filter(id, 'Autoregulación') }"><percentage-box value="{ score.selfregulation }" /></td>
         <td>{ score.n }</td>
       </tr>
 
       <tr>
         <td></td>
-        <td each="{ averages }">{ percent(this.avg) }</td>
+        <td each="{ averages }"><percentage-box value="{ this.avg }" /></td>
       </tr>
     </tbody>
   </table>
@@ -105,12 +105,6 @@
     this.averages = [];
     this.title = "Report";
     this.tree_title = "";
-    this.percent = (value) => {
-      if (value)
-        return Math.round(value * 100) + "%";
-      else
-        return "--";
-    }
     this.average = (list) => {
       const avg = (elem) => {
         var elems = list.map((t) => t.score[elem]).filter((x) => x);

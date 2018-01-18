@@ -22,6 +22,7 @@
 
 // Riot tags
 //= require video-tag
+//= require percentage-box
 //= require dyn-report
 //= require comment-form
 //= require question-show
