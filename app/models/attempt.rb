@@ -4,5 +4,5 @@ class Attempt < ActiveRecord::Base
 
   enum stage: [:initial, :recuperative, :deeping, :finished]
 
-  scope :at_stage, -> (stage) { send(stage) }
+  scope :at_stage, -> (stage) { select do |att| att.send(stage + "?") end }
 end

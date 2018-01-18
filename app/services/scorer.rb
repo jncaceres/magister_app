@@ -2,64 +2,95 @@ class Scorer
   attr_accessor :reply, :tree
 
   def initialize(tree)
-    @tree = tree
-  end
-
-  def base
-    {
-      n:              0,
-      content:        0,
-      interpretation: 0,
-      analysis:       0,
-      evaluation:     0,
-      inference:      0,
-      explication:    0,
-      selfregulation: 0
-    }
+    @tree = Tree.includes(replies: { attempts: :picks }).find tree.id
   end
 
   def call
-    temp = @tree
-      .replies
-      .map { |r| rate(r) }
-      .reduce(base) do |agg, r|
-        {
-          n:              agg[:n]              + 1,
-          content:        agg[:content]        + r[:content],
-          interpretation: agg[:interpretation] + r[:interpretation],
-          analysis:       agg[:analysis]       + r[:analysis],
-          evaluation:     agg[:evaluation]     + r[:evaluation],
-          inference:      agg[:inference]      + r[:inference],
-          explication:    agg[:explication]    + r[:explication],
-          selfregulation: agg[:selfregulation] + r[:selfregulation]
-        }
-      end
-    
-    n = temp[:n]
-    {
-      n:              n,
-      content:        temp[:content]        / n.next,
-      interpretation: temp[:interpretation] / n.next,
-      evaluation:     temp[:evaluation]     / n.next,
-      inference:      temp[:inference]      / n.next,
-      explication:    temp[:explication]    / n.next,
-      selfregulation: temp[:selfregulation] / n.next,
-    }
+    scores = @tree.replies.map do |reply|
+      score_reply(reply)
+    end
+
+    scores.reduce do |agg, elem| reducer(agg, elem) end
   end
 
-  def rate reply
-    p, a = reply.picks, reply.attempts.count
-    a    = a.zero? ? (reply.picks.incorrect.select("distinct date_trunc('second', picks.created_at)").count + 3) : a
+  # private
+  @@attrs  = %i(content interpretation analysis evaluation inference explication selfregulation)
+  @@stages = %w(initial recuperative deeping)
+  @@base   = {
+    n:              1.0,
+    content:        0.0,
+    interpretation: 0.0,
+    analysis:       0.0,
+    evaluation:     0.0,
+    inference:      0.0,
+    explication:    0.0,
+    selfregulation: 0.0
+  }
 
-    {
-      n:              1,
-      content:        p.content.correct.count.to_f / a,
-      interpretation: p.of_type("Interpretación").select(&:right).count.to_f / a,
-      analysis:       p.of_type("Análisis"      ).select(&:right).count.to_f / a,
-      evaluation:     p.of_type("Evaluación"    ).select(&:right).count.to_f / a,
-      inference:      p.of_type("Inferencia"    ).select(&:right).count.to_f / a,
-      explication:    p.of_type("Explicación"   ).select(&:right).count.to_f / a,
-      selfregulation: p.of_type("Autoregulación").select(&:right).count.to_f / a,
-    }
+  def score_reply(reply)
+    scores = @@stages.map do |stage|
+      score_stage(reply, stage)
+    end.compact
+
+    @@attrs.reduce(@@base) do |acc, att|
+      scs = scores.map do |sc| sc[att] end.compact
+      
+      acc.merge(att => (scs.empty? ? 0.0 : scs.sum / scs.count.to_f))
+    end
+  end
+
+  def score_stage(reply, stage)
+    reply
+      .attempts
+      .select do |att| att.send(stage + "?") end
+      .map    do |att| score_attempt(att, stage) end
+      .reduce(&:merge)
+  end
+
+  def score_attempt(attempt, stage)
+    cn_score = score_question @tree.send("#{stage}_content_question"), attempt.picks.content
+    ct_score = score_question @tree.send("#{stage}_ct_question"),      attempt.picks.ct
+
+    @tree
+      .send("#{stage}_ct_question")
+      .ct_habilities
+      .actives
+      .map(&:name)
+      .reduce({ content: cn_score }) do |agg, ct|
+        agg.merge(symbolify(ct) => ct_score)
+      end
+  end
+
+  def score_question(question, picks)
+    picks.correct.count / question.choices.select(&:right).count.to_f
+  end
+
+  def score_pick(pick)
+    pick.right ? 1 : 0
+  end
+
+  def reducer(acc, score)
+    @@attrs.reduce({ n: acc[:n] + score[:n] }) do |agg, att|
+      agg.merge(att => ponderate(acc, score, att))
+    end
+  end
+
+  def ponderate(accum, score, att)
+    x = accum[att] * accum[:n]
+    y = score[att] * score[:n]
+
+    (x + y) / (accum[:n] + score[:n])
+  end
+
+  def symbolify(str)
+    case str
+      when "Interpretación" then :interpretation
+      when "Análisis"       then :analysis
+      when "Evaluación"     then :evaluation
+      when "Inferencia"     then :inference
+      when "Explicación"    then :explication
+      when "Autoregulación" then :selfregulation
+      else                       :error
+    end
   end
 end

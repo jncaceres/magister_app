@@ -8,16 +8,13 @@ class Pick < ActiveRecord::Base
 
   delegate :right, to: :selectable, allow_nil: true
   scope :correct, -> ()     {
-    joins("INNER JOIN content_choices cc on picks.selectable_type = 'ContentChoice' and cc.id = picks.selectable_id")
-    .joins("INNER JOIN ct_choices ct on picks.selectable_type = 'CtChoice' and ct.id = picks.selectable_id")
-    .where('cc.right or ct.right')
+    select(&:right)
   }
   scope :incorrect, -> ()   {
-    joins("INNER JOIN content_choices cc on picks.selectable_type = 'ContentChoice' and cc.id = picks.selectable_id")
-    .joins("INNER JOIN ct_choices ct on picks.selectable_type = 'CtChoice' and ct.id = picks.selectable_id")
-    .where('not (cc.right or ct.right)')
+    reject(&:right)
   }
   scope :content, -> ()     { where(selectable_type: "ContentChoice" ) }
+  scope :ct,      -> ()     { where(selectable_type: "CtChoice") }
   scope :of_type, -> (type) {
     where(selectable_type: "CtChoice")
       .includes(selectable: :ct_habilities)
