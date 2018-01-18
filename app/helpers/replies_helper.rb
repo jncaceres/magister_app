@@ -12,7 +12,7 @@ module RepliesHelper
   end
 
   def is_right? picks
-    total = picks.map(&:selectable).map(&:question).map(&:choices).flatten.select(&:right).count
+    total = picks.correct.count
     !picks.empty? and picks.all?(&:right) and picks.count == total
   end
 end

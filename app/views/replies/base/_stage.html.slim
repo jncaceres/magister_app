@@ -5,7 +5,7 @@ h3.subtitle
   span(class="#{right ? 'correct' : 'incorrect'}") = right ? 'Correcta' : 'Incorrecta'
 
 .alert.alert-info
-  = @tree.send @stage + "_complex_feedback"
+  = @tree.send stage + "_complex_feedback"
 
 .container
   .col-md-6
