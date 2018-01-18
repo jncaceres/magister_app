@@ -5,8 +5,7 @@ class Replies::BetweensController < Replies::BaseController
     
     def show
       @stage = params[:stage] || "initial"
-      @picks = Pick.where(attempt_id: @reply.attempts.at_stage(@stage).map(&:id))
-      @right = is_right? @picks
+      @picks = @reply.attempts.at_stage(@stage).last.picks
     end
   
     private
