@@ -10,7 +10,7 @@ class Scorer
       score_reply(reply)
     end
 
-    scores.reduce do |agg, elem| reducer(agg, elem) end
+    scores.reduce(@@base) do |agg, elem| reducer(agg, elem) end
   end
 
   # private
