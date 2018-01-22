@@ -62,7 +62,8 @@ class Scorer
   end
 
   def score_question(question, picks)
-    picks.correct.count / question.choices.select(&:right).count.to_f
+    rights = question.choices.select(&:right)
+    rights.empty? ? 0.0 : (picks.correct.count / rights.count.to_f)
   end
 
   def score_pick(pick)
