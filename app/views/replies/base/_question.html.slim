@@ -4,7 +4,7 @@ h3 = t type
   == markdown question.question
 ul
   - question.send(type + "_choices").each do |choice|
-    - if reply.picks.select do |p| p.selectable == choice end.first then
+    - if choice.right or reply.picks.select do |p| p.selectable == choice end.first then
       li(class="#{choice.right ? 'correct' : 'incorrect'}") = choice.text
     - else
       li = choice.text

@@ -9,6 +9,11 @@ class Course < ActiveRecord::Base
   has_many :feedbacks, through: :trees
   #accepts_nested_attributes_for :trees, :reject_if => lambda { |a| a[:content].blank? }, :allow_destroy => true
 
+  validates :name,
+    presence: true
+  validates :course_code,
+    presence: true
+
   def full_name
     "[#{course_code}] #{name}"
   end

@@ -1,5 +1,6 @@
 h1 = @report.name
 
 = link_to "Volver", course_reports_path(@course), class: 'btn btn-primary'
+br
 
 dyn-report(course_id="#{@course.id}" report_id="#{@report.id}")

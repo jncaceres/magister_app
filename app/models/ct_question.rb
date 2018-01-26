@@ -9,4 +9,10 @@ class CtQuestion < ActiveRecord::Base
 
   validates :question,
     presence: true
+  
+  validate :has_correct
+
+  def has_correct
+    errors.add :choices, "Se necesita al menos una alternativa correcta" unless self.choices.select(&:right).any?
+  end
 end
