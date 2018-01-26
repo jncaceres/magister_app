@@ -4,12 +4,5 @@
   
   <script>
     this.value = opts.value * 100;
-    this.on('mount', () => {
-      const update = () => {
-        this.update(value: opts.value * 100)
-      }
-
-      setTimeout(update, 1000)
-    })
   </script>
 </percentage-box>

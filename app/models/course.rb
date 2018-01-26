@@ -11,8 +11,8 @@ class Course < ActiveRecord::Base
 
   validates :name,
     presence: true
-  validates :course_code,
-    presence: true
+  # validates :course_code,
+  #   presence: true
 
   def full_name
     "[#{course_code}] #{name}"
