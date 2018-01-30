@@ -1,5 +1,5 @@
 class Cloner
-  attr_accessor :origin, :target, :error
+  attr_accessor :origin, :target
 
   def initialize(origin, target)
     @origin = Course.find origin
@@ -43,17 +43,13 @@ class Cloner
         origin_question = origin_tree.send(att)
         target_question = target_tree.send("build_" + att, { question: origin_question.question, type: origin_question.type })
 
-        if origin_question.is_a? ContentQuestion
-          origin_question.content_choices.each do |choice|
-            target_question.content_choices.build text: choice.text, right: choice.right
-          end
-        elsif origin_question.is_a? CtQuestion
-          origin_question.ct_choices.each do |choice|
-            target_question.ct_choices.build text: choice.text, right: choice.right
-          end
+        origin_question.choices.each do |choice|
+          target_question.choices.build text: choice.text, right: choice.right
+        end
 
-          origin_question.ct_habilities.each do |choice|
-            target_question.ct_habilities.build name: choice.name, description: choice.description
+        if origin_question.is_a? CtQuestion
+          origin_question.ct_habilities.each do |hability|
+            target_question.ct_habilities.build name: hability.name, description: hability.description
           end
         end
       end
@@ -86,5 +82,9 @@ class Cloner
 
   def save
     self.target.save
+  end
+
+  def error
+    @error || self.target.errors.full_messages.join(" ")
   end
 end
