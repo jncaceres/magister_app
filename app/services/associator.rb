@@ -78,7 +78,7 @@ module Associator
     end
 
     def errors
-      @students.map(&:errors)
+      @students.map(&:errors).flatten
     end
   end
 end

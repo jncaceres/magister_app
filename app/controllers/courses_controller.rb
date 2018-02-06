@@ -115,7 +115,14 @@ class CoursesController < ApplicationController
       .read
       .force_encoding('UTF-8')
     
-    render json: Associator::Associate.new(@course, file).call.students
+    associator = Associator::Associate.new(@course, file).call
+    if associator.save then
+      flash.notice = 'Alumnos registrados exitosamente'
+    else
+      flash.alert  = associator.errors.join(', ')
+    end
+
+    redirect_to @course
   end
 
   def create
