@@ -1,7 +1,7 @@
 class CoursesController < ApplicationController
 
 
-  before_action :set_course, only: [:asistencia, :students, :show, :edit, :update, :destroy, :archive, :eval_form, :reportes, :students_report, :st_report]
+  before_action :set_course, only: [:asistencia, :students, :show, :edit, :update, :destroy, :archive, :eval_form, :reportes, :students_report, :st_report, :associate]
   before_action :set_miscursos_visible, only: [:show, :edit, :new, :eval_form, :reportes, :students_report, :st_report]
   before_action :set_ef_visible, only: [:show, :edit, :eval_form, :reportes]
   before_action :set_reporte_visible, only: [:show, :edit, :eval_form, :reportes, :students_report, :st_report]
@@ -107,6 +107,15 @@ class CoursesController < ApplicationController
       end
     end
     redirect_to users_path
+  end
+
+  def associate
+    file = params[:associate][:file]
+      .tempfile
+      .read
+      .force_encoding('UTF-8')
+    
+    render json: Associator::Associate.new(@course, file).call.students
   end
 
   def create

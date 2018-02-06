@@ -1,0 +1,4 @@
+= simple_form_for :associate, url: associate_course_path do |f|
+  = f.input :file, as: :file, label: 'CSV'
+
+  = f.submit "Enviar", class: 'btn btn-primary'

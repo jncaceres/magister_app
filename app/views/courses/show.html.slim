@@ -9,7 +9,8 @@ h2 = @course.name
   h4
     | Código:&nbsp;
     = @course.course_code
-  = link_to 'Clonar desde...', clone_course_path(@course), class: 'btn btn-primary'
+  = link_to 'Clonar desde...', clone_course_path(@course), class: 'btn btn-primary', style: 'margin-right: 1em'
+  = link_to 'Registrar alumnos...', upload_course_path(@course), class: 'btn btn-primary'
 
 
 
