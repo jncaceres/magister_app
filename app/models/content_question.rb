@@ -11,6 +11,8 @@ class ContentQuestion < ActiveRecord::Base
   validate :has_correct
 
   def has_correct
-    errors.add :choices, "Se necesita al menos una alternativa correcta" unless self.choices.select(&:right).any?
+    unless self.choices.select(&:right).any? or self.content_choices.select(&:right).any? then
+      errors.add :choices, "Se necesita al menos una alternativa correcta"
+    end
   end
 end
