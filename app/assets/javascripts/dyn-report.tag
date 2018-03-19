@@ -32,7 +32,7 @@
       </tr>
 
       <tr>
-        <td></td>
+        <td>Total</td>
         <td each="{ averages }">{ percent(this.avg) }</td>
       </tr>
     </tbody>

@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+    title Flipped UC
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+
+    meta(name="robots" content="noindex,nofollow")
+  
+  body
+    div(class="#{@color || "blue"}_class")
+      = render 'layouts/navbar'
+      - if user_signed_in?
+        = render 'layouts/breadcrumbs'
+      
+      .container
+        main(role="main")
+          = yield

@@ -12,5 +12,5 @@ table.table.table-striped
       tr
         td = course.name
         td = course.course_code
-        td = l course.created_at, format: :short
+        td = l course.created_at.to_date
         td = link_to 'Desarchivar', archive_course_path(course), method: :delete, class: 'btn btn-primary'

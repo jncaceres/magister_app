@@ -1,5 +1,9 @@
 = simple_form_for [@course, @report] do |f|
   = f.input :name
-  = f.association :trees, collection: @trees, as: :check_boxes
+  .container-fluid
+    - @trees.each do |unit, trees|
+      .col-md-4
+        strong Unidad #{unit}
+        = f.association :trees, collection: trees, as: :check_boxes, label: false
 
   = f.submit "Guardar", class: 'btn btn-primary'

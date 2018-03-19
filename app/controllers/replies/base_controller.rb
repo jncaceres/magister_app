@@ -38,7 +38,7 @@ class Replies::BaseController < ApplicationController
       end
     elsif @reply.attempts.send(@reply.stage).count < 1 # { Error, any } -> complex feedback
       logger.warn "#{@reply.stage} giving complex feedback on error"
-      @feedback = @tree.deeping_complex_feedback
+      @feedback = @tree.send("#{@reply.stage}_complex_feedback")
     else
       logger.warn "#{@reply.stage} redirects to #{on_error @reply.stage}"
       @reply.send(on_error(@reply.stage) + "!")

@@ -1,9 +1,8 @@
 h1.title = @target.name
 h3.subtitle Clonar tareas y evaluaciones desde curso...
 
-- if @cloner.try :error
-  .alert.alert-danger
-    = @cloner.error
+- if flash.alert
+  .alert.alert-danger = flash.alert
 - if @message
   .alert.alert-info
     = @message
@@ -14,4 +13,4 @@ h3.subtitle Clonar tareas y evaluaciones desde curso...
 
   = f.submit 'Clonar', class: 'btn btn-primary'
 
-= link_to 'Volver', root_path
+= link_to 'Volver', root_path, class: 'btn btn-primary'

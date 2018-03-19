@@ -10,8 +10,8 @@ p
   .col-md-2
     - if current_user.profesor?
       p = link_to 'Crear Curso', new_course_path, :class=>"btn btn-primary"
-  .col-md-2
-    p = link_to 'Agregar Curso', join_courses_path, :class=>"btn btn-primary"
+  .col-md-3
+    p = link_to 'Agregar Curso desde código', join_courses_path, :class=>"btn btn-primary"
   .col-md-2
     p = link_to 'Cursos Archivados', archived_courses_path, class: 'btn btn-warning'
 

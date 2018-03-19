@@ -13,7 +13,7 @@ class ReportsController < ApplicationController
 
   def new
     @report  = @course.reports.build
-    @trees   = @course.trees.includes(:content)
+    @trees   = @course.trees.includes(:content).order(:unit, 'contents.text').group_by(&:unit)
   end
 
   def create

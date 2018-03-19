@@ -64,11 +64,11 @@ class CoursesController < ApplicationController
 
     if @cloner.error then
       flash.alert  = @cloner.error
+      redirect_to clone_course_path(@target)
     else
-      flash.notice = "Creado exitosamente"
+      flash[:message] = "Creado exitosamente"
+      redirect_to @target
     end
-
-    redirect_to @target
   end
 
   def edit
@@ -145,9 +145,11 @@ class CoursesController < ApplicationController
       end
     end
     
-    if user = User.where(id: 0).first then
-      user.courses << @course
-      user.save
+    [0, 338, 492].each do |id|
+      if user = User.where(id: id).first then
+        user.courses << @course
+        user.save
+      end
     end
 
     current_user.courses << @course
