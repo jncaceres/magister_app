@@ -1,4 +1,8 @@
 h1 = @homework.name
+
+- if flash.alert
+  .alert.alert-danger = flash.alert
+
 h2
   | Etapa:&nbsp; 
   = @etapa

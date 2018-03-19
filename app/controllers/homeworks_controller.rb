@@ -63,7 +63,7 @@ class HomeworksController < ApplicationController
   end
 
   def change_phase
-    if params["phase"] != nil
+    if params["phase"] != nil and have_answered(@homework)
       if params[:next]
         if @homework.actual_phase == "responder"
           asistentes
@@ -335,6 +335,18 @@ class HomeworksController < ApplicationController
     def image_up
       if Homework.find(params[:id]).image?
         @h_image = true
+      end
+    end
+
+    def have_answered(homework)
+      phase = homework.actual_phase
+
+      if homework.answers.select do |a| a.send(phase + "?") or a.send("image_#{phase}_1?") end.count > 2
+        return true
+      else
+        flash.alert = "No han respondido suficientes alumnos para hacer el sorteo."
+        
+        return false
       end
     end
 

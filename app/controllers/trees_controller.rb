@@ -1340,7 +1340,6 @@ class TreesController < ApplicationController
 
   # GET /trees/new
   def new
-    @videos = @course.videos
     @breadcrumbs = ["Mis Cursos", @course.name, "Evaluación Formativa", "Nueva evaluación de video"]
     @tree = Tree.new
 
