@@ -13,10 +13,4 @@ class Replies::BetweensController < Replies::BaseController
       @feedback << @tree.send(@stage + "_simple_feedback")  unless is_right?(cpick)
       @feedback << @tree.send(@stage + "_complex_feedback") unless is_right?(tpick)
     end
-  
-    private
-    def set_breadcrumbs
-      @tree = Tree.find params[:tree_id]
-      @breadcrumbs = ["Trees", @tree.text, current_user.full_name, controller_name]
-    end
   end

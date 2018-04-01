@@ -6,9 +6,10 @@ h1.title Pregunta #{t stage}
     span(class="#{right ? 'correct' : 'incorrect'}") = right ? 'Correcta' : 'Incorrecta'
 
 
-- @feedback.each do |feedback|
-  .alert.alert-warning
-    = feedback
+- if @feedback
+  - @feedback.each do |feedback|
+    .alert.alert-warning
+      = feedback
 
 .container
   .col-md-6

@@ -3,4 +3,7 @@ h1 Evaluación finalizada
 - %w(initial recuperative deeping).each do |stage|
   = render partial: 'stage', locals: { stage: stage, reply: @reply, tree: @tree }
 
-== markdown @tree.after || "## ¡Gracias por responder!"
+hr
+
+.lead
+  == markdown @tree.after || "## ¡Gracias por responder!"
