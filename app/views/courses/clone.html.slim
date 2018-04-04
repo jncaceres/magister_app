@@ -1,6 +1,8 @@
 h1.title = @target.name
 h3.subtitle Clonar tareas y evaluaciones desde curso...
 
+= link_to "Descargar Plantilla", '/files/course.xlsx', class: 'btn btn-info', style: 'margin: 0.5em 0'
+
 - if flash.alert
   .alert.alert-danger = flash.alert
 - if @message
