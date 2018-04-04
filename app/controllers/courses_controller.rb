@@ -131,29 +131,23 @@ class CoursesController < ApplicationController
     @course = Course.new(course_params)
     respond_to do |format|
       if @course.save
-        @course.course_code = @course.description.to_s + current_user.id.to_s + @course.id.to_s
-        if @course.save
-          format.html { redirect_to users_path}
-          format.json { render :show, status: :created, location: @course }
-        else
-          format.html { render :new }
-          format.json { render json: @course.errors, status: :unprocessable_entity }
+        [0, 338, 492].each do |id|
+          if user = User.where(id: id).first then
+            user.courses << @course
+            user.save
+          end
         end
+
+        current_user.courses << @course
+        current_user.save
+
+        format.html { redirect_to users_path }
+        format.json { render :show, status: :created, location: @course }
       else
         format.html { render :new }
         format.json { render json: @course.errors, status: :unprocessable_entity }
       end
     end
-    
-    [0, 338, 492].each do |id|
-      if user = User.where(id: id).first then
-        user.courses << @course
-        user.save
-      end
-    end
-
-    current_user.courses << @course
-    current_user.save
   end
 
   def archive
