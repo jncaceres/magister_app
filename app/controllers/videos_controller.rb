@@ -1,4 +1,5 @@
 class VideosController < ApplicationController
+  before_action :must_be_logged_in
   before_action :set_video, only: [:show, :edit, :update, :destroy]
   before_action :set_breadcrumbs
   before_action :set_course

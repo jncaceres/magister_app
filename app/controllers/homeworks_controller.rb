@@ -24,7 +24,7 @@ class HomeworksController < ApplicationController
       for i in @course.homeworks
         i.current = false
         i.upload = false
-        i.actual_phase = "responder"
+#        i.actual_phase = "responder"
         i.save
       end
       @homeworks = @course.homeworks.sort_by{|e| e[:created_at]}
@@ -253,7 +253,7 @@ class HomeworksController < ApplicationController
   end
 
   def generate_partner
-    users = @users.to_a
+    users = @users.students.to_a
 
     if !@homework.partners
       i = rand(users.length)

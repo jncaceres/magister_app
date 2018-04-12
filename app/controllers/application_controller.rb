@@ -73,4 +73,11 @@ class ApplicationController < ActionController::Base
       redirect_to users_path
     end
   end
+
+  def must_be_logged_in
+    unless user_signed_in?
+      flash.notice = "Para entrar a esta página necesita haber ingresado con sus credenciales"
+      redirect_to new_user_session_path
+    end
+  end
 end

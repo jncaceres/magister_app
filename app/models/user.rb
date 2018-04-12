@@ -45,6 +45,8 @@ class User < ActiveRecord::Base
   has_many :courses, through: :course_users
   has_many :user_tree_performances, :dependent => :destroy
 
+  scope :students, -> () { where(role: 0) }
+
   def full_name
     self.first_name + " " + self.last_name
   end
