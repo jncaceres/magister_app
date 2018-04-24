@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  before_action :must_be_logged_in
   before_action :set_users
   before_action :set_courses
   before_action :set_breadcrumbs

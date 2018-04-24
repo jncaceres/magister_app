@@ -10,7 +10,7 @@ class Replies::BetweensController < Replies::BaseController
       tpick = @picks.ct
 
       @feedback = Array.new
-      @feedback << @tree.send(@stage + "_simple_feedback")  unless is_right?(cpick)
-      @feedback << @tree.send(@stage + "_complex_feedback") unless is_right?(tpick)
+      @feedback << @tree.send(@stage + "_simple_feedback")  unless is_right?(cpick) or @stage == "finished"
+      @feedback << @tree.send(@stage + "_complex_feedback") unless is_right?(tpick) or @stage == "finished"
     end
   end

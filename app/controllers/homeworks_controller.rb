@@ -1,4 +1,5 @@
 class HomeworksController < ApplicationController
+  before_action :must_be_logged_in
   before_action :set_homework, only: [:show, :edit, :update, :close_activity, :destroy, :change_phase, :asistencia, :full_answers]
   before_action :set_course
   before_action :set_unavailable
@@ -13,6 +14,7 @@ class HomeworksController < ApplicationController
   before_action :set_videos_visible, only: :index
 
   def index
+    redirect_to courses_path unless @course
     if params["format"]
       if params["format"]["volver"]
         data = Register.new(button_id:16, user_id:current_user.id)
@@ -344,7 +346,7 @@ class HomeworksController < ApplicationController
       if homework.answers.select do |a| a.send(phase + "?") or a.send("image_#{phase}_1?") end.count > 2
         return true
       else
-        flash.alert = "No han respondido suficientes alumnos para hacer el sorteo."
+        flash.alert = "Se necesita que respondan al menos 3 alumnos para hacer el sorteo."
         
         return false
       end

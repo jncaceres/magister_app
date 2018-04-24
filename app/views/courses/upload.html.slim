@@ -1,4 +1,8 @@
 = simple_form_for :associate, url: associate_course_path do |f|
+  = link_to "Descargar Plantilla", '/files/course.xlsx', class: 'btn btn-info', style: 'margin: 0.5em 0'
+
+  p Recordatorio: favor exportar el archivo a CSV
+
   = f.input :file, as: :file, label: 'CSV'
 
   = f.submit "Enviar", class: 'btn btn-primary'
