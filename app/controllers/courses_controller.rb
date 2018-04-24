@@ -81,8 +81,8 @@ class CoursesController < ApplicationController
     @breadcrumbs = ["Mis Cursos", @course.name, "Configuraciones"]
     @course = Course.find(params[:id])
     @users = @course.users
-    if params.index("Remover")
-      user = User.find_by_id(params.index("Remover"))
+    if params.key("Remover")
+      user = User.find_by_id(params.key("Remover"))
       user.courses.destroy(@course)
       data = Register.new(button_id:6, user_id:current_user.id)
       data.save
