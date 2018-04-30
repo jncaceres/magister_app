@@ -88,6 +88,6 @@ class Replies::BaseController < ApplicationController
   end
 
   def is_right? picks
-    !picks.empty? and picks.all?(&:right) and picks.count == picks.first.selectable.question.choices.select(&:right).count
+    picks.any? and picks.all?(&:right) and picks.count == picks.first.selectable.question.choices.select(&:right).count
   end
 end
