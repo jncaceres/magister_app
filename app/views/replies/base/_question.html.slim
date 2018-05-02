@@ -4,7 +4,15 @@ h3 = t type
   == markdown question.question
 ul
   - question.send(type + "_choices").each do |choice|
-    - if choice.right or reply.picks.select do |p| p.selectable == choice end.first then
-      li(class="#{choice.right ? 'correct' : 'incorrect'}") = choice.text
+    - marked = reply.picks.select do |p| p.selectable == choice end.any? # Fue marcada por el alumno
+    
+    - if choice.right then
+      li.correct class=('mark-correct' if marked)
+        = choice.text
+        | &nbsp;
+        = reply.user.signature if marked
     - else
-      li = choice.text
+      li class=('incorrect mark-incorrect' if marked)
+        = choice.text
+        | &nbsp;
+        = reply.user.signature if marked

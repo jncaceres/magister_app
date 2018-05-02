@@ -7,3 +7,6 @@ hr
 
 .lead
   == markdown @tree.after || "## ¡Gracias por responder!"
+
+- if @tree.video
+  = link_to 'Volver al video', course_video_path(@tree.course, @tree.video), class: 'btn btn-primary'

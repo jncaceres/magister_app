@@ -201,11 +201,32 @@
 }
 
 .correct {
+  border: 2px dotted;
+  border-color: green;
   color: green;
+  padding: 0.2em;
 }
 
 .incorrect {
+  border: 2px dotted;
+  border-color: darkred;
   color: darkred;
+  padding: 0.2em;
+}
+
+li.mark-correct, li.mark-incorrect {
+  border: 2px;
+  border-style: solid;
+}
+
+li.mark-correct::after {
+  content: '\2714';
+  padding: 0 0.5em;
+}
+
+li.mark-incorrect::after {
+  content: '\2718';
+  padding: 0 0.5em;
 }
 
 .buttonify {

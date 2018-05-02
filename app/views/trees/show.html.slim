@@ -21,7 +21,7 @@ hr
         == markdown question.question
       ul
         - question.content_choices.each do |choice| 
-          li(class="#{choice.right ? 'correct' : 'incorrect'}") = choice.text
+          li class=('correct' if choice.right) = choice.text
     
 
     .col-md-6
@@ -33,7 +33,7 @@ hr
         == markdown question.question
       ul
         - question.ct_choices.each do |choice| 
-          li(class="#{choice.right ? 'correct' : 'incorrect'}") = choice.text
+          li class=('correct' if choice.right) = choice.text
 
 = link_to 'Editar', edit_course_tree_path(@tree.course, @tree), class: 'btn btn-primary'
 = link_to 'Volver', eval_form_path(@tree.course), class: 'btn'
