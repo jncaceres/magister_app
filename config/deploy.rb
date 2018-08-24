@@ -2,7 +2,7 @@
 lock "3.7.1"
 
 set :application, "magister_app"
-set  :repo_url, "https://github.com/haroldmuller/magister_app.git"
+set  :repo_url, "https://github.com/jncaceres/magister_app.git"
 
 # set :repo_url, "git@github.com:haroldmuller/magister_app.git"
 
@@ -10,7 +10,7 @@ set  :repo_url, "https://github.com/haroldmuller/magister_app.git"
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, "/home/hlmuller/magister_app"
+set :deploy_to, "/home/administrator/magister"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
