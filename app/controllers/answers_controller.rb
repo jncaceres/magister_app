@@ -140,45 +140,85 @@ class AnswersController < ApplicationController
   end
 
   def generate_pdf
-    @corregido = User.find_by_id(current_user.corregido)
-    @corrector = User.find_by_id(current_user.corrector)
-    begin
-      if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
-        @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-        @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
-        answer = []
-        answer << "Responder:"
-        answer << @partner_answer.responder
-        answer << "\nArgumentar:"
-        answer << @my_answer.argumentar
-        answer << "\nRehacer:"
-        answer << @partner_answer.rehacer
-        answer << "\nEvaluar:"
-        answer << @my_answer.evaluar
-      elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar" ||  @homework.actual_phase == "responder"
-        @my_answer = current_user.answers.find_by_homework_id(@homework.id)
-        @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
-        answer = []
-        answer << "Responder:"
-        answer << @my_answer.responder
-        answer << "\nArgumentar:"
-        answer << @partner_answer.argumentar
-        answer << "\nRehacer:"
-        answer << @my_answer.rehacer
-        answer << "\nEvaluar:"
-        answer << @partner_answer.evaluar
-        answer << "\nIntegrar:"
-        answer << @my_answer.integrar
+    nombre_tarea = @homework.name
+    lista = []
+    lista_num_alum = []
+    id_curso = @homework.course_id
+    @curso = Course.find_by_id(id_curso)
+    @curso.users.each do |alumno|
+      if alumno.role == "alumno"
+        @corregido = User.find_by_id(alumno.corregido)
+        @corrector = User.find_by_id(alumno.corrector)
+          if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
+            @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
+            @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
+            answer = []
+            answer << "Nombre: " + @corregido.first_name + " " + @corregido.last_name
+            answer << "Responder:"
+            answer << @partner_answer.responder
+            answer << "\nArgumentar:"
+            answer << @my_answer.argumentar
+            #answer << "\nRehacer:"
+            #answer << @partner_answer.rehacer
+            #answer << "\nEvaluar:"
+            #answer << @my_answer.evaluar
+            lista << answer
+            mail = @corregido.email.split("@")
+            lista_num_alum << mail[0] + ".pdf"
+          elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar" ||  @homework.actual_phase == "responder"
+            @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
+            #@my_answer = Answer.first
+            @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
+            #@partner_answer = Answer.first
+            answer = []
+            answer << "Nombre: " + @corregido.first_name + " " + @corregido.last_name
+            answer << "Responder:"
+            answer << @my_answer.responder
+            answer << "\nArgumentar:"
+            answer << @partner_answer.argumentar
+            answer << "\nRehacer:"
+            answer << @my_answer.rehacer
+            #answer << "\nEvaluar:"
+            #answer << @partner_answer.evaluar
+            #answer << "\nIntegrar:"
+            #answer << @my_answer.integrar
+            lista << answer
+            mail = @corregido.email.split("@")
+            lista_num_alum << mail[0] + ".pdf"
+        end
       end
-    rescue
     end
+    c = 0
+    lista.each do |ans|
+      #filename = "pdfs/" + @homework.id.to_s + "_" + current_user.first_name + "_" + current_user.last_name + c.to_s + ".pdf"
+      filename = "pdfs/" + lista_num_alum[c]
+      Prawn::Document.generate (filename) do |pdf|
+        ans.each do |element|
+          pdf.text element
+        end
+      end
+      #send_file filename
+      c += 1
+    end
+    folder = "/home/joaquin/Escritorio/magister/pdfs"
+    input_filenames = lista_num_alum
+    zipfile_name = "/home/joaquin/Escritorio/magister/" + nombre_tarea + ".zip"
+    Zip.continue_on_exists_proc = true
+    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+      input_filenames.each do |filename|
+      # Two arguments:
+      # - The name of the file as it will appear in the archive
+      # - The original file, including the path to find it
+        zipfile.add(filename, File.join(folder, filename))
+      end
+      #zipfile.get_output_stream("myFile") { |f| f.write "myFile contains just this" }
+    end
+    zipfile = File.read(zipfile_name)
+    send_data(zipfile, :type => "application/zip", :filename => nombre_tarea + ".zip")
+    File.delete(zipfile_name)
+    #redirect_to :back
+ end
 
-    Prawn::Document.generate (@homework.id.to_s + "_" + current_user.first_name + "_" + current_user.last_name + ".pdf") do |pdf|
-      answer.each do |element|
-        pdf.text element
-       end
-     end
-  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -188,6 +228,7 @@ class AnswersController < ApplicationController
 
     def set_homework
       @homework = Homework.find(params[:homework_id])
+      #homework_id
     end
 
     def set_miscursos_visible

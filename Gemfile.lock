@@ -157,7 +157,7 @@ GEM
       mime-types
       mimemagic (~> 0.3.0)
     pdf-core (0.7.0)
-    pg (0.21.0)
+    pg (0.20.0)
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
@@ -229,6 +229,7 @@ GEM
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
     ruby-graphviz (1.2.3)
+    rubyzip (1.2.2)
     sass (3.5.6)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -298,6 +299,8 @@ GEM
       sprockets-rails (>= 2.0, < 4.0)
     wicked_pdf (1.1.0)
     wkhtmltopdf-binary (0.12.3.1)
+    zip-zip (0.3)
+      rubyzip (>= 1.0.0)
 
 PLATFORMS
   ruby
@@ -323,7 +326,7 @@ DEPENDENCIES
   jquery-fileupload-rails
   jquery-rails
   paperclip (~> 5.0.0)
-  pg (~> 0.21.0)
+  pg (~> 0.20.0)
   prawn
   rails (= 4.2.6)
   rails-erd
@@ -332,6 +335,7 @@ DEPENDENCIES
   riot_js-rails
   rspec
   rspec-rails
+  rubyzip
   sass-rails (~> 5.0)
   sdoc (~> 0.4.0)
   showdown-rails
@@ -347,9 +351,10 @@ DEPENDENCIES
   web-console (~> 2.0)
   wicked_pdf
   wkhtmltopdf-binary
+  zip-zip
 
 RUBY VERSION
    ruby 2.3.4p301
 
 BUNDLED WITH
-   1.16.0
+   1.16.3

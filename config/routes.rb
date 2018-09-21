@@ -56,8 +56,11 @@ Rails.application.routes.draw do
   end
 
 
-  get 'homeworks/:id/answers/:id/generate_pdf', to:"answers#generate_pdf"
-  post 'homeworks/:id/answers/:id/generate_pdf', to:"answers#generate_pdf", as:"generate_pdf"
+  #get 'homeworks/:id/answers/:id/generate_pdf', to:"answers#generate_pdf"
+  #post 'homeworks/:id/answers/:id/generate_pdf', to:"answers#generate_pdf", as:"generate_pdf"
+  get 'homeworks/:homework_id/generate_pdf', to:"answers#generate_pdf"
+  post 'homeworks/:homework_id/generate_pdf', to:"answers#generate_pdf", as:"generate_pdf"
+
 
   post 'courses/new' => 'courses#agregate'
   get 'courses/:id/clone' => 'courses#clone', as: :clone_course
@@ -91,7 +94,7 @@ Rails.application.routes.draw do
 
   post 'homework/:id/favorite', to: 'homeworks#favorite', as: :favorite_homework
   delete 'homework/:id/favorite', to: 'homeworks#favorite'
-  
+
   resources :courses do
     resources :reports
     resources :users do
