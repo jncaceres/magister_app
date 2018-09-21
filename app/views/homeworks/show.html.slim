@@ -4,7 +4,7 @@ h1 = @homework.name
   .alert.alert-danger = flash.alert
 
 h2
-  | Etapa:&nbsp; 
+  | Etapa:&nbsp;
   = @etapa
 p
   | Han respondido: &nbsp;
@@ -26,7 +26,8 @@ h3(align='justify') Pregunta
       a.btn.btn-primary(onclick="location.reload(true)") Refrescar
     .col-md-4
       = link_to "Cerrar Actividad", close_homework_path(@homework), class: "btn btn-primary", style: "background-color: #822;", method: :get, data: { confirm: "¿Está seguro de cerrar la actividad?" }
-  
+    .col-md-4
+      = link_to "Descargar Pdf", generate_pdf_path(@homework), class: "btn btn-primary", style: "background-color: #822;", method: :post
   .column
     .col-sm-70.col-md-5(style="align:center")
       br
