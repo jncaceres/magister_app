@@ -161,6 +161,8 @@ GEM
     prawn (2.2.2)
       pdf-core (~> 0.7.0)
       ttfunk (~> 1.5)
+    prawn-emoji (2.1.1)
+      prawn (>= 2.1.0)
     rack (1.6.9)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -328,6 +330,7 @@ DEPENDENCIES
   paperclip (~> 5.0.0)
   pg (~> 0.20.0)
   prawn
+  prawn-emoji
   rails (= 4.2.6)
   rails-erd
   redcarpet
@@ -357,4 +360,4 @@ RUBY VERSION
    ruby 2.3.4p301
 
 BUNDLED WITH
-   1.16.3
+   1.16.4

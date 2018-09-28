@@ -146,14 +146,15 @@ class AnswersController < ApplicationController
     id_curso = @homework.course_id
     @curso = Course.find_by_id(id_curso)
     @curso.users.each do |alumno|
-      if alumno.role == "alumno"
+      if alumno.role == "alumno" and alumno.corregido
         @corregido = User.find_by_id(alumno.corregido)
         @corrector = User.find_by_id(alumno.corrector)
           if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
             @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
             @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
             answer = []
-            answer << "Nombre: " + @corregido.first_name + " " + @corregido.last_name
+            mail = @corregido.email.split("@")
+            # answer << "Numero de alumno: " + mail[0]
             answer << "Responder:"
             answer << @partner_answer.responder
             answer << "\nArgumentar:"
@@ -163,7 +164,6 @@ class AnswersController < ApplicationController
             #answer << "\nEvaluar:"
             #answer << @my_answer.evaluar
             lista << answer
-            mail = @corregido.email.split("@")
             lista_num_alum << mail[0] + ".pdf"
           elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar" ||  @homework.actual_phase == "responder"
             @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
@@ -171,7 +171,8 @@ class AnswersController < ApplicationController
             @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
             #@partner_answer = Answer.first
             answer = []
-            answer << "Nombre: " + @corregido.first_name + " " + @corregido.last_name
+	    mail = @corregido.email.split("@")
+            # answer << "Numero de alumno: " + mail[0]
             answer << "Responder:"
             answer << @my_answer.responder
             answer << "\nArgumentar:"
@@ -183,8 +184,8 @@ class AnswersController < ApplicationController
             #answer << "\nIntegrar:"
             #answer << @my_answer.integrar
             lista << answer
-            mail = @corregido.email.split("@")
-            lista_num_alum << mail[0] + ".pdf"
+	    nombre = mail[0] + ".pdf"
+            lista_num_alum << nombre.force_encoding("UTF-8")
         end
       end
     end
@@ -192,18 +193,21 @@ class AnswersController < ApplicationController
     lista.each do |ans|
       #filename = "pdfs/" + @homework.id.to_s + "_" + current_user.first_name + "_" + current_user.last_name + c.to_s + ".pdf"
       filename = "pdfs/" + lista_num_alum[c]
+      filename = filename.force_encoding("UTF-8")
       Prawn::Document.generate (filename) do |pdf|
         ans.each do |element|
+	  p element
           pdf.text element
         end
       end
       #send_file filename
       c += 1
     end
-    folder = "/home/joaquin/Escritorio/magister/pdfs"
+    folder = "/home/administrator/magister/pdfs"
     input_filenames = lista_num_alum
-    zipfile_name = "/home/joaquin/Escritorio/magister/" + nombre_tarea + ".zip"
+    zipfile_name = "/home/administrator/magister/" + nombre_tarea + ".zip"
     Zip.continue_on_exists_proc = true
+    Zip.unicode_names = true
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       input_filenames.each do |filename|
       # Two arguments:
