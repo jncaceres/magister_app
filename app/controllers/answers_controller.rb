@@ -139,16 +139,32 @@ class AnswersController < ApplicationController
     end
   end
 
+def pdf_crear(lista, lista_num_alum, letra)
+  lista.each do |ans|
+        #filename = "pdfs/" + @homework.id.to_s + "_" + current_user.first_name + "_" + current_user.last_name + c.to_s + ".pdf"
+    filename = "pdfs/" + lista_num_alum[letra]
+    filename = filename.force_encoding("UTF-8")
+    Prawn::Document.generate (filename) do |pdf|
+      ans.each do |element|
+        pdf.text element
+      end
+    end
+    #send_file filename
+    letra += 1
+  end
+end
+
   def generate_pdf
+    regex = /[^\u1F600-\u1F6FF\s]/i
     nombre_tarea = @homework.name
     lista = []
     lista_num_alum = []
     id_curso = @homework.course_id
     @curso = Course.find_by_id(id_curso)
     @curso.users.each do |alumno|
-      if alumno.role == "alumno" and alumno.corregido
-        @corregido = User.find_by_id(alumno.corregido)
-        @corrector = User.find_by_id(alumno.corrector)
+      @corregido = User.find_by_id(alumno.id)
+      @corrector = User.find_by_id(alumno.corrector)
+      if alumno.role == "alumno" and alumno.corrector and alumno.answers.find_by_homework_id(@homework.id)# and @corrector.answers.find_by_homework_id(@homework.id)
           if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
             @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
             @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
@@ -156,9 +172,9 @@ class AnswersController < ApplicationController
             mail = @corregido.email.split("@")
             # answer << "Numero de alumno: " + mail[0]
             answer << "Responder:"
-            answer << @partner_answer.responder
+            answer << @partner_answer.responder.scan(/[a-zA-Z]/).to_s
             answer << "\nArgumentar:"
-            answer << @my_answer.argumentar
+            answer << @my_answer.argumentar.scan(/[a-zA-Z]/).to_s
             #answer << "\nRehacer:"
             #answer << @partner_answer.rehacer
             #answer << "\nEvaluar:"
@@ -167,42 +183,77 @@ class AnswersController < ApplicationController
             lista_num_alum << mail[0] + ".pdf"
           elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar" ||  @homework.actual_phase == "responder"
             @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
+	    if @my_answer.responder == nil
+               @my_answer.responder = ""
+	    end
+	    if @my_answer.rehacer == nil
+               @my_answer.rehacer = ""
+            end
             #@my_answer = Answer.first
             @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
             #@partner_answer = Answer.first
             answer = []
 	    mail = @corregido.email.split("@")
             # answer << "Numero de alumno: " + mail[0]
+	    nombre_usuario = @corregido.first_name + " " + @corregido.last_name
+	    nombre_corrector = @corrector.first_name + " " + @corrector.last_name
+	    answer << "Nombre usuario: " + nombre_usuario
+	    answer << "Nombre corrector: " + nombre_corrector
             answer << "Responder:"
-            answer << @my_answer.responder
+	    responder1 = @my_answer.responder.to_s
+	    responder2 = responder1.each_char.select { |char| char.bytesize < 3 }.join  #responder1.gsub(regex, '')  #.gsub(/[^0-9A-Za-z]/, ' ')
+            answer << responder2  #responder1.gsub(regex, '')
             answer << "\nArgumentar:"
-            answer << @partner_answer.argumentar
+	    if @partner_answer != nil
+	      if @partner_answer.argumentar == nil
+		answer << ""
+	      else
+	      	argumentar1 = @partner_answer.argumentar.to_s
+	      	argumentar2 = argumentar1.each_char.select { |char| char.bytesize < 3 }.join
+              	answer << argumentar2 # argumentar1.gsub(regex, '')  #.gsub(/[^0-9A-Za-z]/, ' ')
+	      end
+	    else
+	      answer << ""
+	    end
             answer << "\nRehacer:"
-            answer << @my_answer.rehacer
+	    if @my_answer != nil
+              if @my_answer.rehacer == nil
+                answer << ""
+              else
+                respuesta = @my_answer.rehacer.to_s
+                respuesta2 = respuesta.each_char.select { |char| char.bytesize < 3 }.join
+                answer << respuesta2 # respuesta.gsub(regex, '')
+              end
+            else
+              answer << ""
+            end
+            # respuesta = @my_answer.rehacer.to_s
+	    # respuesta2 = respuesta.each_char.select { |char| char.bytesize < 4 }.join
+            # answer << respuesta2 #respuesta.gsub(regex, '') #.gsub(/[^0-9A-Za-z]/, ' ')
             #answer << "\nEvaluar:"
             #answer << @partner_answer.evaluar
             #answer << "\nIntegrar:"
             #answer << @my_answer.integrar
             lista << answer
 	    nombre = mail[0] + ".pdf"
-            lista_num_alum << nombre.force_encoding("UTF-8")
+            lista_num_alum << nombre
         end
       end
     end
-    c = 0
-    lista.each do |ans|
-      #filename = "pdfs/" + @homework.id.to_s + "_" + current_user.first_name + "_" + current_user.last_name + c.to_s + ".pdf"
-      filename = "pdfs/" + lista_num_alum[c]
-      filename = filename.force_encoding("UTF-8")
-      Prawn::Document.generate (filename) do |pdf|
-        ans.each do |element|
-	  p element
-          pdf.text element
-        end
-      end
-      #send_file filename
-      c += 1
-    end
+    a = 0
+    b = lista.length/3
+    c = lista.length*2/3
+    lista1 = lista[0..lista.length/3]
+    lista2 = lista[lista.length/3..lista.length*2/3]
+    lista3 = lista[lista.length*2/3..lista.length]
+    th1 = Thread.new {pdf_crear(lista1, lista_num_alum, a)}
+
+    th2 = Thread.new {pdf_crear(lista2, lista_num_alum, b)}
+
+    th3 = Thread.new {pdf_crear(lista3, lista_num_alum, c)}
+    th1.join()
+    th2.join()
+    th3.join()
     folder = "/home/administrator/magister/pdfs"
     input_filenames = lista_num_alum
     zipfile_name = "/home/administrator/magister/" + nombre_tarea + ".zip"
