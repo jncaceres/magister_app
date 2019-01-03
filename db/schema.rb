@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171226151813) do
+ActiveRecord::Schema.define(version: 20190102193231) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 20171226151813) do
   create_table "courses_users", id: false, force: :cascade do |t|
     t.integer "course_id"
     t.integer "user_id"
-    t.boolean "archived"
+    t.boolean "archived",  default: false
   end
 
   add_index "courses_users", ["course_id", "user_id"], name: "index_courses_users_on_course_id_and_user_id", using: :btree
@@ -160,16 +160,6 @@ ActiveRecord::Schema.define(version: 20171226151813) do
   end
 
   add_index "ct_habilities", ["ct_question_id"], name: "index_ct_habilities_on_ct_question_id", using: :btree
-
-  create_table "ct_hability_questions", force: :cascade do |t|
-    t.integer  "ct_hability_id"
-    t.integer  "ct_question_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-  end
-
-  add_index "ct_hability_questions", ["ct_hability_id"], name: "index_ct_hability_questions_on_ct_hability_id", using: :btree
-  add_index "ct_hability_questions", ["ct_question_id"], name: "index_ct_hability_questions_on_ct_question_id", using: :btree
 
   create_table "ct_questions", force: :cascade do |t|
     t.text     "question"
@@ -215,11 +205,6 @@ ActiveRecord::Schema.define(version: 20171226151813) do
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
-  end
-
-  create_table "homeworks_questions", id: false, force: :cascade do |t|
-    t.integer "homework_id"
-    t.integer "question_id"
   end
 
   create_table "homeworks_users", id: false, force: :cascade do |t|
@@ -281,9 +266,9 @@ ActiveRecord::Schema.define(version: 20171226151813) do
     t.float    "inference_sc"
     t.float    "explanation_sc"
     t.float    "selfregulation_sc"
+    t.float    "content_sc"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
-    t.float    "content_sc"
   end
 
   add_index "reports", ["course_id"], name: "index_reports_on_course_id", using: :btree
@@ -295,22 +280,20 @@ ActiveRecord::Schema.define(version: 20171226151813) do
 
   add_index "reports_trees", ["report_id", "tree_id"], name: "index_reports_trees_on_report_id_and_tree_id", using: :btree
 
+  create_table "tecleras", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "trees", force: :cascade do |t|
     t.integer  "iterations"
     t.integer  "course_id"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
-    t.float    "content_sc"
-    t.float    "interpretation_sc"
-    t.float    "analysis_sc"
-    t.float    "evaluation_sc"
-    t.float    "inference_sc"
-    t.float    "explanation_sc"
-    t.float    "selfregulation_sc"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.text     "prev"
     t.text     "after"
     t.integer  "video_id"
-    t.boolean  "active",            default: false
+    t.boolean  "active",     default: false
     t.integer  "unit"
   end
 
@@ -327,13 +310,6 @@ ActiveRecord::Schema.define(version: 20171226151813) do
     t.float    "inference_sc"
     t.float    "explanation_sc"
     t.float    "selfregulation_sc"
-    t.integer  "content_n"
-    t.integer  "interpretation_n"
-    t.integer  "analysis_n"
-    t.integer  "evaluation_n"
-    t.integer  "inference_n"
-    t.integer  "explanation_n"
-    t.integer  "selfregulation_n"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.float    "init_content"
@@ -370,8 +346,8 @@ ActiveRecord::Schema.define(version: 20171226151813) do
     t.integer  "role"
     t.boolean  "asistencia"
     t.integer  "partner_id"
-    t.integer  "corrector",              default: 0
-    t.integer  "corregido",              default: 0
+    t.integer  "corrector"
+    t.integer  "corregido"
     t.integer  "current_course_id",      default: 0
     t.datetime "last_asistencia",        default: '2016-01-01 12:00:00'
     t.integer  "last_homework"
@@ -421,8 +397,6 @@ ActiveRecord::Schema.define(version: 20171226151813) do
   add_foreign_key "contents", "trees"
   add_foreign_key "ct_choices", "ct_questions"
   add_foreign_key "ct_habilities", "ct_questions"
-  add_foreign_key "ct_hability_questions", "ct_habilities"
-  add_foreign_key "ct_hability_questions", "ct_questions"
   add_foreign_key "ct_questions", "trees"
   add_foreign_key "ct_subhabilities", "ct_habilities"
   add_foreign_key "feedbacks", "trees"

@@ -14,6 +14,10 @@
                 <li ><%= button_to "Mis Cursos", users_path, :disabled => true, :class => "btn btn-primary", :style => "font-size:18px; height:50px" %></li>
               </ul>
             <% end %>
+
+            <ul class="nav navbar-nav">
+              <li ><%= button_to "Tecleras", tecleras_path, :class => "btn btn-primary", :style => "font-size:18px; height:50px", method: :get %></li>
+            </ul>
             <% if @videos_visible %> <!-- BOTON VIDEOS -->
               <ul class="nav navbar-nav">
                 <li ><%= button_to "Videos", course_videos_path(current_user.current_course_id), :class => "btn btn-primary", :style => "font-size:18px; height:50px", method: :get %></li>

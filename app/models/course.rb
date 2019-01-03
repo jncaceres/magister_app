@@ -7,6 +7,7 @@ class Course < ActiveRecord::Base
   has_many :reports, dependent: :destroy
   has_many :videos, dependent: :destroy
   has_many :feedbacks, through: :trees
+  has_many :tecleras
   #accepts_nested_attributes_for :trees, :reject_if => lambda { |a| a[:content].blank? }, :allow_destroy => true
 
   before_validation :set_default_course_code

@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   post '/courses/:course_id/trees/:id' => 'trees#edx_view'
   get 'trees/report_values', to: 'trees#set_report_values', as: 'set_report_values'
 
+  resources :tecleras
   resources :courses do
     get :join, on: :collection
 
