@@ -1,5 +1,5 @@
 class TeclerasController < ApplicationController
   def index
-    @courses = Teclera.all
+    @tecleras = Teclera.all
   end
 end

@@ -1,1 +1,14 @@
-<h1>HELLO WORLD</h1>
+<h1>Encuestas</h1>
+
+<br><br><br>
+
+<% @tecleras.each do |teclera| %>
+  <div class="jumbotron">
+    <p><%= current_user.first_name %>, aquí debería ir el nombre del curso</p>
+    <hr class="my-4">
+    <p><b>aquí debería ir el nombre de la encuesta o la fecha </b></p>
+    <p class="lead">
+      <a class="btn btn-primary" style="font-size:18px; height:40px" href="tecleras/show" role="button">Ver</a>
+    </p>
+  </div>
+<% end %>
