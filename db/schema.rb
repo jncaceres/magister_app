@@ -281,6 +281,7 @@ ActiveRecord::Schema.define(version: 20190102193231) do
   add_index "reports_trees", ["report_id", "tree_id"], name: "index_reports_trees_on_report_id_and_tree_id", using: :btree
 
   create_table "tecleras", force: :cascade do |t|
+    t.integer  "cantidad"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

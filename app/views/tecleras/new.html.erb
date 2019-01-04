@@ -1,10 +1,17 @@
-<h2>Nueva Encuesta</h2>
-<br><br>
+<% if not user_signed_in? %>
 
-<div class="field">
-<form>
-  Número de preguntas:
-  <input type="number" name="cantidad" min="1" max="10">
-  <input type="submit" value="Crear Encuesta"
-</form>
-</div>
+  <h2>Nueva Encuesta</h2>
+  <br><br>
+
+  <%= form_for(@teclera) do |f| %>
+    <div class="field">
+      <%= f.label :cantidad %><br>
+      <%= f.number_field(:cantidad, in:2..6, step: 1) %>
+    </div>
+    <div class="actions">
+      <%= f.submit 'Crear Encuesta'%>
+    </div>
+  <% end %>
+<% else %>
+  <%= render 'encuesta', teclera: @teclera %>
+<% end %>

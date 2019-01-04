@@ -99,3 +99,4 @@ end
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'svg-graph'
+gem 'googlecharts'

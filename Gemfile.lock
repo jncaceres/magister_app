@@ -115,6 +115,7 @@ GEM
     ffi (1.9.23)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    googlecharts (1.6.12)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     jbuilder (2.7.0)
@@ -324,6 +325,7 @@ DEPENDENCIES
   factory_bot
   factory_bot_rails
   faker
+  googlecharts
   jbuilder (~> 2.0)
   jquery-fileupload-rails
   jquery-rails
@@ -360,4 +362,4 @@ RUBY VERSION
    ruby 2.3.4p301
 
 BUNDLED WITH
-   1.16.4
+   1.16.6
