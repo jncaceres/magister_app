@@ -22,6 +22,14 @@
 #
 
 class User < ActiveRecord::Base
+  has_many :corrections, :foreign_key => :corrected_id, :dependent => :destroy
+  has_many :reverse_corrections, :class_name => :Correction, :foreign_key => :corrector_id, :dependent => :destroy
+  has_many :users, :through => :corrections, :source => :corrector
+  has_many :attachments, :dependent => :destroy, :inverse_of => :user
+############################# FALTAAAAAAAA ########################
+
+
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 

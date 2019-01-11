@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190102193231) do
+ActiveRecord::Schema.define(version: 20190109055006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,21 @@ ActiveRecord::Schema.define(version: 20190102193231) do
   end
 
   add_index "answers", ["user_id", "homework_id"], name: "index_answers_on_user_id_and_homework_id", using: :btree
+
+  create_table "assignment_schedules", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "assignments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "attachments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "attempts", force: :cascade do |t|
     t.integer  "reply_id"
@@ -280,8 +295,18 @@ ActiveRecord::Schema.define(version: 20190102193231) do
 
   add_index "reports_trees", ["report_id", "tree_id"], name: "index_reports_trees_on_report_id_and_tree_id", using: :btree
 
+  create_table "sections", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "tecleras", force: :cascade do |t|
     t.integer  "cantidad"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "terms", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
