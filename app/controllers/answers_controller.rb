@@ -195,8 +195,13 @@ end
             answer = []
 	    mail = @corregido.email.split("@")
             # answer << "Numero de alumno: " + mail[0]
-	    nombre_usuario = @corregido.first_name + " " + @corregido.last_name
-	    nombre_corrector = @corrector.first_name + " " + @corrector.last_name
+      if params['names'] == 'true'
+	        nombre_usuario = @corregido.first_name + " " + @corregido.last_name
+	        nombre_corrector = @corrector.first_name + " " + @corrector.last_name
+      else
+          nombre_usuario = ""
+          nombre_corrector = ""
+      end
 	    answer << "Nombre usuario: " + nombre_usuario
 	    answer << "Nombre corrector: " + nombre_corrector
             answer << "Responder:"
