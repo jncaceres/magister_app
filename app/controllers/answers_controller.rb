@@ -155,7 +155,6 @@ def pdf_crear(lista, lista_num_alum, letra)
 end
 
   def generate_pdf
-    puts "[INFO] - Method GENERATE_PDF"
     regex = /[^\u1F600-\u1F6FF\s]/i
     nombre_tarea = @homework.name
     lista = []
@@ -196,13 +195,8 @@ end
             answer = []
 	    mail = @corregido.email.split("@")
             # answer << "Numero de alumno: " + mail[0]
-      if params['names'] == 'true'
-	      nombre_usuario = @corregido.first_name + " " + @corregido.last_name
-	      nombre_corrector = @corrector.first_name + " " + @corrector.last_name
-      else
-        nombre_usuario = "" # @corregido.first_name + " " + @corregido.last_name
-        nombre_corrector = "" # @corrector.first_name + " " + @corrector.last_name
-      end
+	    nombre_usuario = @corregido.first_name + " " + @corregido.last_name
+	    nombre_corrector = @corrector.first_name + " " + @corrector.last_name
 	    answer << "Nombre usuario: " + nombre_usuario
 	    answer << "Nombre corrector: " + nombre_corrector
             answer << "Responder:"
@@ -260,9 +254,9 @@ end
     th1.join()
     th2.join()
     th3.join()
-    folder = "/home/pato/Documentos/Magister/magister_app/pdfs"
+    folder = "/home/administrator/magister/pdfs"
     input_filenames = lista_num_alum
-    zipfile_name = "/home/pato/Documentos/Magister/magister_app/" + nombre_tarea + ".zip"
+    zipfile_name = "/home/administrator/magister/" + nombre_tarea + ".zip"
     Zip.continue_on_exists_proc = true
     Zip.unicode_names = true
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
