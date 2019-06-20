@@ -29,7 +29,6 @@ Rails.application.routes.draw do
   resources :replies
   resources :ct_subhabilities
   resources :reports
-#  resources :interactions, module: :videos, only: [:index, :show]
 
   post '/courses/:course_id/trees/:id' => 'trees#edx_view'
   get 'trees/report_values', to: 'trees#set_report_values', as: 'set_report_values'
@@ -39,10 +38,6 @@ Rails.application.routes.draw do
 
     get :upload, on: :member
     post :associate, on: :member
-
-#    resources :videos do
-#      resources :interactions, module: :videos, only: [:index, :create]
-#    end
 
     resources :trees do
       resources :ct_questions do
