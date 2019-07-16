@@ -82,4 +82,8 @@ class ApplicationController < ActionController::Base
       redirect_to new_user_session_path
     end
   end
+
+  def allow_iframe
+    response.headers.except! 'X-Frame-Options'
+  end
 end
