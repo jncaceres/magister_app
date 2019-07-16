@@ -1,4 +1,5 @@
 class LtiController < ApplicationController
+    after_action :allow_iframe
     def launch
         if not Rails.configuration.lti_settings[params[:oauth_consumer_key]]
             render "lti/launch_error", status: 401
@@ -25,5 +26,11 @@ class LtiController < ApplicationController
     end
 
     def launch_error
+    end
+
+    private
+
+    def allow_iframe
+      response.headers.except! 'X-Frame-Options'
     end
 end
