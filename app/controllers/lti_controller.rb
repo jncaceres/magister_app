@@ -13,7 +13,7 @@ class LtiController < ApplicationController
           params
         )
         
-        render plain: perro
+        render plain: request
         return
 
         if not @provider.valid_request?(request)
