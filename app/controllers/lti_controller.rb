@@ -12,6 +12,9 @@ class LtiController < ApplicationController
           Rails.configuration.lti_settings[params[:oauth_consumer_key]],
           params
         )
+        
+        render plain: @provider
+        return
 
         if not @provider.valid_request?(request)
           # the request wasn't validated
