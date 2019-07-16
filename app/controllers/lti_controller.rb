@@ -13,7 +13,7 @@ class LtiController < ApplicationController
           params
         )
         
-        render plain: oauth_consumer_key
+        render plain: params[:custom_canvas_user_login_id]
         return
 
         if not @provider.valid_request?(request)
