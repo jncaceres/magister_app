@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :set_visible_for_admins
   before_action :check_for_bogus_current_course
   skip_before_action :verify_authenticity_token, only: :launch
+  before_action :default_url_options
   after_action :allow_iframe
 
   def configure_permitted_parameters
@@ -85,5 +86,9 @@ class ApplicationController < ActionController::Base
 
   def allow_iframe
     response.headers.except! 'X-Frame-Options'
+  end
+
+  def default_url_options
+    { protocol: :https }
   end
 end
