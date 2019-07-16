@@ -16,6 +16,7 @@ class LtiController < ApplicationController
           params
         )
         render_plain: params.sort
+        return
 
         if not @provider.valid_request?(request)
           # the request wasn't validated
