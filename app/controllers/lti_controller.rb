@@ -2,7 +2,8 @@ class LtiController < ApplicationController
     after_action :allow_iframe
     def launch
         if not Rails.configuration.lti_settings[params[:oauth_consumer_key]]
-            render "lti/launch_error", status: 401
+            #render "lti/launch_error", status: 401
+            render plain: params[:oauth_consumer_key]
             return
         end 
 
