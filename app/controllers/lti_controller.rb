@@ -13,10 +13,8 @@ class LtiController < ApplicationController
           params
         )
         
-        render plain: request
-        return
 
-        if not @provider.valid_request?(request)
+        if not @provider.valid_request?(params)
           # the request wasn't validated
           render "lti/launch_error", status: 401
           return
