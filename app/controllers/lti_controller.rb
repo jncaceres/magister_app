@@ -13,7 +13,7 @@ class LtiController < ApplicationController
           params
         )
         
-        render plain: params[:custom_canvas_user_login_id]
+        render plain: perro
         return
 
         if not @provider.valid_request?(request)
