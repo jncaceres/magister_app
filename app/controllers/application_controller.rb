@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :set_videos_visible, only: [:index, :show]
   before_action :set_visible_for_admins
   before_action :check_for_bogus_current_course
+  skip_before_action :verify_authenticity_token, only: :launch
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up) {|u| u.permit(:email, :password,
