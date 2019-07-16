@@ -15,7 +15,7 @@ class LtiController < ApplicationController
           Rails.configuration.lti_settings[params[:oauth_consumer_key]],
           params
         )
-        render_plain: params.sort
+        render plain: params.sort
         return
 
         if not @provider.valid_request?(request)
