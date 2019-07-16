@@ -13,7 +13,7 @@ class LtiController < ApplicationController
           params
         )
         
-        render plain: @provider.valid_request?(request)
+        render plain: oauth_consumer_key
         return
 
         if not @provider.valid_request?(request)
