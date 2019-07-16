@@ -13,7 +13,7 @@ class LtiController < ApplicationController
           params
         )
         
-        render plain: @provider
+        render plain: @provider.valid_request?(request)
         return
 
         if not @provider.valid_request?(request)
