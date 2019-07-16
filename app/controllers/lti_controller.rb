@@ -2,12 +2,11 @@ class LtiController < ApplicationController
     after_action :allow_iframe
     def launch
         if not Rails.configuration.lti_settings[params[:oauth_consumer_key]]
-            #render "lti/launch_error", status: 401
-            render plain: params[:oauth_consumer_key]
+            render "lti/launch_error", status: 401
             return
         end 
 
-        require 'oauth/request_proxy/action_controller_request'
+        require 'oauth/request_proxy/rack_request'
         @provider = IMS::LTI::ToolProvider.new(
           params[:oauth_consumer_key],
           Rails.configuration.lti_settings[params[:oauth_consumer_key]],
