@@ -17,7 +17,7 @@ class LtiController < ApplicationController
         session[:user_id] = params.require :user_id
         session[:lis_person_contact_email_primary] = params.require :lis_person_contact_email_primary
         if session[:lis_person_contact_email_primary] in User.all.map(&:email)
-          user = User.find_by_email(lis_person_contact_email_primary)
+          user = User.find_by_email(session[:lis_person_contact_email_primary])
           sign_in(:user, user)
           redirect_to users_path
         elsif
