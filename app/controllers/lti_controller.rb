@@ -15,12 +15,17 @@ class LtiController < ApplicationController
         oauth_nonce = params[:oauth_nonce]
 
         session[:user_id] = params.require :user_id
-        session[:lis_person_name_full] = params.require :lis_person_name_full
-        if user_signed_in?
+        session[:lis_person_contact_email_primary] = params.require :lis_person_contact_email_primary
+        if session[:lis_person_contact_email_primary] in User.all.map(&:email)
+          user = User.find_by_email(lis_person_contact_email_primary)
+          sign_in(:user, user)
           redirect_to users_path
-        elsif
-          render "home/home"
         end
+        #if user_signed_in?
+          #redirect_to users_path
+        #elsif
+          #render "home/home"
+        #end
     end
 
     def launch_error
