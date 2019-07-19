@@ -31,6 +31,7 @@ class LtiController < ApplicationController
     end
 
     def launch_error
+      sign_out current_user
     end
 
     private
