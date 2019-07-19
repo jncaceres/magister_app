@@ -1,5 +1,6 @@
 class LtiController < ApplicationController
     after_action :allow_iframe
+    before_action :set_breadcrumbs, only: [:launch_error]
     def launch
         if not Rails.configuration.lti_settings[params[:oauth_consumer_key]]
             redirect_to lti_launch_error_path
@@ -37,5 +38,8 @@ class LtiController < ApplicationController
     def allow_iframe
       response.headers.except! 'X-Frame-Options'
     end
-
+    
+    def set_breadcrumbs
+      @breadcrumbs = []
+    end
   end
