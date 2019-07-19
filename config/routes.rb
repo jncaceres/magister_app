@@ -98,6 +98,7 @@ Rails.application.routes.draw do
   #### lti
   get 'lti/launch'
   post 'lti/launch'
+  get 'lti/launch_error'
 
   resources :courses do
     resources :reports

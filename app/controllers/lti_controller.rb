@@ -24,7 +24,7 @@ class LtiController < ApplicationController
             render "lti/launch_error", status: 401
           end
         elsif 
-          render "lti/launch_error", status: 401
+          redirect_to lti_launch_error_path
             return
         end
     end
