@@ -83,6 +83,4 @@ class LtiController < ApplicationController
       @Configuraciones_visible = true
     end
   
-  
-  end
 end
