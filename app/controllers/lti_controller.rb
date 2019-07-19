@@ -17,6 +17,8 @@ class LtiController < ApplicationController
         session[:user_id] = params.require :user_id
         session[:lis_person_name_full] = params.require :lis_person_name_full
         @lis_person_name_full = session[:lis_person_name_full]
+        render plain: params
+        return
         render "home/home"
     end
 
