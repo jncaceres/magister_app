@@ -14,7 +14,7 @@ class LtiController < ApplicationController
         oauth_timestamp = params[:oauth_timestamp]
         oauth_nonce = params[:oauth_nonce]
 
-        if condicion_1 and condicion_2 and condicion_3 and oauth_consumer_key == "flippedkey"
+        if condicion_1 and condicion_2 and condicion_3
           session[:user_id] = params.require :user_id
           session[:lis_person_contact_email_primary] = params.require :lis_person_contact_email_primary
           if User.all.map(&:email).include? session[:lis_person_contact_email_primary]
@@ -22,7 +22,7 @@ class LtiController < ApplicationController
             sign_in(:user, user)
             redirect_to users_path
           elsif
-            render "lti/launch_error", status: 401
+            redirect_to lti_launch_error_path
           end
         elsif 
           redirect_to lti_launch_error_path
