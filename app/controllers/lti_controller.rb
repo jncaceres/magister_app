@@ -2,7 +2,7 @@ class LtiController < ApplicationController
     after_action :allow_iframe
     def launch
         if not Rails.configuration.lti_settings[params[:oauth_consumer_key]]
-            render "lti/launch_error", status: 401
+            redirect_to lti_launch_error_path
             return
         end 
         condicion_1 = params[:lti_message_type] == "basic-lti-launch-request"
