@@ -20,10 +20,9 @@ class LtiController < ApplicationController
           user = User.find_by_email(session[:lis_person_contact_email_primary])
           sign_in(:user, user)
           redirect_to users_path
+        elsif
+          render "lti/launch_error", status: 401
         end
-        #elsif
-         # render "lti/launch_error", status: 401
-        #end
         #if user_signed_in?
           #redirect_to users_path
         #elsif
