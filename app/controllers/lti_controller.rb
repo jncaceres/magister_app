@@ -1,6 +1,11 @@
 class LtiController < ApplicationController
     before_action :set_breadcrumbs
     after_action :allow_iframe
+    before_action :set_miscursos_visible, only: :index
+    before_action :set_actividades_visible, only: :show
+    before_action :set_videos_visible, only: :show
+    before_action :set_users
+    before_action :set_courses
     def launch
         if not Rails.configuration.lti_settings[params[:oauth_consumer_key]]
             render "lti/launch_error", status: 401
@@ -35,4 +40,49 @@ class LtiController < ApplicationController
     def set_breadcrumbs
       @breadcrumbs = []
     end
+
+    def admin_only
+      unless current_user.profesor?
+        redirect_to :back
+      end
+    end
+  
+    def secure_params
+      params.require(:user).permit(:role)
+    end
+  
+    def set_asistente
+      @asistente = User.find(params[:id])
+    end
+  
+    def set_users
+      @users = User.all
+    end
+  
+    def set_courses
+      @courses = current_user.courses
+    end
+  
+    def set_miscursos_visible
+      @miscursos_visible = true
+    end
+  
+    def set_ef_visible
+      @ef_visible = true
+    end
+  
+    def set_reporte_visible
+      @reporte_visible = true
+    end
+  
+    def set_actividades_visible
+      @actividades_visible = true
+    end
+  
+    def set_configuraciones_visible
+      @Configuraciones_visible = true
+    end
+  
+  
+  end
 end
