@@ -1,2 +1,11 @@
-h1 Synthesis#index_with_edition
-p Find me in app/views/synthesis/index_with_edition.html.slim
+h1 align="center" Síntesis con edición
+
+h3 align="center"
+  = "Actividad " + @homework_name
+
+
+div align="center"
+  .form-group
+    = text_area_tag 'Synthesis text', @answer, size: "75x15", required: true
+
+  button class="btn btn-primary btn-lg" onclick="SubmitForm()" = t('code.submit')
