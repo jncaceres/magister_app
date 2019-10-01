@@ -24,28 +24,26 @@ class SynthesisController < ApplicationController
       if alumno.role == "alumno" and alumno.corrector and alumno.answers.find_by_homework_id(@homework.id)
         @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
         @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
-        if @homework.actual_phase == "responder" || @homework.actual_phase == "argumentar" || @homework.actual_phase == "rehacer"
+        if @homework.actual_phase == "responder"
           if @my_answer.responder.nil?
             @my_answer.responder = ""
           end
+          answer << @my_answer.responder.to_s
+          answer << "\n"
+        elsif @homework.actual_phase == "argumentar"
           if @partner_answer.argumentar.nil?
             @partner_answer.argumentar = ""
           end
+          answer << @partner_answer.argumentar.to_s
+          answer << "\n"
+        elsif @homework.actual_phase == "rehacer"
           if @my_answer.rehacer.nil?
             @my_answer.rehacer = ""
           end
-          answer << @my_answer.responder.to_s
-          answer << "\n"
-          unless @homework.actual_phase == "responder"
-            answer << @partner_answer.argumentar.to_s
-            answer << "\n"
-            unless @homework.actual_phase == "argumentar"
-              answer << @my_answer.rehacer
-              answer << "\n"
-            end
-          end
+          answer << @my_answer.rehacer
           answer << "\n"
         end
+        answer << "\n"
       end
     end
     answer = answer.join
