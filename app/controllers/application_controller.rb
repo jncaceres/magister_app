@@ -8,6 +8,9 @@ class ApplicationController < ActionController::Base
   before_action :set_videos_visible, only: [:index, :show]
   before_action :set_visible_for_admins
   before_action :check_for_bogus_current_course
+  skip_before_action :verify_authenticity_token, only: :launch
+  before_action :default_url_options
+  after_action :allow_iframe
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.permit(:sign_up) {|u| u.permit(:email, :password,
@@ -79,5 +82,13 @@ class ApplicationController < ActionController::Base
       flash.notice = "Para entrar a esta página necesita haber ingresado con sus credenciales"
       redirect_to new_user_session_path
     end
+  end
+
+  def allow_iframe
+    response.headers.except! 'X-Frame-Options'
+  end
+
+  def default_url_options
+    { protocol: :https }
   end
 end
