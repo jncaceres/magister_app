@@ -10,7 +10,7 @@ class SynthesisController < ApplicationController
 
   def index_with_edition
     @homework_name = @homework.name
-    @answer = obtain_text
+    @answer = collect_answers
   end
 
   def collect_answers
