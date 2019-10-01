@@ -26,9 +26,17 @@ h3(align='justify') Pregunta
       a.btn.btn-primary(onclick="location.reload(true)") Refrescar
     .col-md-4
       = link_to "Cerrar Actividad", close_homework_path(@homework), class: "btn btn-primary", style: "background-color: #822;", method: :get, data: { confirm: "¿Está seguro de cerrar la actividad?" }
-    .col-md-4
+  br
+  .row
+    .col-md-3
+    .col-md-3
       = link_to "Descargar Pdf - Con Nombre", generate_pdf_path(@homework, names: true), class: "btn btn-primary", style: "background-color: #822;", method: :post
       = link_to "Descargar Pdf - Sin Nombre", generate_pdf_path(@homework, names: false), class: "btn btn-primary", style: "background-color: #822;", method: :post
+    .col-md-3
+      = link_to "Botón Leyla - Con Edición", synthesis_with_edition_path(@homework, edition: true), class: "btn btn-primary", style: "background-color: #123", method: :get
+      = link_to "Botón Leyla - Sin Edición", synthesis_path(@homework, edition: false), class: "btn btn-primary", style: "background-color: #123", method: :get
+    .col-md-3
+  .col-md-4
   .column
     .col-sm-70.col-md-5(style="align:center")
       br

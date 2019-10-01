@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   namespace :replies do
   get 'interactions/show'
   end
@@ -61,6 +62,8 @@ Rails.application.routes.draw do
   get 'homeworks/:homework_id/generate_pdf', to:"answers#generate_pdf"
   post 'homeworks/:homework_id/generate_pdf', to:"answers#generate_pdf", as:"generate_pdf"
 
+  get 'homework/:homework_id/synthesis', to:"synthesis#index", as: "synthesis"
+  get 'homework/:homework_id/synthesis_edition', to:"synthesis#index_with_edition", as: "synthesis_with_edition"
 
   post 'courses/new' => 'courses#agregate'
   get 'courses/:id/clone' => 'courses#clone', as: :clone_course
