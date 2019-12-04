@@ -10,7 +10,26 @@ class SynthesisController < ApplicationController
 
   def index_with_edition
     @homework_name = @homework.name
-    @answer = collect_answers
+    if request.post?
+      @all_text = params["Synthesis Text"]
+    else
+      @all_text = collect_answers
+    end
+    @output = sinthesize_text(@all_text)
+    @output = sinthesize_text(@output.inner_text)
+  end
+
+  def sinthesize_text(text)
+    mechanize = Mechanize.new
+    page = mechanize.get('https://www.splitbrain.org/_static/ots/index.php')
+    form = page.forms.first
+    form['text'] = text
+    form.radiobutton_with(:id => "ratio_10").check
+    form['lang'] = ['es']
+    page = form.submit
+    page.search('div').each do |h3|
+      h3.text
+    end
   end
 
   def collect_answers

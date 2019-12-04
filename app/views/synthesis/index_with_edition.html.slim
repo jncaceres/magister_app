@@ -1,11 +1,21 @@
 h1 align="center" Síntesis con edición
 
 h3 align="center"
-  = "Actividad " + @homework_name
+  = "Actividad " + @homework_name + " (Input)"
 
 
 div align="center"
-  .form-group
-    = text_area_tag 'Synthesis text', @answer, size: "75x15", required: true
+  = form_for "" do |f|
+    = f.text_area "Synthesis Text", size: "75x15", required: true, :value => @all_text
+    = f.submit "Re-Sintetizar", class: "btn btn-success"
 
-  button class="btn btn-primary btn-lg" onclick="SubmitForm()" = t('code.submit')
+br
+
+div align="center"
+  .form-group
+    = link_to 'Atrás', homework_path(params['homework_id']), method: :get, class: "btn btn-danger"
+
+div align="center"
+  h3 "Resultado"
+  br
+  p = @output.to_s.html_safe
