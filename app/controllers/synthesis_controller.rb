@@ -4,8 +4,9 @@ class SynthesisController < ApplicationController
 
   def index
     @homework_name = @homework.name
-    puts "<=== AQUI DEBE DESCARGAR EL RESUMEN ===>"
-    @answer = "La Respuesta"
+    @all_text = collect_answers
+    @answer = sinthesize_text(@all_text)
+    @output = sinthesize_text(@answer.inner_text)
   end
 
   def index_with_edition
