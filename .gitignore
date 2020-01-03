@@ -12,6 +12,7 @@
 !/log/.keep
 /tmp
 
-
+# Ignore pdf
+*.pdf
 
 .DS_Store

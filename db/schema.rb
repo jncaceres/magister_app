@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171226151813) do
+ActiveRecord::Schema.define(version: 20191227025045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -130,6 +130,7 @@ ActiveRecord::Schema.define(version: 20171226151813) do
     t.string   "course_code"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.string   "course_type"
   end
 
   create_table "courses_users", id: false, force: :cascade do |t|
@@ -280,6 +281,16 @@ ActiveRecord::Schema.define(version: 20171226151813) do
 
   add_index "reports_trees", ["report_id", "tree_id"], name: "index_reports_trees_on_report_id_and_tree_id", using: :btree
 
+  create_table "sinthesies", force: :cascade do |t|
+    t.text     "sinthesys"
+    t.string   "phase"
+    t.integer  "homework_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "sinthesies", ["homework_id"], name: "index_sinthesies_on_homework_id", using: :btree
+
   create_table "trees", force: :cascade do |t|
     t.integer  "iterations"
     t.integer  "course_id"
@@ -401,6 +412,7 @@ ActiveRecord::Schema.define(version: 20171226151813) do
   add_foreign_key "picks", "replies"
   add_foreign_key "replies", "trees"
   add_foreign_key "replies", "users"
+  add_foreign_key "sinthesies", "homeworks"
   add_foreign_key "trees", "courses"
   add_foreign_key "trees", "videos"
   add_foreign_key "user_tree_performances", "trees"

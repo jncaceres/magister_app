@@ -1,0 +1,13 @@
+h1 align="center" Síntesis sin edición
+
+h3 align="center"
+  = "Actividad " + @homework_name
+
+div align="center"
+  h3 "Resultado"
+  br
+  p = @output.to_s.html_safe
+
+div align="center"
+  .form-group
+    = link_to 'Atrás', homework_path(params['homework_id']), method: :get, class: "btn btn-danger"
