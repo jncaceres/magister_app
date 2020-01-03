@@ -44,6 +44,10 @@ gem 'prawn-emoji', require: false
 gem 'rubyzip'
 gem 'zip-zip'
 
+gem 'ims-lti', '~> 1.1.8'
+gem 'mechanize'
+
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -59,6 +63,7 @@ gem 'simple_form'
 # Use Capistrano for deployment
 
 group :development do
+  gem "rails-erd"
   gem 'capistrano', '~> 3.4'
   gem 'capistrano-rails', '~> 1.2', '>= 1.2.2'
   gem 'capistrano-rbenv', '~> 2.1'
