@@ -70,10 +70,7 @@ class AnswersController < ApplicationController
       if Course.find(current_user.current_course_id).course_type == "Resumen"
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
         @sintesis = @partner_answer
-        puts "ACA"
-        puts @partner_answer
       else
-        puts "AQUI"
         @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
       end
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"

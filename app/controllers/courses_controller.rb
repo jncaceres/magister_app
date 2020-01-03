@@ -126,7 +126,6 @@ class CoursesController < ApplicationController
   end
 
   def create
-    puts "ENTRANDING"
     data = Register.new(button_id:3, user_id:current_user.id)
     data.save
     @course = Course.new(course_params)
