@@ -1,6 +1,5 @@
 class HomeController < ApplicationController
   before_action :set_breadcrumbs
-  after_action :allow_iframe
 
   respond_to :html, :json
   def home
@@ -22,10 +21,6 @@ class HomeController < ApplicationController
 
   def set_breadcrumbs
     @breadcrumbs = []
-  end
-
-  def allow_iframe
-    response.headers.except! 'X-Frame-Options'
   end
 
 end
