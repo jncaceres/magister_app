@@ -95,6 +95,11 @@ Rails.application.routes.draw do
   post 'homework/:id/favorite', to: 'homeworks#favorite', as: :favorite_homework
   delete 'homework/:id/favorite', to: 'homeworks#favorite'
 
+  #### lti
+  get 'lti/launch'
+  post 'lti/launch'
+  get 'lti/launch_error'
+
   resources :courses do
     resources :reports
     resources :users do
