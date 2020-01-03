@@ -117,9 +117,6 @@ GEM
       activesupport (>= 4.2.0)
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
-    ims-lti (1.1.13)
-      builder
-      oauth (>= 0.4.5, < 0.6)
     jbuilder (2.7.0)
       activesupport (>= 4.2.0)
       multi_json (>= 1.2)
@@ -152,7 +149,6 @@ GEM
     net-ssh (4.2.0)
     nokogiri (1.8.2)
       mini_portile2 (~> 2.3.0)
-    oauth (0.5.4)
     orm_adapter (0.5.0)
     paperclip (5.0.0)
       activemodel (>= 4.2.0)
@@ -328,7 +324,6 @@ DEPENDENCIES
   factory_bot
   factory_bot_rails
   faker
-  ims-lti (~> 1.1.8)
   jbuilder (~> 2.0)
   jquery-fileupload-rails
   jquery-rails
@@ -360,6 +355,9 @@ DEPENDENCIES
   wicked_pdf
   wkhtmltopdf-binary
   zip-zip
+
+RUBY VERSION
+   ruby 2.3.4p301
 
 BUNDLED WITH
    1.16.4

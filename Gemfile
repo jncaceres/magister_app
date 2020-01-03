@@ -43,8 +43,10 @@ gem 'prawn'
 gem 'prawn-emoji', require: false
 gem 'rubyzip'
 gem 'zip-zip'
+
 gem 'ims-lti', '~> 1.1.8'
 gem 'mechanize'
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
