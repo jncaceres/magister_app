@@ -19,6 +19,9 @@ class AnswersController < ApplicationController
       if @homework.argumentar? or @homework.evaluar?
         @my_answer      = @corregido.answers.find_by(homework_id: @homework.id) || @homework.answers.build
         @partner_answer = own_answer
+        if Course.find(current_user.current_course_id).course_type == "Resumen"
+          @partner_answer.argumentar = @homework.sinthesy.where(phase: "responder").last.sinthesys
+        end
         @answer         = @partner_answer
       elsif @homework.rehacer? or @homework.integrar?
         @my_answer      = own_answer
@@ -64,10 +67,21 @@ class AnswersController < ApplicationController
     @corrector = User.find_by_id(current_user.corrector)
     if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
       @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-      @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
+      if Course.find(current_user.current_course_id).course_type == "Resumen"
+        @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
+        @sintesis = @partner_answer
+        puts "ACA"
+        puts @partner_answer
+      else
+        puts "AQUI"
+        @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
+      end
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
       @my_answer = current_user.answers.find_by_homework_id(@homework.id)
       @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
+      if Course.find(current_user.current_course_id).course_type == "Resumen"
+        @partner_answer.argumentar = @homework.sinthesy.where(phase: "responder").last.sinthesys
+      end
     else
       @my_answer = current_user.answers.find_by_homework_id(@homework.id)
     end
@@ -277,9 +291,9 @@ class AnswersController < ApplicationController
     th1.join()
     th2.join()
     th3.join()
-    folder = "/home/administrator/magister/pdfs"
+    folder = "/home/patricio/Documentos/Magister/magister_app/pdfs"
     input_filenames = lista_num_alum
-    zipfile_name = "/home/administrator/magister/" + nombre_tarea + ".zip"
+    zipfile_name = "/home/patricio/Documentos/Magister/magister_app/" + nombre_tarea + ".zip"
     Zip.continue_on_exists_proc = true
     Zip.unicode_names = true
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|

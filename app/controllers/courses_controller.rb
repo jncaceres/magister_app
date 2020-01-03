@@ -114,7 +114,7 @@ class CoursesController < ApplicationController
       .tempfile
       .read
       .force_encoding('UTF-8')
-    
+
     associator = Associator::Associate.new(@course, file).call
     if associator.save then
       flash.notice = 'Alumnos registrados exitosamente'
@@ -126,6 +126,7 @@ class CoursesController < ApplicationController
   end
 
   def create
+    puts "ENTRANDING"
     data = Register.new(button_id:3, user_id:current_user.id)
     data.save
     @course = Course.new(course_params)
@@ -446,7 +447,7 @@ class CoursesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def course_params
-      params.require(:course).permit(:name, :description, :button)
+      params.require(:course).permit(:name, :description, :button, :course_type)
     end
 
     def set_breadcrumbs

@@ -60,7 +60,7 @@ class HomeworksController < ApplicationController
     #   .course
     #   .users
     #   .update_all(partner_id: nil, corrector: nil, corregido: nil)
-    
+
     redirect_to homeworks_path
   end
 
@@ -347,7 +347,7 @@ class HomeworksController < ApplicationController
         return true
       else
         flash.alert = "Se necesita que respondan al menos 3 alumnos para hacer el sorteo."
-        
+
         return false
       end
     end

@@ -9,13 +9,14 @@ div align="center"
     = f.text_area "Synthesis Text", size: "75x15", required: true, :value => @all_text
     = f.submit "Re-Sintetizar", class: "btn btn-success"
 
+div align="center"
+  h3 "Resultado"
+  = form_for "" do |fo|
+    = fo.text_area "Synthesized Text", size: "75x15", required: true, :value => @output.to_s
+    = fo.submit "Guardar", class: "btn btn-primary"
+
 br
 
 div align="center"
   .form-group
     = link_to 'Atrás', homework_path(params['homework_id']), method: :get, class: "btn btn-danger"
-
-div align="center"
-  h3 "Resultado"
-  br
-  p = @output.to_s.html_safe

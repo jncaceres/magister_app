@@ -4,20 +4,41 @@ class SynthesisController < ApplicationController
 
   def index
     @homework_name = @homework.name
-    @all_text = collect_answers
+    collected_text = collect_answers
+    @all_text = parse_text_with_rules(collected_text)
     @answer = sinthesize_text(@all_text)
     @output = sinthesize_text(@answer.inner_text)
+  end
+
+  def parse_text_with_rules(old_text)
+    new_text = old_text.gsub(URI.regexp, "")
+    new_text = old_text.gsub(/(([A-Z]|[a-z])|([0-9]))[.]?[-]?[)][ ]/, "")
+    new_text = old_text.gsub(/(([A-Z]|[a-z])|([0-9]))[.]?[-][ ]/, "")
+    # new_text = old_text.gsub(/([0-9]|[a-z]|[A-Z])[.][ ]/, "")
+    return new_text
   end
 
   def index_with_edition
     @homework_name = @homework.name
     if request.post?
-      @all_text = params["Synthesis Text"]
+      if params["Synthesis Text"].nil?
+        saved_values = {"sinthesys": params["Synthesized Text"], "phase": @homework.actual_phase, "homework_id": @homework.id}
+        if Sinthesy.create(saved_values)
+          flash.alert = "Se ha guardado el resumen correctamente"
+          redirect_to homework_path(@homework.id), notice: "Gane"
+        else
+          flash.alert = "Hubo un error desconocido"
+          redirect_to homework_path(@homework.id), notice: "perdí"
+        end
+      else
+        @all_text = params["Synthesis Text"]
+      end
     else
       @all_text = collect_answers
     end
     @output = sinthesize_text(@all_text)
     @output = sinthesize_text(@output.inner_text)
+    @output = @output.inner_text
   end
 
   def sinthesize_text(text)
@@ -41,9 +62,11 @@ class SynthesisController < ApplicationController
     @course.users.each do |alumno|
       @corregido = User.find_by_id(alumno.id)
       @corrector = User.find_by_id(alumno.corrector)
-      if alumno.role == "alumno" and alumno.corrector and alumno.answers.find_by_homework_id(@homework.id)
+      if alumno.role == "alumno" and alumno.answers.find_by_homework_id(@homework.id)
         @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-        @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
+        if alumno.corrector
+          @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
+        end
         if @homework.actual_phase == "responder"
           if @my_answer.responder.nil?
             @my_answer.responder = ""
@@ -51,11 +74,27 @@ class SynthesisController < ApplicationController
           answer << @my_answer.responder.to_s
           answer << "\n"
         elsif @homework.actual_phase == "argumentar"
-          if @partner_answer.argumentar.nil?
-            @partner_answer.argumentar = ""
+          if @course.course_type == "Resumen"
+            if @partner_answer
+              if @partner_answer.responder.nil?
+                @partner_answer.responder = ""
+              end
+              answer << @partner_answer.responder.to_s
+              answer << "\n"
+            else
+              answer << "No se ha generado ninguna respuesta"
+            end
+          else
+            if @partner_answer
+              if @partner_answer.argumentar.nil?
+                @partner_answer.argumentar = ""
+              end
+              answer << @partner_answer.argumentar.to_s
+              answer << "\n"
+            else
+              answer << "No se ha generado ninguna respuesta"
+            end
           end
-          answer << @partner_answer.argumentar.to_s
-          answer << "\n"
         elsif @homework.actual_phase == "rehacer"
           if @my_answer.rehacer.nil?
             @my_answer.rehacer = ""
@@ -73,6 +112,10 @@ class SynthesisController < ApplicationController
 
     def set_breadcrumbs
       @breadcrumbs = []
+    end
+
+    def sinthesys_params
+      params.require(:sinthesys).permit(:sinthesys, :phase, :homework_id)
     end
 
     def set_homework
