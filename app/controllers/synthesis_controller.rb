@@ -14,7 +14,6 @@ class SynthesisController < ApplicationController
     new_text = old_text.gsub(URI.regexp, "")
     new_text = old_text.gsub(/(([A-Z]|[a-z])|([0-9]))[.]?[-]?[)][ ]/, "")
     new_text = old_text.gsub(/(([A-Z]|[a-z])|([0-9]))[.]?[-][ ]/, "")
-    # new_text = old_text.gsub(/([0-9]|[a-z]|[A-Z])[.][ ]/, "")
     return new_text
   end
 

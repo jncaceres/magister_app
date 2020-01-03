@@ -4,15 +4,14 @@ production:
   pool: 5
   database: magister_app_production
   host: localhost
-  username: patricio
-  password: Pato5987
+  username: deploy
+  password: helloworld
 
 development:
   adapter: postgresql
   encoding: utf8
   pool: 5
-  #database: magister_app_development
-  database: finanzas_db
+  database: magister_app_development
   host: localhost
-  username: patricio
-  password: Pato5987
+  username: deploy
+  password: helloworld
