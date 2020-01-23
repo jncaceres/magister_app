@@ -81,7 +81,52 @@ class AnswersController < ApplicationController
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
         @sintesis = @partner_answer
       else
-        @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
+        if @bit_argue
+
+          #Revisamos si ya tienes preguntas asignadas
+          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", @corregido.id, @corregido.id)
+          @caca = assigned.length
+
+          if assigned.length > 0
+
+            if assigned.length == 2
+              @partner_answer_2 = assigned[1]
+            end
+
+            @partner_answer = assigned[0]
+
+          else
+
+            partners_answers = Answer.where(homework_id: @homework.id).where.not(user_id: @corregido.id).where.not(corrector_id: @corregido.id).where.not(corrector_id_2: @corregido.id).where("counter_argue < 2")
+
+            if partners_answers.length > 1
+              random_answers = partners_answers.sample(2)
+              @partner_answer = random_answers[0]
+              @partner_answer_2 = random_answers[1]
+              @partner_answer_2.update(counter_argue: @partner_answer_2.counter_argue + 1)
+
+              if @partner_answer_2.counter_argue == 2
+                @partner_answer_2.update(corrector_id_2: @corregido.id)
+              else
+                @partner_answer_2.update(corrector_id: @corregido.id)
+              end
+
+            elsif partners_answers.length == 1
+              @partner_answer = partners_answers.sample[0]
+            end
+
+            #Actualizamos contador de revision
+            @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
+
+            if @partner_answer.counter_argue == 2
+              @partner_answer.update(corrector_id_2: @corregido.id)
+            else
+              @partner_answer.update(corrector_id: @corregido.id)
+            end
+
+          end
+
+        end
       end
 
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
