@@ -65,7 +65,8 @@ class AnswersController < ApplicationController
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Realizar Actividad"]
     @corregido = User.find_by_id(current_user.corregido)
     @corrector = User.find_by_id(current_user.corrector)
-    if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
+    @bit_argue = current_user.argument
+    if @homework.actual_phase == "evaluar"
       @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
       if Course.find(current_user.current_course_id).course_type == "Resumen"
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
@@ -73,6 +74,16 @@ class AnswersController < ApplicationController
       else
         @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
       end
+    elsif @homework.actual_phase == "argumentar" and @bit_argue
+
+      @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
+      if Course.find(current_user.current_course_id).course_type == "Resumen"
+        @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
+        @sintesis = @partner_answer
+      else
+        @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
+      end
+
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
       @my_answer = current_user.answers.find_by_homework_id(@homework.id)
       @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)

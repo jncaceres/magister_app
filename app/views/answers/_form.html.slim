@@ -16,10 +16,7 @@
 
     .form-group
       .col-sm-10
-        - if Course.find(current_user.current_course_id).course_type == "Resumen" && @homework.actual_phase == 'argumentar'
-          = f.text_area @homework.actual_phase.to_sym, cols: 40, rows: 15, id: 'answer', class: 'form-control', placeholder: 'Ingrese respuesta', readonly: true, value: @sintesis, style: 'font-size: 15px; line-height: 1.5'
-        - else
-          = f.text_area @homework.actual_phase.to_sym, cols: 40, rows: 15, id: 'answer', class: 'form-control', placeholder: 'Ingrese respuesta', style: 'font-size: 15px; line-height: 1.5'
+        = f.text_area @homework.actual_phase.to_sym, cols: 40, rows: 15, id: 'answer', class: 'form-control', placeholder: 'Ingrese respuesta', style: 'font-size: 15px; line-height: 1.5'
         br
 
       .col-xs-2
@@ -27,12 +24,12 @@
         = f.file_field "image_#{@homework.actual_phase}_2", style: 'display: none', type: 'file', id: 'pictureInput_2'
 
         br
-
+      
       = render "form#{Homework.actual_phases[@homework.actual_phase] + 1}_#{@homework.actual_phase}"
 
     .row
       .span4
         .spacer10
-
+    
     .actions
       = f.submit 'Enviar Respuesta', class: 'btn btn-primary'
