@@ -12,6 +12,8 @@
     - @actual_phase = @homework.actual_phase.capitalize
 
     = f.hidden_field :phase, value: @actual_phase
+    = f.hidden_field :partner_answer_id, value: @partner_answer.user_id
+
     h3.control-label.col-sm-9(for="question") = @actual_phase
 
     .form-group
@@ -19,17 +21,9 @@
         = f.text_area @homework.actual_phase.to_sym, cols: 40, rows: 15, id: 'answer', class: 'form-control', placeholder: 'Ingrese respuesta', style: 'font-size: 15px; line-height: 1.5'
         br
 
-      .col-xs-2
-        = f.file_field "image_#{@homework.actual_phase}_1", style: 'display: none', type: 'file', id: 'pictureInput_1'
-        = f.file_field "image_#{@homework.actual_phase}_2", style: 'display: none', type: 'file', id: 'pictureInput_2'
-
-        br
-
-      = render "form#{Homework.actual_phases[@homework.actual_phase] + 1}_#{@homework.actual_phase}"
-
     .row
       .span4
         .spacer10
 
     .actions
-      = f.submit 'Enviar Respuesta', class: 'btn btn-primary'
+      = f.submit 'Enviar Argumentación 1', class: 'btn btn-primary'

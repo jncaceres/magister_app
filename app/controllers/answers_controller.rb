@@ -12,17 +12,54 @@ class AnswersController < ApplicationController
 
     @corregido = User.find_by_id(current_user.corregido)
     @corrector = User.find_by_id(current_user.corrector)
+    @user_id = current_user.id
 
     own_answer = current_user.answers.find_by(homework_id: @homework.id)
+    @my_answer = current_user.answers.find_by_homework_id(@homework.id)
 
     if @homework.responder? or (own_answer and check_answer(own_answer, 'responder')) then
       if @homework.argumentar? or @homework.evaluar?
-        @my_answer      = @corregido.answers.find_by(homework_id: @homework.id) || @homework.answers.build
         @partner_answer = own_answer
+        @partner_answer_2 = own_answer
         if Course.find(current_user.current_course_id).course_type == "Resumen"
           @partner_answer.argumentar = @homework.sinthesy.where(phase: "responder").last.sinthesys
         end
         @answer         = @partner_answer
+
+        if @homework.actual_phase == "argumentar"
+          #Lista de preguntadas asignadas para argumentar
+          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id)
+          @partner_answer = nil
+          @partner_answer_2 = nil
+          @my_argue = nil
+          @my_argue_2 = nil
+
+          if assigned.length == 1
+            @partner_answer = assigned[0]
+            if @partner_answer.corrector_id == current_user.id
+              @my_argue = @partner_answer.argumentar
+            else
+              @my_argue = @partner_answer.argumentar_2
+            end
+
+          elsif assigned.length == 2
+            @partner_answer = assigned[0]
+            @partner_answer_2 = assigned[1]
+
+            if current_user.id == @partner_answer.corrector_id
+              @my_argue = @partner_answer.argumentar
+            else
+              @my_argue = @partner_answer.argumentar_2
+            end
+
+            if current_user.id == @partner_answer_2.corrector_id
+              @my_argue_2 = @partner_answer_2.argumentar
+            else
+              @my_argue_2 = @partner_answer_2.argumentar_2
+            end
+          end
+        end
+
       elsif @homework.rehacer? or @homework.integrar?
         @my_answer      = own_answer
         @partner_answer = @corrector.answers.find_by(homework_id: @homework.id) || @homework.answers.build
@@ -62,42 +99,41 @@ class AnswersController < ApplicationController
   end
 
   def edit
+
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Realizar Actividad"]
     @corregido = User.find_by_id(current_user.corregido)
     @corrector = User.find_by_id(current_user.corrector)
     @bit_argue = current_user.argument
+    @my_answer = current_user.answers.find_by_homework_id(@homework.id)
+
     if @homework.actual_phase == "evaluar"
-      @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
       if Course.find(current_user.current_course_id).course_type == "Resumen"
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
         @sintesis = @partner_answer
       else
         @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
       end
-    elsif @homework.actual_phase == "argumentar" and @bit_argue
 
-      @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
+    elsif @homework.actual_phase == "argumentar"
       if Course.find(current_user.current_course_id).course_type == "Resumen"
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
         @sintesis = @partner_answer
       else
-        if @bit_argue
-
+        if @bit_argue == 1
           #Revisamos si ya tienes preguntas asignadas
-          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", @corregido.id, @corregido.id)
-          @caca = assigned.length
+          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id)
+          @n_assigned = assigned
 
+          #Si ya tengo preguntas a argumentar asignadas
           if assigned.length > 0
-
             if assigned.length == 2
               @partner_answer_2 = assigned[1]
             end
-
             @partner_answer = assigned[0]
-
           else
 
-            partners_answers = Answer.where(homework_id: @homework.id).where.not(user_id: @corregido.id).where.not(corrector_id: @corregido.id).where.not(corrector_id_2: @corregido.id).where("counter_argue < 2")
+            #Si es que no tengo preguntas a argumentar asignadas, las asigno.
+            partners_answers = Answer.where("homework_id = ? AND user_id != ? AND corrector_id != ? AND corrector_id_2 != ? AND counter_argue < 2", @homework.id, current_user.id, current_user.id, current_user.id)
 
             if partners_answers.length > 1
               random_answers = partners_answers.sample(2)
@@ -106,31 +142,30 @@ class AnswersController < ApplicationController
               @partner_answer_2.update(counter_argue: @partner_answer_2.counter_argue + 1)
 
               if @partner_answer_2.counter_argue == 2
-                @partner_answer_2.update(corrector_id_2: @corregido.id)
+                @partner_answer_2.update(corrector_id_2: current_user.id)
               else
-                @partner_answer_2.update(corrector_id: @corregido.id)
+                @partner_answer_2.update(corrector_id: current_user.id)
               end
 
             elsif partners_answers.length == 1
               @partner_answer = partners_answers.sample[0]
             end
 
-            #Actualizamos contador de revision
-            @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
+            if @partner_answer != nil
+              #Actualizamos contador de revision
+              @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
 
-            if @partner_answer.counter_argue == 2
-              @partner_answer.update(corrector_id_2: @corregido.id)
-            else
-              @partner_answer.update(corrector_id: @corregido.id)
+              if @partner_answer.counter_argue == 2
+                @partner_answer.update(corrector_id_2: current_user.id)
+              else
+                @partner_answer.update(corrector_id: current_user.id)
+              end
             end
-
           end
-
         end
       end
 
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
-      @my_answer = current_user.answers.find_by_homework_id(@homework.id)
       @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
       if Course.find(current_user.current_course_id).course_type == "Resumen"
         @partner_answer.argumentar = @homework.sinthesy.where(phase: "responder").last.sinthesys
@@ -149,7 +184,7 @@ class AnswersController < ApplicationController
       @homework.answers << @answer
       @answer.homework = @homework
     end
-    if params["commit"] == "Enviar Respuesta"
+    if params["commit"] == "Enviar Respuesta" or params["commit"] == "Enviar Argumentación 1" or params["commit"] == "Enviar Argumentación 2"
       redirect_to homework_answers_path(@homework)
     else
       redirect_to edit_homework_answer_path(@homework, @answer)
@@ -157,38 +192,92 @@ class AnswersController < ApplicationController
   end
 
   def update
+    #@my_answer = current_user.answers.find_by_homework_id(@homework.id)
     if @homework.upload
       begin
         user = User.find_by_id(@answer.user_id)
-        corrector = User.find_by_id(user.corrector)
-        @answer.corrector_id = corrector.id
-        @answer.save
+        #corrector = User.find_by_id(user.corrector)
+        #@answer.corrector_id = corrector.id
+        #@answer.save
       rescue
       end
       respond_to do |format|
-        @answer.update(answer_params)
-        if @answer.save
-          if params["commit"] == "Enviar Respuesta"
+        if params["commit"] == "Enviar Argumentación 1"
+          partner_id = params["answer"]['partner_answer_id']
+          answer_1 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id = ?", @homework.id, partner_id, current_user.id)
+
+          #Si soy el primer corrector
+          if answer_1.length == 1
+            @partner_answer = answer_1[0]
+            @partner_answer.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+          else
+            answer_2 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id_2 = ?", @homework.id, partner_id, current_user.id)
+            @partner_answer = answer_2[0]
+            @partner_answer.update(argumentar_2: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+          end
+
+          if @partner_answer.save
             data = Register.new(button_id:35, user_id:current_user.id)
             data.save
-            format.html { redirect_to homework_answers_path(@homework)}
+            format.html { redirect_to homework_answers_path(@homework) }
             format.json { render :show, status: :ok, location: @homework }
           else
-            if @answer.phase.downcase != @homework.actual_phase
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
+            format.json { render json: @homework.errors, status: :unprocessable_entity }
+          end
+
+        elsif params["commit"] == "Enviar Argumentación 2"
+
+          partner_id = params["answer"]['partner_answer_id']
+          answer_1 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id = ?", @homework.id, partner_id, current_user.id)
+
+          #Si soy el primer corrector
+          if answer_1.length == 1
+            @partner_answer_2 = answer_1[0]
+            @partner_answer_2.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+          else
+            answer_2 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id_2 = ?", @homework.id, partner_id, current_user.id)
+            @partner_answer_2 = answer_2[0]
+            @partner_answer_2.update(argumentar_2: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+          end
+
+          if @answer.save
+            data = Register.new(button_id:35, user_id:current_user.id)
+            data.save
+            format.html { redirect_to homework_answers_path(@homework) }
+            format.json { render :show, status: :ok, location: @homework }
+          else
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
+            format.json { render json: @homework.errors, status: :unprocessable_entity }
+          end
+
+        else
+          @answer.update(answer_params)
+          if @answer.save
+            if params["commit"] == "Enviar Respuesta"
+              data = Register.new(button_id:35, user_id:current_user.id)
+              data.save
               format.html { redirect_to homework_answers_path(@homework)}
               format.json { render :show, status: :ok, location: @homework }
             else
-              #format.js
+              if @answer.phase.downcase != @homework.actual_phase
+                format.html { redirect_to homework_answers_path(@homework)}
+                format.json { render :show, status: :ok, location: @homework }
+              else
+                #format.js
+              end
             end
+          else
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
+            format.json { render json: @homework.errors, status: :unprocessable_entity }
           end
-        else
-          format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
-          format.json { render json: @homework.errors, status: :unprocessable_entity }
         end
       end
+
     else
       redirect_to homework_answers_path(@homework)
     end
+
   end
 
   def favorite

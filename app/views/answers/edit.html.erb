@@ -4,7 +4,7 @@
 			<%= render 'part0_pregunta' %>
 		</div>
 		<div class="thumbnail">
-		<% if @partner_answer != nil && @my_answer != nil %>
+		<% if @partner_answer != nil or @my_answer != nil %>
 			<% if @homework.actual_phase != "responder" %>
 				<%= render 'part1_responder' %>
 				<% if @homework.actual_phase != "argumentar" %>
