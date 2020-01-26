@@ -1,20 +1,11 @@
 <div class="container-fluid">
   <% if @partner_answer != nil %>
 
-    <h3>Respuesta compañer@</h3>
+    <h3><b>Respuesta compañer@ 1</b></h3>
 
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@partner_answer.responder, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-
-        <% if @user_id == @partner_answer.corrector_id and @partner_answer.argumentar != nil %>
-        <h3>Tu argumento</h3>
-          <%= simple_format(@partner_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-        <% elsif @user_id == @partner_answer.corrector_id_2 and @partner_answer.argumentar_2 != nil %>
-        <h3>Tu argumento</h3>
-          <%= simple_format(@partner_answer.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-        <% end %>
-
       </div>
 
       <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
@@ -36,9 +27,7 @@
         <button>
           <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
         </button>
-
         <%end%>
-
         <br></br>
 
         <% if @partner_answer.image_responder_2?%>
@@ -63,22 +52,39 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <h3><b>Nota respuesta compañer@ 1</b></h3>
+      </div>
+
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <% if @user_id == @partner_answer.corrector_id and @partner_answer.grade_argue_1 != nil %>
+          <%= @partner_answer.grade_argue_1 %>
+        <% elsif @user_id == @partner_answer.corrector_id_2 and @partner_answer.argumentar_2 != nil %>
+          <%= @partner_answer.grade_argue_2 %>
+        <% end %>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <% if @user_id == @partner_answer.corrector_id and @partner_answer.argumentar != nil %>
+        <h3><b>Tu argumento</b></h3>
+          <%= simple_format(@partner_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+        <% elsif @user_id == @partner_answer.corrector_id_2 and @partner_answer.argumentar_2 != nil %>
+        <h3><b>Tu argumento</b></h3>
+          <%= simple_format(@partner_answer.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+        <% end %>
+      </div>
+    </div>
   <% end %>
 
   <% if @partner_answer_2 != nil %>
-    <h3>Respuesta compañer@</h3>
+    <h3><b>Respuesta compañer@ 2</b></h3>
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@partner_answer_2.responder, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-
-        <% if @user_id == @partner_answer_2.corrector_id and @partner_answer_2.argumentar != nil %>
-        <h3>Tu argumento</h3>
-          <%= simple_format(@partner_answer_2.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-        <% elsif @user_id == @partner_answer_2.corrector_id_2 and @partner_answer_2.argumentar != nil %>
-        <h3>Tu argumento</h3>
-          <%= simple_format(@partner_answer_2.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-        <% end %>
-
       </div>
       <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
         <% if @partner_answer_2.image_responder_1?%>
@@ -122,6 +128,33 @@
           <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
         </button>
         <%end%>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <h3><b>Nota respuesta compañer@ 2</b></h3>
+      </div>
+
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <% if @user_id == @partner_answer_2.corrector_id and @partner_answer_2.grade_argue_1 != nil %>
+          <%= @partner_answer_2.grade_argue_1 %>
+        <% elsif @user_id == @partner_answer_2.corrector_id_2 and @partner_answer_2.argumentar_2 != nil %>
+          <%= @partner_answer_2.grade_argue_2 %>
+        <% end %>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <% if @user_id == @partner_answer_2.corrector_id and @partner_answer_2.argumentar != nil %>
+        <h3><b>Tu argumento</b></h3>
+          <%= simple_format(@partner_answer_2.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+        <% elsif @user_id == @partner_answer_2.corrector_id_2 and @partner_answer_2.argumentar != nil %>
+        <h3><b>Tu argumento</b></h3>
+          <%= simple_format(@partner_answer_2.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+        <% end %>
       </div>
     </div>
   <% end %>

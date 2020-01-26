@@ -121,7 +121,7 @@ class AnswersController < ApplicationController
       else
         if @bit_argue == 1
           #Revisamos si ya tienes preguntas asignadas
-          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id)
+          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
           @n_assigned = assigned
 
           #Si ya tengo preguntas a argumentar asignadas
@@ -210,10 +210,12 @@ class AnswersController < ApplicationController
           if answer_1.length == 1
             @partner_answer = answer_1[0]
             @partner_answer.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+            @partner_answer.update(grade_argue_1: params["answer"]['grade_argue_1'])
           else
             answer_2 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id_2 = ?", @homework.id, partner_id, current_user.id)
             @partner_answer = answer_2[0]
             @partner_answer.update(argumentar_2: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+            @partner_answer.update(grade_argue_2: params["answer"]['grade_argue_1'])
           end
 
           if @partner_answer.save
@@ -235,10 +237,12 @@ class AnswersController < ApplicationController
           if answer_1.length == 1
             @partner_answer_2 = answer_1[0]
             @partner_answer_2.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+            @partner_answer_2.update(grade_argue_1: params["answer"]['grade_argue_1'])
           else
             answer_2 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id_2 = ?", @homework.id, partner_id, current_user.id)
             @partner_answer_2 = answer_2[0]
             @partner_answer_2.update(argumentar_2: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+            @partner_answer_2.update(grade_argue_2: params["answer"]['grade_argue_1'])
           end
 
           if @answer.save
@@ -494,6 +498,8 @@ class AnswersController < ApplicationController
       params.require(:answer).permit(:phase, :upload, :responder, :argumentar,
        :rehacer, :evaluar, :integrar, :image_responder_1, :image_responder_2,
        :image_argumentar_1, :image_argumentar_2, :image_rehacer_1,  :image_rehacer_2,
-       :image_evaluar_1, :image_evaluar_2, :image_integrar_1, :image_integrar_2, :corrector_id)
+       :image_evaluar_1, :image_evaluar_2, :image_integrar_1, :image_integrar_2,
+       :corrector_id, :argumentar_2, :grade_argue_1, :grade_argue_2, :grade_eval_1,
+       :grade_eval_2)
     end
 end

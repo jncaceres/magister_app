@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200124001319) do
+ActiveRecord::Schema.define(version: 20200126001806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,6 +72,10 @@ ActiveRecord::Schema.define(version: 20200124001319) do
     t.integer  "counter_argue",                   default: 0
     t.integer  "corrector_id_2",                  default: 0
     t.text     "argumentar_2"
+    t.integer  "grade_argue_1"
+    t.integer  "grade_argue_2"
+    t.integer  "grade_eval_1"
+    t.integer  "grade_eval_2"
   end
 
   add_index "answers", ["user_id", "homework_id"], name: "index_answers_on_user_id_and_homework_id", using: :btree
