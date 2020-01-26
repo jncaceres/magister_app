@@ -11,7 +11,11 @@
 
     = f.hidden_field :phase, value: @actual_phase
     = f.hidden_field :partner_answer_id, value: @partner_answer.user_id
-    - @answer.argumentar = @partner_answer.argumentar
+    - if @answer.user_id == @partner_answer.corrector_id
+      - @answer.argumentar = @partner_answer.argumentar
+    - else
+      - @answer.argumentar = @partner_answer.argumentar_2
+
 
     h3.control-label.col-sm-9(for="question") = @actual_phase
 
