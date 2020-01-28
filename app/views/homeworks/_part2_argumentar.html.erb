@@ -1,53 +1,21 @@
 <div class="container-fluid">
-  <% if @partner_answer.argumentar != nil %>
-    <h3>Argumentar</h3>
+
+  <% if @student_answer.argumentar != nil %>
+    <h3>Argumento compañer@ 1</h3>
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
-        <%= simple_format(@partner_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-      </div>
-      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-        <% if @partner_answer.image_argumentar_1?%>
-          <button data-toggle="modal" data-target=".bs-argumentar_1-modal-lg">
-            <%= image_tag @partner_answer.image_argumentar_1.url(:medium), style: "height: 100px; width: 100px" %>
-          </button>
-
-          <div class="modal fade bs-argumentar_1-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <p><%= image_tag @partner_answer.image_argumentar_1.url(:medium) %></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        <%else%>
-        <button>
-          <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
-        </button>
-        <%end%>
-
-        <br></br>
-
-        <% if @partner_answer.image_argumentar_2?%>
-          <button data-toggle="modal" data-target=".bs-argumentar_2-modal-lg">
-            <%= image_tag @partner_answer.image_argumentar_2.url(:medium), style: "height: 100px; width: 100px" %>
-          </button>
-
-          <div class="modal fade bs-argumentar_2-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <p><%= image_tag @partner_answer.image_argumentar_2.url(:medium) %></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        <%else%>
-        <button>
-          <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
-        </button>
-        <%end%>
+        <%= simple_format(@student_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
       </div>
     </div>
   <% end %>
+
+  <% if @student_answer.argumentar_2 != nil %>
+    <h3>Argumento compañer@ 2</h3>
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <%= simple_format(@student_answer.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+      </div>
+    </div>
+  <% end %>
+
 </div>

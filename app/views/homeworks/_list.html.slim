@@ -6,14 +6,17 @@ div(onload="timedRefresh(3000);")
   br
   br
   br
-  
+
   table.table.table-striped#students_list
     thead
       tr
         th Apellido
         th Nombre
         th Respuesta
+        th Nota Argumentar 1
+        th Nota Argumentar 2
         th Ver
+        th Editar
     tbody
       - @students.sort_by{|e| e[:last_name]}.each do |user|
         - if user.alumno?
@@ -22,4 +25,7 @@ div(onload="timedRefresh(3000);")
             td = user.last_name
             td = user.first_name
             td = bool_tag did_answer(answer, @homework.actual_phase)
+            td = bool_tag have_grade?(answer, "grade_argue_1")
+            td = bool_tag have_grade?(answer, "grade_argue_2")
             td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase)
+            td = link_to 'Agregar nota', addgradetostudentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase)

@@ -10,9 +10,8 @@ class AnswersController < ApplicationController
   def index
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Realizar Actividad"]
 
-    @corregido = User.find_by_id(current_user.corregido)
-    @corrector = User.find_by_id(current_user.corrector)
     @user_id = current_user.id
+    @user = User.find_by_id(current_user.id)
 
     own_answer = current_user.answers.find_by(homework_id: @homework.id)
     @my_answer = current_user.answers.find_by_homework_id(@homework.id)
@@ -69,18 +68,9 @@ class AnswersController < ApplicationController
         @answer         = @my_answer
       end
     else
-      render 'late' and return
+      #render 'late' and return
     end
 
-    if @homework.upload
-      if @answer.nil?
-        redirect_to new_homework_answer_path @homework
-      elsif @answer.send(@homework.actual_phase).nil?
-        redirect_to edit_homework_answer_path @homework, @answer
-      end
-    else
-      redirect_to users_path
-    end
   end
 
   def show
@@ -283,6 +273,7 @@ class AnswersController < ApplicationController
     end
 
   end
+
 
   def favorite
     @answer = Answer.find_by homework_id: params[:homework_id], user_id: params[:user_id]

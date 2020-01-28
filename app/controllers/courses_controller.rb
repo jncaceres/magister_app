@@ -27,6 +27,7 @@ class CoursesController < ApplicationController
     @courses = Course.all
     current_user.current_course_id = @course.id
     current_user.save
+
     if params['format']
       if params['format']["Ingresar"]
         data = Register.new(button_id:4, user_id:current_user.id)
@@ -114,7 +115,7 @@ class CoursesController < ApplicationController
       .tempfile
       .read
       .force_encoding('UTF-8')
-    
+
     associator = Associator::Associate.new(@course, file).call
     if associator.save then
       flash.notice = 'Alumnos registrados exitosamente'
