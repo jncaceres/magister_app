@@ -25,7 +25,7 @@ div(onload="timedRefresh(3000);")
             td = user.last_name
             td = user.first_name
             td = bool_tag did_answer(answer, @homework.actual_phase)
-            td = bool_tag have_grade?(answer, "grade_argue_1")
-            td = bool_tag have_grade?(answer, "grade_argue_2")
+            td = bool_tag have_grade?(answer, "grade_argue_1", @homework.actual_phase)
+            td = bool_tag have_grade?(answer, "grade_argue_2", @homework.actual_phase)
             td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase)
             td = link_to 'Agregar nota', addgradetostudentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase)

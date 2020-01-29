@@ -8,10 +8,14 @@
         <%= simple_format(@student_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
       </div>
     </div>
+
   <% else %>
+
+    <h4>Sin argumentación de compañer@ 1</h4>
     <% if @student_answer.grade_argue_1 == nil %>
-      <h4>Sin calificación de compañer@ 1</h4>
+      <h4>Agregar nota argumentación 1</h4>
     <% else %>
+      <h4>Nota ingresada por ayudante / profesor: <%= @student_answer.grade_argue_1 %></h4>
       <h4>Editar nota argumentación 1</h4>
     <% end %>
 
@@ -34,7 +38,7 @@
 
   <% if @student_answer.argumentar_2 != nil %>
 
-    <h4><b>Nota compañer@ 2: <%= @student_answer.grade_argue_1%></b></h4>
+    <h4><b>Nota compañer@ 2: <%= @student_answer.grade_argue_2%></b></h4>
     <h3><b>Argumento compañer@ 2</b></h3>
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
@@ -43,10 +47,11 @@
     </div>
 
   <% else %>
-
+    <h4>Sin argumentación de compañer@ 2</h4>
     <% if @student_answer.grade_argue_2 == nil %>
-      <h4>Sin calificación de compañer@ 2</h4>
+      <h4>Agregar nota argumentación 2</h4>
     <% else %>
+      <h4>Nota ingresada por ayudante / profesor: <%= @student_answer.grade_argue_2 %></h4>
       <h4>Editar nota argumentación 2</h4>
     <% end %>
 

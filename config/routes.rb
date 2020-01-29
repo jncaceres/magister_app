@@ -99,6 +99,9 @@ Rails.application.routes.draw do
   post 'homework/:id/favorite', to: 'homeworks#favorite', as: :favorite_homework
   delete 'homework/:id/favorite', to: 'homeworks#favorite'
 
+  patch 'homeworks/:homework_id/answers/:id/edit', to: 'answers#update'
+  #get 'homeworks/:homework_id/answers', to: 'answers#update'
+
   #### lti
   get 'lti/launch'
   post 'lti/launch'

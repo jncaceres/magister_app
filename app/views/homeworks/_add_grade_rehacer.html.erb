@@ -1,6 +1,62 @@
 <div class="container-fluid">
+
+  <% if @student_answer.argumentar != nil %>
+    <% if @student_answer.grade_eval_1 != nil %>
+      <h4><b>Nota para argumentos de compañer@ 1: <%= @student_answer.grade_eval_1%></b></h4>
+    <% else %>
+      <% if @student_answer.grade_eval_1 == nil %>
+        <h4>Sin calificación a compañer@ 1</h4>
+      <% else %>
+        <h4>Editar nota argumentación 1</h4>
+      <% end %>
+
+        <h4>Elija calificación a asignar</h4>
+        <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+        <div class="field">
+          <%= f.select :grade_eval_1, options_for_select(1..7)%>
+        </div>
+
+        <div class="field">
+          <% if @student_answer.grade_eval_1 == nil %>
+            <%= f.submit "Agregar nota para argumento 1", class: "btn be-red white"%>
+          <% else %>
+            <%= f.submit "Editar nota para argumento 1", class: "btn be-red white"%>
+          <% end %>
+        </div>
+        <% end %>
+    <% end %>
+  <% end %>
+
+  <% if @student_answer.argumentar_2 != nil %>
+    <% if @student_answer.grade_eval_2 != nil %>
+      <h4><b>Nota para argumentos de compañer@ 2: <%= @student_answer.grade_eval_2 %></b></h4>
+    <% else %>
+
+      <% if @student_answer.grade_eval_2 == nil %>
+        <h4>Sin calificación a compañer@ 2</h4>
+      <% else %>
+        <h4>Editar nota argumentación 2</h4>
+      <% end %>
+
+        <h4>Elija calificación a asignar</h4>
+        <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+        <div class="field">
+          <%= f.select :grade_eval_2, options_for_select(1..7)%>
+        </div>
+
+        <div class="field">
+          <% if @student_answer.grade_argue_1 == nil %>
+            <%= f.submit "Agregar nota para argumento 2", class: "btn be-red white"%>
+          <% else %>
+            <%= f.submit "Editar nota para argumento 2", class: "btn be-red white"%>
+          <% end %>
+        </div>
+        <% end %>
+    <% end %>
+  <% end %>
+
   <% if @student_answer.rehacer != nil %>
-    <h3>Rehacer</h3>
+    <h3><b>Rehacer</b></h3>
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@student_answer.rehacer, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
@@ -48,6 +104,9 @@
         </button>
         <%end%>
       </div>
+  <% else %>
+    <h3><b>Sin respuesta en etapa Rehacer</b></h3>
     </div>
   <% end %>
+
 </div>

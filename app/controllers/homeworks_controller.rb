@@ -225,14 +225,65 @@ class HomeworksController < ApplicationController
 
   def update
 
-    if params['commit'] == 'Agregar nota argumento 2' or params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1' or params['commit'] == 'Editar nota argumento 2'
-      @student_answer = Answer.where('homework_id = ? AND user_id = ?', @homework.id, params['student_id'])[0]
-      if params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1'
-        @student_answer.update(grade_argue_1: params['answer']['grade_argue_1'])
-      else
-        @student_answer.update(grade_argue_2: params['answer']['grade_argue_2'])
+    if @homework.actual_phase == 'argumentar' or @homework.actual_phase == 'rehacer'
+      if @homework.actual_phase == 'argumentar'
+        if params['commit'] == 'Agregar nota argumento 2' or params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1' or params['commit'] == 'Editar nota argumento 2'
+          @student_answer = Answer.where('homework_id = ? AND user_id = ?', @homework.id, params['student_id'])[0]
+          if params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1'
+            @student_answer.update(grade_argue_1: params['answer']['grade_argue_1'])
+          else
+            @student_answer.update(grade_argue_2: params['answer']['grade_argue_2'])
+          end
+          redirect_to homework_path(@homework)
+
+        else
+          data = Register.new(button_id:13, user_id:current_user.id)
+          data.save
+          respond_to do |format|
+            if @homework.update(homework_params)
+              format.html { redirect_to homeworks_path } # REDIRECT TO INDEX
+              format.json { render :index, status: :ok }
+            else
+              format.html { render :edit }
+              format.json { render json: @homework.errors, status: :unprocessable_entity }
+            end
+          end
+        end
+      elsif @homework.actual_phase == 'rehacer'
+        @student_answer = Answer.where('homework_id = ? AND user_id = ?', @homework.id, params['student_id'])[0]
+        if params['commit'] == 'Agregar nota para argumento 2' or params['commit'] == 'Agregar nota para argumento 1' or params['commit'] == 'Editar nota para argumento 1' or params['commit'] == 'Editar nota para argumento 2'
+
+          if params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1'
+            @student_answer.update(grade_eval_1: params['answer']['grade_eval_1'])
+          else
+            @student_answer.update(grade_eval_2: params['answer']['grade_eval_2'])
+          end
+          redirect_to homework_path(@homework)
+
+        elsif params['commit'] == 'Agregar nota argumento 2' or params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1' or params['commit'] == 'Editar nota argumento 2'
+
+          if params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1'
+            @student_answer.update(grade_argue_1: params['answer']['grade_argue_1'])
+          else
+            @student_answer.update(grade_argue_2: params['answer']['grade_argue_2'])
+          end
+          redirect_to homework_path(@homework)
+
+        else
+          data = Register.new(button_id:13, user_id:current_user.id)
+          data.save
+          respond_to do |format|
+            if @homework.update(homework_params)
+              format.html { redirect_to homeworks_path } # REDIRECT TO INDEX
+              format.json { render :index, status: :ok }
+            else
+              format.html { render :edit }
+              format.json { render json: @homework.errors, status: :unprocessable_entity }
+            end
+          end
+        end
       end
-      redirect_to homework_path(@homework)
+
     else
       data = Register.new(button_id:13, user_id:current_user.id)
       data.save
@@ -246,6 +297,7 @@ class HomeworksController < ApplicationController
         end
       end
     end
+
   end
 
   def destroy
