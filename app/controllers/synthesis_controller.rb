@@ -36,8 +36,8 @@ class SynthesisController < ApplicationController
       @all_text = collect_answers
     end
     @output = sinthesize_text(@all_text)
-    @output = sinthesize_text(@output.inner_text)
-    @output = @output.inner_text
+    @output = sinthesize_text(@output)
+    @output = @output
   end
 
   def sinthesize_text(text)
@@ -48,8 +48,11 @@ class SynthesisController < ApplicationController
     form.radiobutton_with(:id => "ratio_10").check
     form['lang'] = ['es']
     page = form.submit
-    page.search('div').each do |h3|
-      h3.text
+    parsed_data = Nokogiri::HTML.parse(page.body)
+    if parsed_data.at_css('[id="out"]')
+      parsed_data.at_css('[id="out"]').text
+    else
+      ""
     end
   end
 
