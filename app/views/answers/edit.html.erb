@@ -21,13 +21,20 @@
 				<% end %>
 			<% end %>
 		<% end %>
+
 		<% if @homework.actual_phase == "argumentar"%>
 			<% if @bit_argue == 1 %>
 				<%= render 'arguments' %>
 			<% end %>
+
+		<% elsif @homework.actual_phase == "rehacer"%>
+			<%= render 'rehacer' %>
+			<%= render 'form' %>
+
 		<% else %>
 			<%= render 'form' %>
 		<% end %>
+
 		</div>
 	<% end %>
 </div>

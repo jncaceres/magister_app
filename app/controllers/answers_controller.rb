@@ -15,6 +15,8 @@ class AnswersController < ApplicationController
 
     own_answer = current_user.answers.find_by(homework_id: @homework.id)
     @my_answer = current_user.answers.find_by_homework_id(@homework.id)
+    @partner_answer = nil
+    @partner_answer_2 = nil
 
     if @homework.responder? or (own_answer and check_answer(own_answer, 'responder')) then
       if @homework.argumentar? or @homework.evaluar?
@@ -28,8 +30,6 @@ class AnswersController < ApplicationController
         if @homework.actual_phase == "argumentar"
           #Lista de preguntadas asignadas para argumentar
           assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id)
-          @partner_answer = nil
-          @partner_answer_2 = nil
           @my_argue = nil
           @my_argue_2 = nil
 
@@ -61,14 +61,13 @@ class AnswersController < ApplicationController
 
       elsif @homework.rehacer? or @homework.integrar?
         @my_answer      = own_answer
-        @partner_answer = @corrector.answers.find_by(homework_id: @homework.id) || @homework.answers.build
         @answer         = @my_answer
       else
         @my_answer      = own_answer
         @answer         = @my_answer
       end
     else
-      #render 'late' and return
+      render 'late' and return
     end
 
   end
@@ -91,8 +90,6 @@ class AnswersController < ApplicationController
   def edit
 
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Realizar Actividad"]
-    @corregido = User.find_by_id(current_user.corregido)
-    @corrector = User.find_by_id(current_user.corrector)
     @bit_argue = current_user.argument
     @my_answer = current_user.answers.find_by_homework_id(@homework.id)
 
@@ -156,7 +153,7 @@ class AnswersController < ApplicationController
       end
 
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
-      @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
+      @my_answer = current_user.answers.find_by_homework_id(@homework.id)
       if Course.find(current_user.current_course_id).course_type == "Resumen"
         @partner_answer.argumentar = @homework.sinthesy.where(phase: "responder").last.sinthesys
       end
@@ -243,6 +240,36 @@ class AnswersController < ApplicationController
           else
             format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
             format.json { render json: @homework.errors, status: :unprocessable_entity }
+          end
+
+        elsif params["commit"] == "Editar nota argumento 1" or params["commit"] == "Agregar nota argumento 1"
+
+          if params["commit"] == "Editar nota argumento 1" or params["commit"] == "Agregar nota argumento 1"
+            @answer.update(grade_eval_1: params['answer']['grade_eval_1'])
+            format.html { redirect_to homework_answers_path(@homework)}
+            format.json { render :show, status: :ok, location: @homework }
+          else
+            if @answer.phase.downcase != @homework.actual_phase
+              format.html { redirect_to homework_answers_path(@homework)}
+              format.json { render :show, status: :ok, location: @homework }
+            else
+              #format.js
+            end
+          end
+
+        elsif params["commit"] == "Editar nota argumento 2" or params["commit"] == "Agregar nota argumento 2"
+
+          if params["commit"] == "Editar nota argumento 2" or params["commit"] == "Agregar nota argumento 2"
+            @answer.update(grade_eval_2: params['answer']['grade_eval_2'])
+            format.html { redirect_to homework_answers_path(@homework)}
+            format.json { render :show, status: :ok, location: @homework }
+          else
+            if @answer.phase.downcase != @homework.actual_phase
+              format.html { redirect_to homework_answers_path(@homework)}
+              format.json { render :show, status: :ok, location: @homework }
+            else
+              #format.js
+            end
           end
 
         else
@@ -486,7 +513,7 @@ class AnswersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def answer_params
-      params.require(:answer).permit(:phase, :upload, :responder, :argumentar,
+      params.require(:answer).permit(:id, :phase, :upload, :responder, :argumentar,
        :rehacer, :evaluar, :integrar, :image_responder_1, :image_responder_2,
        :image_argumentar_1, :image_argumentar_2, :image_rehacer_1,  :image_rehacer_2,
        :image_evaluar_1, :image_evaluar_2, :image_integrar_1, :image_integrar_2,
