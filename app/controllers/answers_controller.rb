@@ -341,6 +341,7 @@ class AnswersController < ApplicationController
   end
 
   def generate_pdf
+
     regex = /[^\u1F600-\u1F6FF\s]/i
     nombre_tarea = @homework.name
     lista = []
@@ -348,99 +349,151 @@ class AnswersController < ApplicationController
     id_curso = @homework.course_id
     @curso = Course.find_by_id(id_curso)
     @curso.users.each do |alumno|
-      @corregido = User.find_by_id(alumno.id)
+
+      @student = User.find_by_id(alumno.id)
       @corrector = User.find_by_id(alumno.corrector)
-      if alumno.role == "alumno" and alumno.corrector and alumno.answers.find_by_homework_id(@homework.id)# and @corrector.answers.find_by_homework_id(@homework.id)
+      @student_answer = @student.answers.find_by_homework_id(@homework.id)
+
+      if alumno.role == "alumno" and alumno.corrector and alumno.answers.find_by_homework_id(@homework.id)
+
+        @corrector = User.find_by_id(@student_answer.corrector_id)
+
         if params['names'] == 'true'
-            nombre_usuario = @corregido.first_name + " " + @corregido.last_name
-            nombre_corrector = @corrector.first_name + " " + @corrector.last_name
+            nombre_usuario = "Nombre usuario: " + @student.first_name + " " + @student.last_name
+            nombre_corrector = "Nombre corrector 1: " + @corrector.first_name + " " + @corrector.last_name
+            if @student_answer.corrector_id_2 != nil and @student_answer.corrector_id_2 != 0
+              @corrector_2 = User.find_by_id(@student_answer.corrector_id_2)
+              nombre_corrector_2 = "Nombre corrector 2: " +@corrector_2.first_name + " " + @corrector_2.last_name
+            end
         else
             nombre_usuario = ""
             nombre_corrector = ""
+            nombre_corrector_2 = ""
         end
+
         if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
-          @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-          @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
-          if @my_answer.evaluar.nil?
-            @my_answer.evaluar = ""
+
+          if @student_answer.evaluar.nil?
+            evaluar = ""
+          else
+            evaluar = @student_answer.evaluar.to_s
           end
-          if @my_answer.argumentar.nil?
-            @my_answer.argumentar = ""
+
+          if @student_answer.argumentar.nil?
+            argumentar = ""
+          else
+            argumentar = @student_answer.argumentar.to_s
           end
+
+          if @student_answer.argumentar_2.nil?
+            argumentar_2 = ""
+          else
+            argumentar_2 = @student_answer.argumentar_2.to_s
+          end
+
           answer = []
           mail = @corregido.email.split("@")
           # answer << "Numero de alumno: " + mail[0]
-          answer << "Nombre usuario: " + nombre_usuario
-          answer << "Nombre corrector: " + nombre_corrector
-          answer << "Responder:"
-          answer << @partner_answer.responder.to_s
-          answer << "\nArgumentar:"
-          answer << @my_answer.argumentar.to_s
-          #answer << "\nRehacer:"
-          #answer << @partner_answer.rehacer
-          #answer << "\nEvaluar:"
-          #answer << @my_answer.evaluar
-          lista << answer
-          lista_num_alum << mail[0] + ".pdf"
+          answer << nombre_usuario
+          answer << "\nFase Responder"
+          answer << "Respuesta entregada"
+          answer << @student_answer.responder.to_s
+          answer << "\nFase Argumentar"
+          answer << nombre_corrector
+          answer << argumentar
+
         elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar" ||  @homework.actual_phase == "responder"
-          @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-    	    if @my_answer.responder.nil?
-            @my_answer.responder = ""
-    	    end
-    	    if @my_answer.rehacer.nil?
-            @my_answer.rehacer = ""
+
+    	    if @student_answer.rehacer.nil?
+            rehacer = ""
           end
-          #@my_answer = Answer.first
-          @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
-          #@partner_answer = Answer.first
+
+          if @student_answer.responder.nil?
+            responder = ""
+          else
+            responder = @student_answer.responder.to_s
+          end
+
           answer = []
-    	    mail = @corregido.email.split("@")
+    	    mail = @student.email.split("@")
           # answer << "Numero de alumno: " + mail[0]
-	        answer << "Nombre usuario: " + nombre_usuario
-          answer << "Nombre corrector: " + nombre_corrector
-          answer << "Responder:"
-	        responder1 = @my_answer.responder.to_s
-	        responder2 = responder1.each_char.select { |char| char.bytesize < 3 }.join  #responder1.gsub(regex, '')  #.gsub(/[^0-9A-Za-z]/, ' ')
-          answer << responder2  #responder1.gsub(regex, '')
+	        answer << nombre_usuario
+          answer << "\n Fase Responder:\n"
+          answer << responder
+
           if @homework.actual_phase != "responder"
-            answer << "\nArgumentar:"
-  	        if @partner_answer != nil
-  	          if @partner_answer.argumentar == nil
+            answer << "\nFase Argumentar:"
+  	        if @student_answer.corrector_id != nil and @student_answer.corrector_id != 0
+  	          if @student_answer.argumentar == nil
+                if nombre_corrector == ""
+                  answer << "\nArgumentos compañero 1\n"
+                else
+                  answer << nombre_corrector
+                end
   		          answer << ""
   	          else
-  	      	    argumentar1 = @partner_answer.argumentar.to_s
-  	      	    argumentar2 = argumentar1.each_char.select { |char| char.bytesize < 3 }.join
-                answer << argumentar2 # argumentar1.gsub(regex, '')  #.gsub(/[^0-9A-Za-z]/, ' ')
+                if nombre_corrector == ""
+                  answer << "\nArgumentos compañero 1\n"
+                else
+                  answer << nombre_corrector
+                end
+
+  	      	    argumentar = @student_answer.argumentar.to_s
+  	      	    argumentar_1 = argumentar.each_char.select { |char| char.bytesize < 3 }.join
+                answer << argumentar_1
   	          end
+
+              if @student_answer.argumentar_2 == nil
+                if nombre_corrector_2 != ""
+                  if nombre_corrector_2 != nil
+
+                    if nombre_corrector == ""
+                      answer << "\nArgumentos compañero 2\n"
+                    else
+                      answer << "\n" + nombre_corrector_2
+                    end
+      		          answer << ""
+                  end
+                end
+  	          else
+
+                if nombre_corrector == ""
+                  answer << "\nArgumentos compañero 2\n"
+                else
+                  answer << "\n" + nombre_corrector_2
+                end
+                
+  	      	    argumentar2 = @student_answer.argumentar_2.to_s
+  	      	    argumentar_2 = argumentar2.each_char.select { |char| char.bytesize < 3 }.join
+                answer << argumentar_2
+  	          end
+
   	        else
   	          answer << ""
   	        end
-            answer << "\nRehacer:"
-  	        if @my_answer != nil
-              if @my_answer.rehacer == nil
-                answer << ""
-              else
-                respuesta = @my_answer.rehacer.to_s
-                respuesta2 = respuesta.each_char.select { |char| char.bytesize < 3 }.join
-                answer << respuesta2 # respuesta.gsub(regex, '')
-              end
-            else
-              answer << ""
+
+            if @homework.actual_phase != "argumentar"
+
+              answer << "\nFase Rehacer:\n"
+
+                if @student_answer.rehacer == nil
+                  answer << ""
+                else
+                  rehacer = @student_answer.rehacer.to_s
+                  rehacer2 = rehacer.each_char.select { |char| char.bytesize < 3 }.join
+                  answer << rehacer2
+                end
             end
           end
-          # respuesta = @my_answer.rehacer.to_s
-	        # respuesta2 = respuesta.each_char.select { |char| char.bytesize < 4 }.join
-          # answer << respuesta2 #respuesta.gsub(regex, '') #.gsub(/[^0-9A-Za-z]/, ' ')
-          #answer << "\nEvaluar:"
-          #answer << @partner_answer.evaluar
-          #answer << "\nIntegrar:"
-          #answer << @my_answer.integrar
+
           lista << answer
 	        nombre = mail[0] + ".pdf"
           lista_num_alum << nombre
         end
       end
+
     end
+
     a = 0
     b = lista.length/3
     c = lista.length*2/3
@@ -455,9 +508,9 @@ class AnswersController < ApplicationController
     th1.join()
     th2.join()
     th3.join()
-    folder = "/home/patricio/Documentos/Magister/magister_app/pdfs"
+    folder = "/home/savelozo/Desktop/magister_app/pdfs"
     input_filenames = lista_num_alum
-    zipfile_name = "/home/patricio/Documentos/Magister/magister_app/" + nombre_tarea + ".zip"
+    zipfile_name = "/home/savelozo/Desktop/magister_app/" + nombre_tarea + ".zip"
     Zip.continue_on_exists_proc = true
     Zip.unicode_names = true
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
@@ -473,6 +526,7 @@ class AnswersController < ApplicationController
     send_data(zipfile, :type => "application/zip", :filename => nombre_tarea + ".zip")
     File.delete(zipfile_name)
     #redirect_to :back
+
  end
 
 
