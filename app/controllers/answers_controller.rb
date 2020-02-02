@@ -21,14 +21,13 @@ class AnswersController < ApplicationController
     if @homework.responder? or (own_answer and check_answer(own_answer, 'responder')) then
       if @homework.argumentar? or @homework.evaluar?
         @partner_answer = own_answer
-        @partner_answer_2 = own_answer
         if Course.find(current_user.current_course_id).course_type == "Resumen"
           @partner_answer.argumentar = @homework.sinthesy.where(phase: "responder").last.sinthesys
         end
         @answer         = @partner_answer
 
         if @homework.actual_phase == "argumentar"
-          #Lista de preguntadas asignadas para argumentar
+          #Random argue question distribution
           assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id)
           @my_argue = nil
           @my_argue_2 = nil
@@ -98,7 +97,7 @@ class AnswersController < ApplicationController
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
         @sintesis = @partner_answer
       else
-        @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
+      	@partner_answer = current_user.answers.find_by_homework_id(@homework.id)
       end
 
     elsif @homework.actual_phase == "argumentar"
@@ -220,7 +219,7 @@ class AnswersController < ApplicationController
           partner_id = params["answer"]['partner_answer_id']
           answer_1 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id = ?", @homework.id, partner_id, current_user.id)
 
-          #Si soy el primer corrector
+          #If I'm the first corrector
           if answer_1.length == 1
             @partner_answer_2 = answer_1[0]
             @partner_answer_2.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
