@@ -27,7 +27,7 @@ class AnswersController < ApplicationController
         @answer         = @partner_answer
 
         if @homework.actual_phase == "argumentar"
-          #Lista de preguntadas asignadas para argumentar
+          #Random argue question distribution
           assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id)
           @my_argue = nil
           @my_argue_2 = nil
@@ -219,7 +219,7 @@ class AnswersController < ApplicationController
           partner_id = params["answer"]['partner_answer_id']
           answer_1 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id = ?", @homework.id, partner_id, current_user.id)
 
-          #Si soy el primer corrector
+          #If I'm the first corrector
           if answer_1.length == 1
             @partner_answer_2 = answer_1[0]
             @partner_answer_2.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
