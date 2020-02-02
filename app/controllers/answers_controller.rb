@@ -21,7 +21,6 @@ class AnswersController < ApplicationController
     if @homework.responder? or (own_answer and check_answer(own_answer, 'responder')) then
       if @homework.argumentar? or @homework.evaluar?
         @partner_answer = own_answer
-        @partner_answer_2 = own_answer
         if Course.find(current_user.current_course_id).course_type == "Resumen"
           @partner_answer.argumentar = @homework.sinthesy.where(phase: "responder").last.sinthesys
         end
@@ -98,7 +97,7 @@ class AnswersController < ApplicationController
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
         @sintesis = @partner_answer
       else
-        @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
+      	@partner_answer = current_user.answers.find_by_homework_id(@homework.id)
       end
 
     elsif @homework.actual_phase == "argumentar"
