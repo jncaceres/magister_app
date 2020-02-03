@@ -12,7 +12,8 @@
     - @actual_phase = @homework.actual_phase.capitalize
 
     = f.hidden_field :phase, value: @actual_phase
-    h3.control-label.col-sm-9(for="question") = @actual_phase
+    h3.control-label.col-sm-9(for="question")
+      b = @actual_phase
 
     .form-group
       .col-sm-10
