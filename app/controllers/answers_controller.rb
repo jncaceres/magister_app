@@ -350,20 +350,20 @@ class AnswersController < ApplicationController
     @curso.users.each do |alumno|
 
       @student = User.find_by_id(alumno.id)
-      @corrector = User.find_by_id(alumno.corrector)
       @student_answer = @student.answers.find_by_homework_id(@homework.id)
 
       if alumno.role == "alumno" and alumno.corrector and alumno.answers.find_by_homework_id(@homework.id)
 
-        @corrector = User.find_by_id(@student_answer.corrector_id)
-
-        if params['names'] == 'true'
+        if params['names'] == 'true' and @homework.actual_phase != "responder"
+            @corrector = User.find_by_id(@student_answer.corrector_id)
             nombre_usuario = "Nombre usuario: " + @student.first_name + " " + @student.last_name
             nombre_corrector = "Nombre corrector 1: " + @corrector.first_name + " " + @corrector.last_name
             if @student_answer.corrector_id_2 != nil and @student_answer.corrector_id_2 != 0
               @corrector_2 = User.find_by_id(@student_answer.corrector_id_2)
               nombre_corrector_2 = "Nombre corrector 2: " +@corrector_2.first_name + " " + @corrector_2.last_name
             end
+        elsif params['names'] == 'true' and @homework.actual_phase == "responder"
+            nombre_usuario = "Nombre usuario: " + @student.first_name + " " + @student.last_name
         else
             nombre_usuario = ""
             nombre_corrector = ""
@@ -461,7 +461,7 @@ class AnswersController < ApplicationController
                 else
                   answer << "\n" + nombre_corrector_2
                 end
-                
+
   	      	    argumentar2 = @student_answer.argumentar_2.to_s
   	      	    argumentar_2 = argumentar2.each_char.select { |char| char.bytesize < 3 }.join
                 answer << argumentar_2
