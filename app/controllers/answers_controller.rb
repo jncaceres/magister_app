@@ -27,6 +27,50 @@ class AnswersController < ApplicationController
         @answer         = @partner_answer
 
         if @homework.actual_phase == "argumentar"
+
+          if @user.argument == 1
+            #Random distribution
+            assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
+            @n_assigned = assigned
+
+            if assigned.length > 0
+              if assigned.length == 2
+                @partner_answer_2 = assigned[1]
+              end
+              @partner_answer = assigned[0]
+            else
+              #Si es que no tengo preguntas a argumentar asignadas, las asigno.
+              partners_answers = Answer.where("homework_id = ? AND user_id != ? AND corrector_id != ? AND corrector_id_2 != ? AND counter_argue < 2", @homework.id, current_user.id, current_user.id, current_user.id)
+
+              if partners_answers.length > 1
+                random_answers = partners_answers.sample(2)
+                @partner_answer = random_answers[0]
+                @partner_answer_2 = random_answers[1]
+                @partner_answer_2.update(counter_argue: @partner_answer_2.counter_argue + 1)
+
+                if @partner_answer_2.counter_argue == 2
+                  @partner_answer_2.update(corrector_id_2: current_user.id)
+                else
+                  @partner_answer_2.update(corrector_id: current_user.id)
+                end
+
+              elsif partners_answers.length == 1
+                @partner_answer = partners_answers.sample[0]
+              end
+
+              if @partner_answer != nil
+                #Actualizamos contador de revision
+                @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
+
+                if @partner_answer.counter_argue == 2
+                  @partner_answer.update(corrector_id_2: current_user.id)
+                else
+                  @partner_answer.update(corrector_id: current_user.id)
+                end
+              end
+            end
+          end
+
           #Random argue question distribution
           assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id)
           @my_argue = nil
@@ -110,43 +154,11 @@ class AnswersController < ApplicationController
           assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
           @n_assigned = assigned
 
-          #Si ya tengo preguntas a argumentar asignadas
           if assigned.length > 0
             if assigned.length == 2
               @partner_answer_2 = assigned[1]
             end
             @partner_answer = assigned[0]
-          else
-
-            #Si es que no tengo preguntas a argumentar asignadas, las asigno.
-            partners_answers = Answer.where("homework_id = ? AND user_id != ? AND corrector_id != ? AND corrector_id_2 != ? AND counter_argue < 2", @homework.id, current_user.id, current_user.id, current_user.id)
-
-            if partners_answers.length > 1
-              random_answers = partners_answers.sample(2)
-              @partner_answer = random_answers[0]
-              @partner_answer_2 = random_answers[1]
-              @partner_answer_2.update(counter_argue: @partner_answer_2.counter_argue + 1)
-
-              if @partner_answer_2.counter_argue == 2
-                @partner_answer_2.update(corrector_id_2: current_user.id)
-              else
-                @partner_answer_2.update(corrector_id: current_user.id)
-              end
-
-            elsif partners_answers.length == 1
-              @partner_answer = partners_answers.sample[0]
-            end
-
-            if @partner_answer != nil
-              #Actualizamos contador de revision
-              @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
-
-              if @partner_answer.counter_argue == 2
-                @partner_answer.update(corrector_id_2: current_user.id)
-              else
-                @partner_answer.update(corrector_id: current_user.id)
-              end
-            end
           end
         end
       end
