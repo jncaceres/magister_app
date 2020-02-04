@@ -154,7 +154,7 @@
           <% if @user_id == @partner_answer_2.corrector_id and @partner_answer_2.argumentar != nil %>
           <h3><b>Tu argumento</b></h3>
             <%= simple_format(@partner_answer_2.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-          <% elsif @user_id == @partner_answer_2.corrector_id_2 and @partner_answer_2.argumentar != nil %>
+          <% elsif @user_id == @partner_answer_2.corrector_id_2 and @partner_answer_2.argumentar_2 != nil %>
           <h3><b>Tu argumento</b></h3>
             <%= simple_format(@partner_answer_2.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
           <% end %>

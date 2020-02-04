@@ -13,8 +13,8 @@ class AnswersController < ApplicationController
     @user_id = current_user.id
     @user = User.find_by_id(current_user.id)
 
-    own_answer = current_user.answers.find_by(homework_id: @homework.id)
     @my_answer = current_user.answers.find_by_homework_id(@homework.id)
+    own_answer = @my_answer
     @partner_answer = nil
     @partner_answer_2 = nil
 
@@ -39,7 +39,6 @@ class AnswersController < ApplicationController
               end
               @partner_answer = assigned[0]
             else
-              #Si es que no tengo preguntas a argumentar asignadas, las asigno.
               partners_answers = Answer.where("homework_id = ? AND user_id != ? AND corrector_id != ? AND corrector_id_2 != ? AND counter_argue < 2", @homework.id, current_user.id, current_user.id, current_user.id)
 
               if partners_answers.length > 1
@@ -59,7 +58,6 @@ class AnswersController < ApplicationController
               end
 
               if @partner_answer != nil
-                #Actualizamos contador de revision
                 @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
 
                 if @partner_answer.counter_argue == 2
@@ -113,6 +111,16 @@ class AnswersController < ApplicationController
       render 'late' and return
     end
 
+    if @homework.upload
+      if @answer.nil?
+        redirect_to new_homework_answer_path @homework
+      elsif @answer.send(@homework.actual_phase).nil?
+        redirect_to edit_homework_answer_path @homework, @answer
+      end
+    else
+      redirect_to users_path
+    end
+
   end
 
   def show
@@ -150,7 +158,6 @@ class AnswersController < ApplicationController
         @sintesis = @partner_answer
       else
         if @bit_argue == 1
-          #Revisamos si ya tienes preguntas asignadas
           assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
           @n_assigned = assigned
 
@@ -204,7 +211,7 @@ class AnswersController < ApplicationController
           partner_id = params["answer"]['partner_answer_id']
           answer_1 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id = ?", @homework.id, partner_id, current_user.id)
 
-          #Si soy el primer corrector
+          #If I'm the first corrector
           if answer_1.length == 1
             @partner_answer = answer_1[0]
             @partner_answer.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
