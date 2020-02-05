@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <% if @partner_answer != nil %>
 
-    <h3><b>Respuesta compañer@</b></h3>
+    <h3><b>Respuesta compañera/o</b></h3>
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@partner_answer.responder, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
@@ -60,7 +60,7 @@
   <% end %>
 
   <% if @partner_answer_2 != nil %>
-    <h3><b>Respuesta compañer@</b></h3>
+    <h3><b>Respuesta compañera/o</b></h3>
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@partner_answer_2.responder, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
