@@ -246,12 +246,12 @@ class AnswersController < ApplicationController
           if answer_1.length == 1
             @partner_answer_2 = answer_1[0]
             @partner_answer_2.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
-            @partner_answer_2.update(grade_argue_1: params["answer"]['grade_argue_1'])
+            @partner_answer_2.update(grade_argue_1: params["answer"]['grade_argue_2'])
           else
             answer_2 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id_2 = ?", @homework.id, partner_id, current_user.id)
             @partner_answer_2 = answer_2[0]
             @partner_answer_2.update(argumentar_2: params["answer"]["argumentar"], phase: params["answer"]["phase"])
-            @partner_answer_2.update(grade_argue_2: params["answer"]['grade_argue_1'])
+            @partner_answer_2.update(grade_argue_2: params["answer"]['grade_argue_2'])
           end
 
           if @answer.save

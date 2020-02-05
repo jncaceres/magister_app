@@ -16,20 +16,22 @@ div(onload="timedRefresh(3000);")
         - if @homework.actual_phase == "argumentar"
           th Nota Argumentar 1
           th Nota Argumentar 2
+          th Nota Síntesis
         th Ver
         - if @homework.actual_phase != "responder"
           th Editar
     tbody
       - @students.sort_by{|e| e[:last_name]}.each do |user|
         - if user.alumno?
-          - answer = @answers.select do |a| a.user_id == user.id end.first
+          - answer = Answer.where("homework_id = ? AND user_id = ?", @homework.id, user.id).take
           tr
             td = user.last_name
             td = user.first_name
-            td = bool_tag did_answer(answer, @homework.actual_phase)
+            td = bool_tag did_answer(answer, @homework.actual_phase, user)
             - if @homework.actual_phase == "argumentar"
               td = bool_tag have_grade?(answer, "grade_argue_1", @homework.actual_phase)
               td = bool_tag have_grade?(answer, "grade_argue_2", @homework.actual_phase)
-            td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase)
+              td = bool_tag have_grade?(answer, "grade_sinthesys", @homework.actual_phase)
+            td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase, user)
             - if @homework.actual_phase != "responder"
-              td = link_to 'Agregar nota', addgradetostudentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase)
+              td = link_to 'Agregar nota', addgradetostudentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase, user)

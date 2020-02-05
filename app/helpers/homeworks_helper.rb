@@ -1,7 +1,29 @@
 module HomeworksHelper
-  def did_answer answer, phase
-    return false if answer.nil?
-    !answer.send(phase).blank? or answer.send("image_#{phase}_1") or answer.send("image_#{phase}_2")
+  def did_answer answer, phase, user
+    if phase == "argumentar" and user.argument == 0
+      if answer.nil?
+        return false
+      else
+        if answer.grade_sinthesys.nil?
+          return false
+        else
+          return true
+        end
+      end
+    elsif phase == "rehacer"
+      if answer.nil?
+        return false
+      else
+        if answer.rehacer.nil?
+          return false
+        else
+          return true
+        end
+      end
+    else
+      return false if answer.nil?
+      !answer.send(phase).blank? or answer.send("image_#{phase}_1") or answer.send("image_#{phase}_2")
+    end
   end
 
   def have_grade? answer, grade_argue_n, phase
@@ -19,6 +41,12 @@ module HomeworksHelper
           else
             return true
           end
+        elsif grade_argue_n == "grade_sinthesys"
+            if answer.grade_sinthesys.nil?
+              return false
+            else
+              return true
+            end
         end
       end
     elsif phase == "rehacer"
