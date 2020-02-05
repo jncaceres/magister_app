@@ -42,7 +42,6 @@
 					<% end %>
 				<% elsif @homework.actual_phase == "rehacer" %>
 	      	<%= submit_tag "Editar Respuesta", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
-
 				<% elsif @homework.upload %>
 	      	<%= submit_tag "Editar Respuesta", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
 				<%end%>

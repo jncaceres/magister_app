@@ -19,7 +19,13 @@
 			<% end %>
 			<div class="thumbnail">
 				<% begin %>
-				<h3><%= "Nombre: " + user.first_name + " " + user.last_name%></h3>
+				<div class="container-fluid">
+					<div class="row">
+			      <div class="col-sm-10 col-md-10 col-lg-10">
+			        <%= simple_format("Nombre: " + user.first_name + " " + user.last_name, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+			      </div>
+					</div>
+				</div>
 				<%= render 'full_1' %>
 				<% rescue %>
 				<% end %>

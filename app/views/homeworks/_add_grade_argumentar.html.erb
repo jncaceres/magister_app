@@ -1,8 +1,8 @@
 <div class="container-fluid">
 
   <% if @student_answer.argumentar != nil %>
-    <h4><b>Nota compañer@ 1: <%= @student_answer.grade_argue_1%></b></h4>
-    <h3><b>Argumento compañer@ 1</b></h3>
+    <h4><b>Nota compañero/a 1: <%= @student_answer.grade_argue_1%></b></h4>
+    <h3><b>Argumento compañero/a 1</b></h3>
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@student_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
@@ -11,7 +11,7 @@
 
   <% else %>
 
-    <h4>Sin argumentación de compañer@ 1</h4>
+    <h4>Sin argumentación de compañero/a 1</h4>
     <% if @student_answer.grade_argue_1 == nil %>
       <h4>Agregar nota argumentación 1</h4>
     <% else %>
@@ -38,8 +38,8 @@
 
   <% if @student_answer.argumentar_2 != nil %>
 
-    <h4><b>Nota compañer@ 2: <%= @student_answer.grade_argue_2%></b></h4>
-    <h3><b>Argumento compañer@ 2</b></h3>
+    <h4><b>Nota compañero/a 2: <%= @student_answer.grade_argue_2%></b></h4>
+    <h3><b>Argumento compañero/a 2</b></h3>
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@student_answer.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
@@ -47,7 +47,7 @@
     </div>
 
   <% else %>
-    <h4>Sin argumentación de compañer@ 2</h4>
+    <h4>Sin argumentación de compañero/a 2</h4>
     <% if @student_answer.grade_argue_2 == nil %>
       <h4>Agregar nota argumentación 2</h4>
     <% else %>

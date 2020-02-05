@@ -2,10 +2,10 @@
 
   <% if @student_answer.argumentar != nil %>
     <% if @student_answer.grade_eval_1 != nil %>
-      <h4><b>Nota para argumentos de compañer@ 1: <%= @student_answer.grade_eval_1%></b></h4>
+      <h4><b>Nota para argumentos de compañero/a 1: <%= @student_answer.grade_eval_1%></b></h4>
     <% else %>
       <% if @student_answer.grade_eval_1 == nil %>
-        <h4>Sin calificación a compañer@ 1</h4>
+        <h4>Sin calificación a compañero/a 1</h4>
       <% else %>
         <h4>Editar nota argumentación 1</h4>
       <% end %>
@@ -29,11 +29,11 @@
 
   <% if @student_answer.argumentar_2 != nil %>
     <% if @student_answer.grade_eval_2 != nil %>
-      <h4><b>Nota para argumentos de compañer@ 2: <%= @student_answer.grade_eval_2 %></b></h4>
+      <h4><b>Nota para argumentos de compañero/a 2: <%= @student_answer.grade_eval_2 %></b></h4>
     <% else %>
 
       <% if @student_answer.grade_eval_2 == nil %>
-        <h4>Sin calificación a compañer@ 2</h4>
+        <h4>Sin calificación a compañero/a 2</h4>
       <% else %>
         <h4>Editar nota argumentación 2</h4>
       <% end %>
