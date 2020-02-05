@@ -67,6 +67,9 @@ class AnswersController < ApplicationController
                 end
               end
             end
+
+          else
+            @synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "argumentar").last
           end
 
           #Random argue question distribution
@@ -160,13 +163,14 @@ class AnswersController < ApplicationController
         if @bit_argue == 1
           assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
           @n_assigned = assigned
-
           if assigned.length > 0
             if assigned.length == 2
               @partner_answer_2 = assigned[1]
             end
             @partner_answer = assigned[0]
           end
+        else
+          @synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "argumentar").last
         end
       end
 
@@ -279,6 +283,21 @@ class AnswersController < ApplicationController
 
           if params["commit"] == "Editar nota argumento 2" or params["commit"] == "Agregar nota argumento 2"
             @answer.update(grade_eval_2: params['answer']['grade_eval_2'])
+            format.html { redirect_to homework_answers_path(@homework)}
+            format.json { render :show, status: :ok, location: @homework }
+          else
+            if @answer.phase.downcase != @homework.actual_phase
+              format.html { redirect_to homework_answers_path(@homework)}
+              format.json { render :show, status: :ok, location: @homework }
+            else
+              #format.js
+            end
+          end
+
+        elsif params["commit"] == "Editar nota síntesis" or params["commit"] == "Agregar nota síntesis"
+
+          if params["commit"] == "Editar nota síntesis" or params["commit"] == "Agregar nota síntesis"
+            @answer.update(grade_sinthesys: params['answer']['grade_sinthesys'])
             format.html { redirect_to homework_answers_path(@homework)}
             format.json { render :show, status: :ok, location: @homework }
           else

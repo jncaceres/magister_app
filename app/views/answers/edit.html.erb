@@ -25,7 +25,8 @@
 		<% if @homework.actual_phase == "argumentar"%>
 			<% if @bit_argue == 1 %>
 				<%= render 'arguments' %>
-				<%= link_to "Menú principal", homework_answers_path, class: "btn btn-primary", style:"height:35px; width:15em" %>
+			<% else %>
+				<%= render 'synthesis' %>
 			<% end %>
 		<% elsif @homework.actual_phase == "rehacer"%>
 			<%= render 'rehacer' %>
