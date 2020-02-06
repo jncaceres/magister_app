@@ -63,7 +63,7 @@
         <div class="col-sm-10 col-md-10 col-lg-10">
           <% if @user_id == @partner_answer.corrector_id and @partner_answer.grade_argue_1 != nil %>
             <%= @partner_answer.grade_argue_1 %>
-          <% elsif @user_id == @partner_answer.corrector_id_2 and @partner_answer.argumentar_2 != nil %>
+          <% elsif @user_id == @partner_answer.corrector_id_2 and @partner_answer.grade_argue_2 != nil %>
             <%= @partner_answer.grade_argue_2 %>
           <% end %>
         </div>
@@ -142,7 +142,7 @@
         <div class="col-sm-10 col-md-10 col-lg-10">
           <% if @user_id == @partner_answer_2.corrector_id and @partner_answer_2.grade_argue_1 != nil %>
             <%= @partner_answer_2.grade_argue_1 %>
-          <% elsif @user_id == @partner_answer_2.corrector_id_2 and @partner_answer_2.argumentar_2 != nil %>
+          <% elsif @user_id == @partner_answer_2.corrector_id_2 and @partner_answer_2.grade_argue_2 != nil %>
             <%= @partner_answer_2.grade_argue_2 %>
           <% end %>
         </div>

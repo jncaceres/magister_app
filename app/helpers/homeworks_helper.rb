@@ -1,13 +1,25 @@
 module HomeworksHelper
   def did_answer answer, phase, user
-    if phase == "argumentar" and user.argument == 0
-      if answer.nil?
-        return false
-      else
-        if answer.grade_sinthesys.nil?
+    if phase == "argumentar"
+      if user.argument == 0
+        if answer.nil?
           return false
         else
-          return true
+          if answer.grade_sinthesys.nil?
+            return false
+          else
+            return true
+          end
+        end
+      else
+        if answer.nil?
+          return false
+        else
+          if answer.grade_argue_1 != nil or answer.grade_argue_2 != nil
+            return true
+          else
+            return false
+          end
         end
       end
     elsif phase == "rehacer"

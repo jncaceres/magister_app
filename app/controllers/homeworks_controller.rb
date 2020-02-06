@@ -65,8 +65,8 @@ class HomeworksController < ApplicationController
   end
 
   def change_phase
-    if params["phase"] != nil and have_answered(@homework)
-      if params[:next]
+    if params["phase"] != nil
+      if params[:next] and have_answered(@homework)
         if @homework.actual_phase == "responder"
           asistentes
           generate_partner
@@ -98,7 +98,7 @@ class HomeworksController < ApplicationController
           data = Register.new(button_id:25, user_id:current_user.id)
         end
         @homework.upload = true
-      elsif params[:discussion]
+      elsif params[:discussion] and have_answered(@homework)
         data = Register.new(button_id: Homework.actual_phases[@homework.actual_phase] + 27, user_id: current_user.id)
         @homework.upload = false
       end
@@ -454,9 +454,10 @@ class HomeworksController < ApplicationController
 
       if homework.answers.select do |a| a.send(phase + "?") or a.send("image_#{phase}_1?") end.count > 2
         return true
+      elsif phase == 'argumentar'
+        return true
       else
         flash.alert = "Se necesita que respondan al menos 3 alumnos para hacer el sorteo."
-
         return false
       end
     end

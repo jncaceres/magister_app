@@ -6,10 +6,6 @@
 
 	br
 
-	.row
-		.col-md-11
-			= button_to 'Volver',[@homework], class: "btn btn-primary"
-
 		.col-md-1
 			/ = button_to favorite_answer_path(homework_id: @homework.id, user_id: @my_answer.user_id, favorite: !@my_answer.favorite), class: "btn btn-primary" do
 			/ 	= fav_tag @answer.favorite, true
@@ -19,15 +15,22 @@
 		= render 'part0_pregunta'
 
 	br
-	- if @student_answer and @student_answer.argumentar then
+	- if @student_answer.responder != nil
 		.thumbnail
 			= render 'add_grade_responder'
 			br
 
-			- unless @homework.responder?
+			- user = User.find_by_id(@student_answer.user_id)
+			- if @student_answer.argumentar != nil or @student_answer.argumentar_2 != nil or user.argument == 0
 				= render 'add_grade_argumentar'
 				br
 
-				- unless @homework.argumentar?
+				- if @student_answer.rehacer != nil
 					= render 'add_grade_rehacer'
 					br
+
+		br
+
+	 	.row
+	 		.col-md-11
+	 			= button_to 'Volver',[@homework], class: "btn btn-primary"

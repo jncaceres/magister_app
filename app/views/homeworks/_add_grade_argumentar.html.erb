@@ -79,7 +79,7 @@
     <% if @student_answer.grade_sinthesys != nil %>
       <h4><b>Nota estudiante a síntesis: <%= @student_answer.grade_sinthesys%></b></h4>
     <% else %>
-        <h4>¿Desea editar la nota ingresada?</h4>
+        <h4>¿Desea editar la nota?</h4>
         <h4>Elija calificación a asignar</h4>
         <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
         <div class="field">

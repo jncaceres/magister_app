@@ -3,9 +3,6 @@
 	<div style="text-align:left">
 		<h1><%= @homework.name %></h1>
 		<h2><b>Etapa: <%= @homework.actual_phase.capitalize %></b></h2>
-		<br>
-		<%= link_to 'Volver', homeworks_path, :class=>"btn btn-primary", :style=>'color:white' %>
-		<br></br>
 		<div class="thumbnail">
 			<%= render 'full_0' %>
 		</div>
@@ -52,5 +49,8 @@
 				<br>
 			</div>
 	<%end%>
+	<br>
+	<%= link_to 'Volver', homeworks_path, :class=>"btn btn-primary", :style=>'color:white' %>
+	<br></br>
 	<br>
 </div>

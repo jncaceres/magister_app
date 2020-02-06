@@ -69,7 +69,7 @@ class AnswersController < ApplicationController
             end
 
           else
-            @synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "argumentar").last
+            @synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "responder").last
           end
 
           #Random argue question distribution
@@ -170,7 +170,7 @@ class AnswersController < ApplicationController
             @partner_answer = assigned[0]
           end
         else
-          @synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "argumentar").last
+          @synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "responder").last
         end
       end
 
