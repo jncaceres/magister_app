@@ -168,6 +168,35 @@ class AnswersController < ApplicationController
               @partner_answer_2 = assigned[1]
             end
             @partner_answer = assigned[0]
+
+          else:
+            partners_answers = Answer.where("homework_id = ? AND user_id != ? AND corrector_id != ? AND corrector_id_2 != ? AND counter_argue < 2", @homework.id, current_user.id, current_user.id, current_user.id)
+
+            if partners_answers.length > 1
+              random_answers = partners_answers.sample(2)
+              @partner_answer = random_answers[0]
+              @partner_answer_2 = random_answers[1]
+              @partner_answer_2.update(counter_argue: @partner_answer_2.counter_argue + 1)
+
+              if @partner_answer_2.counter_argue == 2
+                @partner_answer_2.update(corrector_id_2: current_user.id)
+              else
+                @partner_answer_2.update(corrector_id: current_user.id)
+              end
+
+            elsif partners_answers.length == 1
+              @partner_answer = partners_answers.sample[0]
+            end
+
+            if @partner_answer != nil
+              @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
+
+              if @partner_answer.counter_argue == 2
+                @partner_answer.update(corrector_id_2: current_user.id)
+              else
+                @partner_answer.update(corrector_id: current_user.id)
+              end
+            end
           end
         else
           @synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "responder").last
