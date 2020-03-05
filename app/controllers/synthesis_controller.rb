@@ -21,7 +21,8 @@ class SynthesisController < ApplicationController
     @homework_name = @homework.name
     if request.post?
       if params["Synthesis Text"].nil?
-        saved_values = {"sinthesys": params["Synthesized Text"], "phase": @homework.actual_phase, "homework_id": @homework.id}
+        #saved_values = {"sinthesys": params["Synthesized Text"], "phase": @homework.actual_phase, "homework_id": @homework.id}
+        saved_values = {"sinthesys": params["Synthesized Text"], "phase": "responder", "homework_id": @homework.id}
         if Sinthesy.create(saved_values)
           flash.alert = "Se ha guardado el resumen correctamente"
           redirect_to homework_path(@homework.id), notice: "Gane"
@@ -65,36 +66,12 @@ class SynthesisController < ApplicationController
       @corregido = User.find_by_id(alumno.id)
       if alumno.role == "alumno" and alumno.answers.find_by_homework_id(@homework.id)
         @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-        if @homework.actual_phase == "responder"
+        if @homework.actual_phase == "responder" or @homework.actual_phase == "argumentar" or @homework.actual_phase == "rehacer"
           if @my_answer.responder.nil?
             @my_answer.responder = ""
           end
           answer << @my_answer.responder.to_s
-          answer << "\n"
-        elsif @homework.actual_phase == "argumentar"
-          if @my_answer.argumentar != nil or @my_answer.argumentar_2 != nil
-            if @my_answer.argumentar.nil?
-              answer << " "
-            else
-              answer << @my_answer.argumentar.to_s
-            end
-            answer << "\n"
-
-            if @my_answer.argumentar_2.nil?
-              answer << " "
-            else
-              answer << @my_answer.argumentar_2.to_s
-            end
-            answer << "\n"
-          else
-            answer << "No se ha generado ningún argumento para esta respuesta"
-          end
-        elsif @homework.actual_phase == "rehacer"
-          if @my_answer.rehacer.nil?
-            @my_answer.rehacer = ""
-          end
-          answer << @my_answer.rehacer
-          answer << "\n"
+          answer << "\n"      
         end
         answer << "\n"
       end
