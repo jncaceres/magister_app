@@ -1,4 +1,25 @@
 <div class="container-fluid">
+  <% if @user.argument == 0 %>
+
+      <h3><b>Síntesis</b></h3>
+      <div class="row">
+        <div class="col-sm-10 col-md-10 col-lg-10", style:"font-size:15px; line-height:1.5", align:"justify">
+            <% if @my_answer.grade_sinthesys != nil %>
+              <h4><b>Nota síntesis:</b> <%= @my_answer.grade_sinthesys %></h4>
+            <% else %>
+              <h4><b>Nota síntesis:</b> Sin nota </h4>
+            <% end %>
+            <% synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @my_answer.homework_id, "responder").last %>
+            <div class="col-sm-10 col-md-10 col-lg-10">
+              <% if synthesis != nil %>
+                <%= simple_format(synthesis.sinthesys, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+              <% end %>
+            </div>
+        </div>
+      </div>
+
+  <% end %>
+
   <% if @my_answer.rehacer != nil %>
     <h3><b>Rehacer</b></h3>
     <div class="row">

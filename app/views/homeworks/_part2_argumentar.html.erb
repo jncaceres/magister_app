@@ -2,49 +2,28 @@
 
   <% if @student_answer.argumentar != nil %>
     <h3><b>Argumento compañera/o 1</b></h3>
-
-    <div class="row">
-      <div class="col-sm-10 col-md-10 col-lg-10">
-        <h3><b>Evaluación argumentos compañera/o 1: <%= @student_answer.grade_argue_1 %></b></h3>
-      </div>
-    </div>
-
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@student_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <h3><b>Evaluación argumentos compañera/o 1: <%= @student_answer.grade_argue_1 %></b></h3>
       </div>
     </div>
   <% end %>
 
   <% if @student_answer.argumentar_2 != nil %>
     <h3><b>Argumento compañera/o 2</b></h3>
-
-    <div class="row">
-      <div class="col-sm-10 col-md-10 col-lg-10">
-        <h3><b>Evaluación argumentos compañera/o 2: <%= @student_answer.grade_argue_2 %></b></h3>
-      </div>
-    </div>
-
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@student_answer.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
       </div>
     </div>
-  <% end %>
-
-  <% if @student_answer.grade_sinthesys != nil %>
-    <h3><b>Síntesis</b></h3>
     <div class="row">
-      <div class="col-sm-10 col-md-10 col-lg-10", style:"font-size:15px; line-height:1.5", align:"justify">
-          <% if @student_answer.grade_sinthesys != nil %>
-            <h4><b>Nota síntesis:</b> <%= @student_answer.grade_sinthesys %></h4>
-          <% end %>
-          <% synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @student_answer.homework_id, "responder").last %>
-          <div class="col-sm-10 col-md-10 col-lg-10">
-            <% if synthesis != nil %>
-              <%= simple_format(synthesis.sinthesys, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-            <% end %>
-          </div>
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <h3><b>Evaluación argumentos compañera/o 2: <%= @student_answer.grade_argue_2 %></b></h3>
       </div>
     </div>
   <% end %>
