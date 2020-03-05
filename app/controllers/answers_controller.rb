@@ -28,77 +28,45 @@ class AnswersController < ApplicationController
 
         if @homework.actual_phase == "argumentar"
 
-          if @user.argument == 1
+          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
+          @n_assigned = assigned
+          if assigned.length > 0
+            @partner_answer = assigned[0]
+          else
             #Random distribution
-            assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
-            @n_assigned = assigned
+            control_group_ids = User.select(:id).where(argument: 1)
+            partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 0, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
 
-            if assigned.length > 0
-              if assigned.length == 2
-                @partner_answer_2 = assigned[1]
-              end
-              @partner_answer = assigned[0]
-            else
-              partners_answers = Answer.where("homework_id = ? AND user_id != ? AND corrector_id != ? AND corrector_id_2 != ? AND counter_argue < 2", @homework.id, current_user.id, current_user.id, current_user.id)
-
-              if partners_answers.length > 1
-                random_answers = partners_answers.sample(2)
-                @partner_answer = random_answers[0]
-                @partner_answer_2 = random_answers[1]
-                @partner_answer_2.update(counter_argue: @partner_answer_2.counter_argue + 1)
-
-                if @partner_answer_2.counter_argue == 2
-                  @partner_answer_2.update(corrector_id_2: current_user.id)
-                else
-                  @partner_answer_2.update(corrector_id: current_user.id)
-                end
-
-              elsif partners_answers.length == 1
-                @partner_answer = partners_answers.sample[0]
-              end
-
-              if @partner_answer != nil
-                @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
-
-                if @partner_answer.counter_argue == 2
-                  @partner_answer.update(corrector_id_2: current_user.id)
-                else
-                  @partner_answer.update(corrector_id: current_user.id)
-                end
-              end
+            if partners_answers.length == 0
+              partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 1, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
             end
 
-          else
-            @synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "responder").last
+            @partner_answer = nil
+
+            if partners_answers.length > 0
+              @partner_answer = partners_answers.sample
+            end
+
+            if @partner_answer != nil
+              @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
+
+              if @partner_answer.counter_argue == 2
+                @partner_answer.update(corrector_id_2: current_user.id)
+              else
+                @partner_answer.update(corrector_id: current_user.id)
+              end
+            end
           end
 
-          #Random argue question distribution
           assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id)
           @my_argue = nil
-          @my_argue_2 = nil
 
-          if assigned.length == 1
+          if assigned.length > 0
             @partner_answer = assigned[0]
             if @partner_answer.corrector_id == current_user.id
               @my_argue = @partner_answer.argumentar
             else
               @my_argue = @partner_answer.argumentar_2
-            end
-
-          elsif assigned.length == 2
-            @partner_answer = assigned[0]
-            @partner_answer_2 = assigned[1]
-
-            if current_user.id == @partner_answer.corrector_id
-              @my_argue = @partner_answer.argumentar
-            else
-              @my_argue = @partner_answer.argumentar_2
-            end
-
-            if current_user.id == @partner_answer_2.corrector_id
-              @my_argue_2 = @partner_answer_2.argumentar
-            else
-              @my_argue_2 = @partner_answer_2.argumentar_2
             end
           end
         end
@@ -110,6 +78,7 @@ class AnswersController < ApplicationController
         @my_answer      = own_answer
         @answer         = @my_answer
       end
+
     else
       render 'late' and return
     end
@@ -118,7 +87,9 @@ class AnswersController < ApplicationController
       if @answer.nil?
         redirect_to new_homework_answer_path @homework
       elsif @answer.send(@homework.actual_phase).nil?
-        redirect_to edit_homework_answer_path @homework, @answer
+        if @homework.actual_phase != "argumentar" and @user.argument != 0
+          redirect_to edit_homework_answer_path @homework, @answer
+        end
       end
     else
       redirect_to users_path
@@ -160,49 +131,38 @@ class AnswersController < ApplicationController
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
         @sintesis = @partner_answer
       else
-        if @bit_argue == 1
-          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
-          @n_assigned = assigned
-          if assigned.length > 0
-            if assigned.length == 2
-              @partner_answer_2 = assigned[1]
-            end
-            @partner_answer = assigned[0]
+        assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
+        @n_assigned = assigned
+        if assigned.length > 0
+          @partner_answer = assigned[0]
+        else
+          #Random distribution
+          control_group_ids = User.select(:id).where(argument: 1)
+          partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 0, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
 
-          else:
-            partners_answers = Answer.where("homework_id = ? AND user_id != ? AND corrector_id != ? AND corrector_id_2 != ? AND counter_argue < 2", @homework.id, current_user.id, current_user.id, current_user.id)
+          if partners_answers.length == 0
+            partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 1, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
+          end
 
-            if partners_answers.length > 1
-              random_answers = partners_answers.sample(2)
-              @partner_answer = random_answers[0]
-              @partner_answer_2 = random_answers[1]
-              @partner_answer_2.update(counter_argue: @partner_answer_2.counter_argue + 1)
+          @partner_answer = nil
 
-              if @partner_answer_2.counter_argue == 2
-                @partner_answer_2.update(corrector_id_2: current_user.id)
-              else
-                @partner_answer_2.update(corrector_id: current_user.id)
-              end
+          if partners_answers.length > 0
+            @partner_answer = partners_answers.sample
+          end
 
-            elsif partners_answers.length == 1
-              @partner_answer = partners_answers.sample[0]
-            end
+          if @partner_answer != nil
+            @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
 
-            if @partner_answer != nil
-              @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
-
-              if @partner_answer.counter_argue == 2
-                @partner_answer.update(corrector_id_2: current_user.id)
-              else
-                @partner_answer.update(corrector_id: current_user.id)
-              end
+            if @partner_answer.counter_argue == 2
+              @partner_answer.update(corrector_id_2: current_user.id)
+            else
+              @partner_answer.update(corrector_id: current_user.id)
             end
           end
-        else
-          @synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "responder").last
         end
+        #else
+          #@synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "responder").last
       end
-
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
       @my_answer = current_user.answers.find_by_homework_id(@homework.id)
       if Course.find(current_user.current_course_id).course_type == "Resumen"
@@ -222,10 +182,10 @@ class AnswersController < ApplicationController
       @homework.answers << @answer
       @answer.homework = @homework
     end
-    if params["commit"] == "Enviar Respuesta" or params["commit"] == "Enviar Argumentación 1" or params["commit"] == "Enviar Argumentación 2"
+    if params["commit"] == "Enviar Respuesta" or params["commit"] == "Enviar Argumentación" or params["commit"] == "Enviar Argumentación 2"
       redirect_to homework_answers_path(@homework)
     else
-      redirect_to edit_homework_answer_path(@homework, @answer)
+      redirect_to homework_answers_path(@homework)
     end
   end
 
@@ -240,7 +200,7 @@ class AnswersController < ApplicationController
       rescue
       end
       respond_to do |format|
-        if params["commit"] == "Enviar Argumentación 1"
+        if params["commit"] == "Enviar Argumentación"
           partner_id = params["answer"]['partner_answer_id']
           answer_1 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id = ?", @homework.id, partner_id, current_user.id)
 
@@ -262,7 +222,8 @@ class AnswersController < ApplicationController
             format.html { redirect_to homework_answers_path(@homework) }
             format.json { render :show, status: :ok, location: @homework }
           else
-            format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
+            format.html { redirect_to homework_answers_path(@homework) }
+            #format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
             format.json { render json: @homework.errors, status: :unprocessable_entity }
           end
 

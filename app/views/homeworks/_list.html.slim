@@ -16,8 +16,7 @@ div(onload="timedRefresh(3000);")
           th Respuesta
         - if @homework.actual_phase == "argumentar"
           th Nota Argumentar 1
-          th Nota Argumentar 2
-          th Nota Síntesis
+          th Nota Argumentar 2          
         th Ver
         - if @homework.actual_phase != "responder"
           th Editar
@@ -33,10 +32,6 @@ div(onload="timedRefresh(3000);")
             - if @homework.actual_phase == "argumentar"
               td = bool_tag have_grade?(answer, "grade_argue_1", @homework.actual_phase)
               td = bool_tag have_grade?(answer, "grade_argue_2", @homework.actual_phase)
-              - if user.argument == 0
-                td = bool_tag have_grade?(answer, "grade_sinthesys", @homework.actual_phase)
-              - else
-                th No aplica
             td = link_to 'Ver Respuesta', studentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase, user)
             - if @homework.actual_phase != "responder"
             td = link_to 'Agregar nota', addgradetostudentanswer_path(homework_id:@homework.id, user_id:user.id), {:class => "btn btn-xs btn-primary ver-respuesta"} if did_answer(answer, @homework.actual_phase, user)

@@ -1,7 +1,14 @@
 <div class="container-fluid">
 
   <% if @student_answer.argumentar != nil %>
-    <h3>Argumento compañera/o 1</h3>
+    <h3><b>Argumento compañera/o 1</b></h3>
+
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <h3><b>Evaluación argumentos compañera/o 1: <%= @student_answer.grade_argue_1 %></b></h3>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@student_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
@@ -10,7 +17,14 @@
   <% end %>
 
   <% if @student_answer.argumentar_2 != nil %>
-    <h3>Argumento compañera/o 2</h3>
+    <h3><b>Argumento compañera/o 2</b></h3>
+
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <h3><b>Evaluación argumentos compañera/o 2: <%= @student_answer.grade_argue_2 %></b></h3>
+      </div>
+    </div>
+
     <div class="row">
       <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@student_answer.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
