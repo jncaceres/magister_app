@@ -8,10 +8,30 @@
         <div class="row">
           <div class="col-sm-10 col-md-10 col-lg-10", style:"font-size:15px; line-height:1.5", align:"justify">
               <% if @my_answer.grade_sinthesys != nil %>
-                <h4><b>Nota síntesis:</b> <%= @my_answer.grade_sinthesys %></h4>
+                <h4><b>Nota síntesis actual:</b> <%= @my_answer.grade_sinthesys %></h4>
               <% else %>
                 <h4><b>Nota síntesis:</b> Sin nota </h4>
               <% end %>
+
+              <h4>Elija calificación a asignar</h4>
+              <%= form_for @my_answer, :url => { :action => "update", :id => @my_answer.id }, authenticity_token: true do |f| %>
+              <div class="field">
+                <%= f.select :grade_sinthesys, options_for_select(1..7)%>
+              </div>
+              <div class="field">
+                <% if @my_answer.grade_sinthesys == nil %>
+                  <%= f.submit "Agregar nota síntesis", class: "btn be-red white"%>
+                <% else %>
+                  <%= f.submit "Editar nota síntesis", class: "btn be-red white"%>
+                <% end %>
+              <% synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @my_answer.homework_id, "responder").last %>
+              <div class="col-sm-10 col-md-10 col-lg-10">
+                <% if synthesis != nil %>
+                  <%= simple_format(synthesis.sinthesys, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+                <% end %>
+              </div>
+              <% end %>
+
               <% synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @my_answer.homework_id, "responder").last %>
               <div class="col-sm-10 col-md-10 col-lg-10">
                 <% if synthesis != nil %>
