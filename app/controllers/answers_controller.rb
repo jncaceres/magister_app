@@ -19,6 +19,7 @@ class AnswersController < ApplicationController
     @partner_answer_2 = nil
 
     if @homework.responder? or (own_answer and check_answer(own_answer, 'responder')) then
+
       if @homework.argumentar? or @homework.evaluar?
         @partner_answer = own_answer
         if Course.find(current_user.current_course_id).course_type == "Resumen"

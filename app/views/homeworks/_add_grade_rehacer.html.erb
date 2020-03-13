@@ -3,56 +3,73 @@
   <% if @student_answer.argumentar != nil %>
     <% if @student_answer.grade_eval_1 != nil %>
       <h4><b>Nota para argumentos de compañero/a 1: <%= @student_answer.grade_eval_1%></b></h4>
+      <h4>¿Desea editar nota para argumento 1?</h4>
     <% else %>
+      <h4>Sin calificación a compañero/a 1</h4>
+    <% end %>
+    <h4>Elija calificación a asignar</h4>
+    <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+    <div class="field">
+      <%= f.select :grade_eval_1, options_for_select(1..7)%>
+    </div>
+
+    <div class="field">
       <% if @student_answer.grade_eval_1 == nil %>
-        <h4>Sin calificación a compañero/a 1</h4>
+        <%= f.submit "Agregar nota para argumento 1", class: "btn be-red white"%>
       <% else %>
-        <h4>Editar nota argumentación 1</h4>
+        <%= f.submit "Editar nota para argumento 1", class: "btn be-red white"%>
       <% end %>
-
-        <h4>Elija calificación a asignar</h4>
-        <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
-        <div class="field">
-          <%= f.select :grade_eval_1, options_for_select(1..7)%>
-        </div>
-
-        <div class="field">
-          <% if @student_answer.grade_eval_1 == nil %>
-            <%= f.submit "Agregar nota para argumento 1", class: "btn be-red white"%>
-          <% else %>
-            <%= f.submit "Editar nota para argumento 1", class: "btn be-red white"%>
-          <% end %>
-        </div>
-        <% end %>
+    </div>
     <% end %>
   <% end %>
 
   <% if @student_answer.argumentar_2 != nil %>
     <% if @student_answer.grade_eval_2 != nil %>
-      <h4><b>Nota para argumentos de compañero/a 2: <%= @student_answer.grade_eval_2 %></b></h4>
+      <h4><b>Nota para argumentos de compañero/a 2: <%= @student_answer.grade_eval_2%></b></h4>
+      <h4>¿Desea editar nota para argumento 2?</h4>
     <% else %>
-
-      <% if @student_answer.grade_eval_2 == nil %>
-        <h4>Sin calificación a compañero/a 2</h4>
-      <% else %>
-        <h4>Editar nota argumentación 2</h4>
-      <% end %>
-
-        <h4>Elija calificación a asignar</h4>
-        <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
-        <div class="field">
-          <%= f.select :grade_eval_2, options_for_select(1..7)%>
-        </div>
-
-        <div class="field">
-          <% if @student_answer.grade_argue_1 == nil %>
-            <%= f.submit "Agregar nota para argumento 2", class: "btn be-red white"%>
-          <% else %>
-            <%= f.submit "Editar nota para argumento 2", class: "btn be-red white"%>
-          <% end %>
-        </div>
-        <% end %>
+      <h4>Sin calificación a compañero/a 2</h4>
     <% end %>
+    <h4>Elija calificación a asignar</h4>
+    <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+    <div class="field">
+      <%= f.select :grade_eval_2, options_for_select(1..7)%>
+    </div>
+
+    <div class="field">
+      <% if @student_answer.grade_eval_1 == nil %>
+        <%= f.submit "Agregar nota para argumento 2", class: "btn be-red white"%>
+      <% else %>
+        <%= f.submit "Editar nota para argumento 2", class: "btn be-red white"%>
+      <% end %>
+    </div>
+    <% end %>
+  <% end %>
+
+  <% student = User.find_by_id(@student_answer.user_id) %>
+  <% if student.argument == 0 and @student_answer.grade_sinthesys == nil %>
+    <h4>Sin calificación de síntesis</h4>
+  <% elsif student.argument == 0 and @student_answer.grade_sinthesys != nil %>
+    <h4><b>Nota síntesis actual:</b> <%= @student_answer.grade_sinthesys %></h4>
+    <h4>¿Desea editar la nota de síntesis?</h4>
+  <% end %>
+
+  <% if student.argument == 0 %>
+    <h4>Elija calificación a asignar</h4>
+    <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+    <div class="field">
+      <%= f.select :grade_sinthesys, options_for_select(1..7)%>
+    </div>
+
+    <div class="field">
+      <% if @student_answer.grade_sinthesys == nil %>
+        <%= f.submit "Agregar nota síntesis", class: "btn be-red white"%>
+      <% else %>
+        <%= f.submit "Editar nota síntesis", class: "btn be-red white"%>
+      <% end %>
+    </div>
+    <% end %>
+
   <% end %>
 
   <% if @student_answer.rehacer != nil %>

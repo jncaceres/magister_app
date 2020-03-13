@@ -3,7 +3,7 @@ class HomeworksController < ApplicationController
   before_action :set_homework, only: [:show, :edit, :update, :close_activity, :destroy, :change_phase, :asistencia, :full_answers]
   before_action :set_course
   before_action :set_unavailable
-  skip_before_action :set_unavailable, only: [:show, :change_phase, :answers]
+  skip_before_action :set_unavailable, only: [:show, :change_phase, :answers, :get_add_grades, :post_add_grades]
   before_action :set_miscursos_visible, only: :index
   before_action :set_ef_visible, only: :index
   before_action :set_actividades_visible, only: [:index, :show, :asistencia, :edit, :new, :answers]
@@ -14,6 +14,7 @@ class HomeworksController < ApplicationController
   before_action :set_videos_visible, only: :index
 
   def index
+
     redirect_to courses_path unless @course
     if params["format"]
       if params["format"]["volver"]
@@ -249,11 +250,12 @@ class HomeworksController < ApplicationController
             end
           end
         end
+
       elsif @homework.actual_phase == 'rehacer'
         @student_answer = Answer.where('homework_id = ? AND user_id = ?', @homework.id, params['student_id'])[0]
         if params['commit'] == 'Agregar nota para argumento 2' or params['commit'] == 'Agregar nota para argumento 1' or params['commit'] == 'Editar nota para argumento 1' or params['commit'] == 'Editar nota para argumento 2'
 
-          if params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1'
+          if params['commit'] == 'Agregar nota para argumento 1' or params['commit'] == 'Editar nota para argumento 1'
             @student_answer.update(grade_eval_1: params['answer']['grade_eval_1'])
           else
             @student_answer.update(grade_eval_2: params['answer']['grade_eval_2'])
@@ -267,6 +269,11 @@ class HomeworksController < ApplicationController
           else
             @student_answer.update(grade_argue_2: params['answer']['grade_argue_2'])
           end
+          redirect_to homework_path(@homework)
+
+        elsif params['commit'] == 'Agregar nota síntesis' or params['commit'] == 'Editar nota síntesis'
+
+          @student_answer.update(grade_sinthesys: params['answer']['grade_sinthesys'])
           redirect_to homework_path(@homework)
 
         else

@@ -1,7 +1,7 @@
 .text-left
 	h1 = @homework.name
 	h2
-		| Etapa:
+		| Etapa: 
 		= @etapa
 
 	br
@@ -21,13 +21,12 @@
 			br
 
 			- user = User.find_by_id(@student_answer.user_id)
-			- if @student_answer.argumentar != nil or @student_answer.argumentar_2 != nil or user.argument == 0
-				= render 'add_grade_argumentar'
-				br
+			= render 'add_grade_argumentar'
+			br
 
-				- if @student_answer.rehacer != nil
-					= render 'add_grade_rehacer'
-					br
+			- if @student_answer.rehacer != nil and @homework.actual_phase == "rehacer"
+				= render 'add_grade_rehacer'
+				br
 
 		br
 
