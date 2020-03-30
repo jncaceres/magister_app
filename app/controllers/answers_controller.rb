@@ -386,11 +386,18 @@ class AnswersController < ApplicationController
         if params['names'] == 'true' and @homework.actual_phase != "responder"
             @corrector = User.find_by_id(@student_answer.corrector_id)
             nombre_usuario = "Nombre usuario: " + @student.first_name + " " + @student.last_name
-            nombre_corrector = "Nombre corrector 1: " + @corrector.first_name + " " + @corrector.last_name
+
+            if @corrector.nil?
+              nombre_corrector = ""
+            else
+              nombre_corrector = "Nombre corrector 1: " + @corrector.first_name + " " + @corrector.last_name
+            end
+
             if @student_answer.corrector_id_2 != nil and @student_answer.corrector_id_2 != 0
               @corrector_2 = User.find_by_id(@student_answer.corrector_id_2)
               nombre_corrector_2 = "Nombre corrector 2: " +@corrector_2.first_name + " " + @corrector_2.last_name
             end
+            
         elsif params['names'] == 'true' and @homework.actual_phase == "responder"
             nombre_usuario = "Nombre usuario: " + @student.first_name + " " + @student.last_name
         else
