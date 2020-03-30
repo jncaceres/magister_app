@@ -32,7 +32,12 @@ class AnswersController < ApplicationController
           #Random distribution of students in groups
           if @homework.distribution.nil?
             all_answers = Answer.where(homework_id: @homework.id)
-            control_group = all_answers.sample(all_answers.length / 2)
+            if all_answers.length % 2 == 0
+              sample_number = all_answers.length / 2
+            else
+              sample_number = 1 + all_answers.length / 2
+            end
+            control_group = all_answers.sample(sample_number)
             experimental_group = all_answers - control_group
 
             all_answers.each do |answer|
@@ -149,7 +154,12 @@ class AnswersController < ApplicationController
       #Random distribution of students in groups
       if @homework.distribution.nil?
         all_answers = Answer.where(homework_id: @homework.id)
-        control_group = all_answers.sample(all_answers.length / 2)
+        if all_answers.length % 2 == 0
+          sample_number = all_answers.length / 2
+        else
+          sample_number = 1 + all_answers.length / 2
+        end
+        control_group = all_answers.sample(sample_number)
         experimental_group = all_answers - control_group
 
         all_answers.each do |answer|
