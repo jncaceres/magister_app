@@ -2,6 +2,9 @@
 <meta http-equiv="refresh" content="15" />
 
 <h2>Debe esperar para la siguiente etapa.</h2>
+<% if @my_answer.rehacer != nil%>
+	<%= link_to "Descargar Pdf", generate_pdf_path(@homework, names: false, student: true), style: 'width: 200px', class: "btn btn-primary", method: :post%>
+<% end %>
 <% @homework = Homework.where(id:params["homework_id"])[0]%>
 <div style="text-align:left">
 	<br>
