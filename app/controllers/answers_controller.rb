@@ -29,6 +29,23 @@ class AnswersController < ApplicationController
 
         if @homework.actual_phase == "argumentar"
 
+          #Random distribution of students in groups
+          if @homework.distribution.nil?
+            all_answers = Answer.where(homework_id: @homework.id)
+            control_group = all_answers.sample(all_answers.length / 2)
+            experimental_group = all_answers - control_group
+
+            all_answers.each do |answer|
+              user = User.find_by_id(answer.user_id)
+              if control_group.include?(answer)
+                user.update(argument: 1)
+              else
+                user.update(argument: 0)
+              end
+            end
+            @homework.update(distribution: 1)
+          end
+
           assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
           @n_assigned = assigned
           if assigned.length > 0
@@ -128,6 +145,24 @@ class AnswersController < ApplicationController
       end
 
     elsif @homework.actual_phase == "argumentar"
+
+      #Random distribution of students in groups
+      if @homework.distribution.nil?
+        all_answers = Answer.where(homework_id: @homework.id)
+        control_group = all_answers.sample(all_answers.length / 2)
+        experimental_group = all_answers - control_group
+
+        all_answers.each do |answer|
+          user = User.find_by_id(answer.user_id)
+          if control_group.include?(answer)
+            user.update(argument: 1)
+          else
+            user.update(argument: 0)
+          end
+        end
+        @homework.update(distribution: 1)
+      end
+
       if Course.find(current_user.current_course_id).course_type == "Resumen"
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
         @sintesis = @partner_answer
@@ -161,8 +196,6 @@ class AnswersController < ApplicationController
             end
           end
         end
-        #else
-          #@synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @homework.id, "responder").last
       end
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
       @my_answer = current_user.answers.find_by_homework_id(@homework.id)
@@ -397,7 +430,7 @@ class AnswersController < ApplicationController
               @corrector_2 = User.find_by_id(@student_answer.corrector_id_2)
               nombre_corrector_2 = "Nombre corrector 2: " +@corrector_2.first_name + " " + @corrector_2.last_name
             end
-            
+
         elsif params['names'] == 'true' and @homework.actual_phase == "responder"
             nombre_usuario = "Nombre usuario: " + @student.first_name + " " + @student.last_name
         else
