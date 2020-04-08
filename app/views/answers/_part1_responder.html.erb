@@ -1,11 +1,17 @@
 <div class="container-fluid">
 
   <% if @my_answer.responder != nil %>
-    <div class="row">
-      <div class="col-sm-10 col-md-10 col-lg-10" style='padding: 2%;'>
-        <h3><b>Tu respuesta</b></h3>
+
+  <div class="card", style='padding:2%;'>
+    <div class="container">
+      <h3><b>Tu respuesta</b></h3>
+      <div class="row">
+        <div class="col-sm-10 col-md-10 col-lg-10">
         <%= simple_format(@my_answer.responder, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+        </div>
       </div>
     </div>
+  </div>
+
   <% end %>
 </div>

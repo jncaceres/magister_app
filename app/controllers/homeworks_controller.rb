@@ -470,6 +470,6 @@ class HomeworksController < ApplicationController
     end
 
     def homework_params
-      params.require(:homework).permit(:name, :content, :actual_phase, :upload, :courses, :image, :current)
+      params.require(:homework).permit(:name, :content, :responder_instruction, :argumentar_instruction, :rehacer_instruction, :actual_phase, :upload, :courses, :image, :current)
     end
 end
