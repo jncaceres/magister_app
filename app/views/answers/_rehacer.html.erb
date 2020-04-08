@@ -67,7 +67,7 @@
 
           <div class="row">
             <div class="col-sm-10 col-md-10 col-lg-10">
-              <h3><b>Editar nota argumento compañera/o</b></h3>
+              <h3><b>Califica el feedback de tu compañera/o</b></h3>
               <h4>Elija calificación a asignar</h4>
               <%= form_for @my_answer, :url => { :action => "update", :id => @my_answer.id }, authenticity_token: true do |f| %>
               <div class="field">
@@ -75,9 +75,9 @@
               </div>
               <div class="field">
                 <% if @my_answer.grade_argue_1 == nil %>
-                  <%= f.submit "Agregar nota argumento 1", class: "btn be-red white"%>
+                  <%= f.submit "Calificar feedback 1", class: "btn be-red white"%>
                 <% else %>
-                  <%= f.submit "Editar nota argumento 1", class: "btn be-red white"%>
+                  <%= f.submit "Editar nota de feedback 1", class: "btn be-red white"%>
                 <% end %>
               </div>
               <% end %>
@@ -102,15 +102,13 @@
 
           <div class="row">
             <div class="col-sm-10 col-md-10 col-lg-10">
-
               <h3><b>Evaluación argumentos compañera/o: <%= @my_answer.grade_eval_2 %></b></h3>
-
             </div>
           </div>
 
           <div class="row">
             <div class="col-sm-10 col-md-10 col-lg-10">
-              <h3><b>Editar nota argumento compañera/o</b></h3>
+              <h3><b>Califica el feedback de tu compañera/o</b></h3>
               <h4>Elija calificación a asignar</h4>
               <%= form_for @my_answer, :url => { :action => "update", :id => @my_answer.id }, authenticity_token: true do |f| %>
               <div class="field">
@@ -118,9 +116,9 @@
               </div>
               <div class="field">
                 <% if @my_answer.grade_argue_2 == nil %>
-                  <%= f.submit "Agregar nota argumento 2", class: "btn be-red white"%>
+                  <%= f.submit "Calificar feedback 2", class: "btn be-red white"%>
                 <% else %>
-                  <%= f.submit "Editar nota argumento 2", class: "btn be-red white"%>
+                  <%= f.submit "Editar nota de feedback 2", class: "btn be-red white"%>
                 <% end %>
               </div>
               <% end %>

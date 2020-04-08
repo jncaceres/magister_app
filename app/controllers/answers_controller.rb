@@ -38,7 +38,6 @@ class AnswersController < ApplicationController
               sample_number = 1 + all_answers.length / 2
             end
             control_group = all_answers.sample(sample_number)
-            experimental_group = all_answers - control_group
 
             all_answers.each do |answer|
               user = User.find_by_id(answer.user_id)
@@ -59,6 +58,8 @@ class AnswersController < ApplicationController
             #Random distribution
             control_group_ids = User.select(:id).where(argument: 1)
             partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 0, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
+            puts(current_user.id)
+            puts(partners_answers)
 
             if partners_answers.length == 0
               partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 1, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
@@ -81,16 +82,14 @@ class AnswersController < ApplicationController
             end
           end
 
-          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id)
-          @my_argue = nil
-
-          if assigned.length > 0
-            @partner_answer = assigned[0]
+          if @partner_answer != nil
             if @partner_answer.corrector_id == current_user.id
               @my_argue = @partner_answer.argumentar
             else
               @my_argue = @partner_answer.argumentar_2
             end
+          else
+            @my_argue = nil
           end
         end
 
@@ -160,7 +159,6 @@ class AnswersController < ApplicationController
           sample_number = 1 + all_answers.length / 2
         end
         control_group = all_answers.sample(sample_number)
-        experimental_group = all_answers - control_group
 
         all_answers.each do |answer|
           user = User.find_by_id(answer.user_id)
@@ -185,6 +183,8 @@ class AnswersController < ApplicationController
           #Random distribution
           control_group_ids = User.select(:id).where(argument: 1)
           partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 0, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
+          puts(current_user.id)
+          puts(partners_answers)
 
           if partners_answers.length == 0
             partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 1, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
@@ -206,6 +206,16 @@ class AnswersController < ApplicationController
             end
           end
         end
+
+        if @partner_answer != nil
+          if @partner_answer.corrector_id == current_user.id
+            @my_argue = @partner_answer.argumentar
+          else
+            @my_argue = @partner_answer.argumentar_2
+          end
+        else
+          @my_argue = nil
+        end
       end
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
       @my_answer = current_user.answers.find_by_homework_id(@homework.id)
@@ -226,7 +236,7 @@ class AnswersController < ApplicationController
       @homework.answers << @answer
       @answer.homework = @homework
     end
-    if params["commit"] == "Enviar Respuesta" or params["commit"] == "Enviar Argumentación" or params["commit"] == "Enviar Argumentación 2"
+    if params["commit"] == "Enviar Respuesta" or params["commit"] == "Enviar Argumentos" or params["commit"] == "Enviar Argumentación 2"
       redirect_to homework_answers_path(@homework)
     else
       redirect_to homework_answers_path(@homework)
@@ -298,9 +308,9 @@ class AnswersController < ApplicationController
             format.json { render json: @homework.errors, status: :unprocessable_entity }
           end
 
-        elsif params["commit"] == "Editar nota argumento 1" or params["commit"] == "Agregar nota argumento 1"
+        elsif params["commit"] == "Editar nota de feedback 1" or params["commit"] == "Calificar feedback 1"
 
-          if params["commit"] == "Editar nota argumento 1" or params["commit"] == "Agregar nota argumento 1"
+          if params["commit"] == "Editar nota de feedback 1" or params["commit"] == "Calificar feedback 1"
             @answer.update(grade_eval_1: params['answer']['grade_eval_1'])
             format.html { redirect_to homework_answers_path(@homework)}
             format.json { render :show, status: :ok, location: @homework }
@@ -313,9 +323,9 @@ class AnswersController < ApplicationController
             end
           end
 
-        elsif params["commit"] == "Editar nota argumento 2" or params["commit"] == "Agregar nota argumento 2"
+        elsif params["commit"] == "Editar nota de feedback 2" or params["commit"] == "Calificar feedback 2"
 
-          if params["commit"] == "Editar nota argumento 2" or params["commit"] == "Agregar nota argumento 2"
+          if params["commit"] == "Editar nota de feedback 2" or params["commit"] == "Calificar feedback 2"
             @answer.update(grade_eval_2: params['answer']['grade_eval_2'])
             format.html { redirect_to homework_answers_path(@homework)}
             format.json { render :show, status: :ok, location: @homework }

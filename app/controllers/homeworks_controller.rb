@@ -200,7 +200,7 @@ class HomeworksController < ApplicationController
       data.save
       @homework = Homework.where(id:params["actualizar"]["homework"])[0]
       answers = current_user.answers.find_by_homework_id([@homework.id])
-      if params["tag_in_index"] == "Editar Respuesta" && @homework.upload or params["tag_in_index"] == "Enviar Respuesta" && @homework.upload or params["tag_in_index"] == "Editar Argumentos y Nota"
+      if params["tag_in_index"] == "Editar Respuesta" && @homework.upload or params["tag_in_index"] == "Enviar Respuesta" && @homework.upload or params["tag_in_index"] == "Editar Argumentos y Nota" or params["tag_in_index"] == "Enviar Argumentos" && @homework.upload or params["tag_in_index"]
         redirect_to edit_homework_answer_path(@homework, answers)
       else
         redirect_to homework_answers_path(@homework)
