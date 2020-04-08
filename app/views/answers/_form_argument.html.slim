@@ -27,10 +27,12 @@
           b Nota respuesta compañera/o
       .col-md-4
         = f.select :grade_argue_1, options_for_select(1..7)
-
-      .col-sm-10
-        h4 Argumenta tu nota
-        = f.text_area @homework.actual_phase.to_sym, cols: 40, rows: 15, id: 'answer', class: 'form-control', placeholder: "Ingrese respuesta", style: 'font-size: 15px; line-height: 1.5'
+      .col-md-8
+        h4
+          b Argumenta tu nota
+    .row
+      .col-md-12
+        = f.text_area @homework.actual_phase.to_sym, cols: 20, rows: 15, id: 'answer', class: 'form-control', placeholder: "Ingrese respuesta", style: 'font-size: 15px; line-height: 1.5'
         br
 
     .row

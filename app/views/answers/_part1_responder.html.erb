@@ -1,52 +1,10 @@
 <div class="container-fluid">
+
   <% if @my_answer.responder != nil %>
-    <h3><b>Responder</b></h3>
     <div class="row">
-      <div class="col-sm-10 col-md-10 col-lg-10">
+      <div class="col-sm-10 col-md-10 col-lg-10" style='padding: 2%;'>
+        <h3><b>Tu respuesta</b></h3>
         <%= simple_format(@my_answer.responder, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-      </div>
-      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-        <% if @my_answer.image_responder_1?%>
-          <button data-toggle="modal" data-target=".bs-responder_1-modal-lg">
-            <%= image_tag @my_answer.image_responder_1.url(:medium), style: "height: 100px; width: 100px" %>
-          </button>
-
-          <div class="modal fade bs-responder_1-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <p><%= image_tag @my_answer.image_responder_1.url(:medium) %></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        <%else%>
-        <button>
-          <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
-        </button>
-        <%end%>
-
-        <br></br>
-
-        <% if @my_answer.image_responder_2?%>
-          <button data-toggle="modal" data-target=".bs-responder_2-modal-lg">
-            <%= image_tag @my_answer.image_responder_2.url(:medium), style: "height: 100px; width: 100px" %>
-          </button>
-
-          <div class="modal fade bs-responder_2-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <p><%= image_tag @my_answer.image_responder_2.url(:medium) %></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        <%else%>
-        <button>
-          <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
-        </button>
-        <%end%>
       </div>
     </div>
   <% end %>
