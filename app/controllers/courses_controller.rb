@@ -195,8 +195,6 @@ class CoursesController < ApplicationController
 
         @course.trees.each do |tree|
           performance = tree.user_tree_performances.find_by(:user_id => user.id)
-          puts "performanceeeeeeeeeeeeeee de los usariooooooooooooooooooooooo"
-          puts performance.inspect
           if performance
             if performance.content_sc
             content_sc = content_sc + (performance.content_sc / performance.content_n)
@@ -309,16 +307,8 @@ class CoursesController < ApplicationController
       explanation_sc = nil
       selfregulation_sc = nil
 
-      puts "holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa0"
-      puts content_m
-      puts content_n
-
       if !performance.nil?
           if !performance.content_sc.nil?
-            puts "holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-            puts @content_m
-            puts performance.content_sc
-            puts performance.content_n
             content_sc = (performance.content_sc / performance.content_n).round(2)
             content_m = content_m + (performance.content_sc / performance.content_n)
             content_n = content_n + 1

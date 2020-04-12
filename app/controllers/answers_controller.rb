@@ -58,8 +58,6 @@ class AnswersController < ApplicationController
             #Random distribution
             control_group_ids = User.select(:id).where(argument: 1)
             partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 0, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
-            puts(current_user.id)
-            puts(partners_answers)
 
             if partners_answers.length == 0
               partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 1, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
@@ -67,7 +65,25 @@ class AnswersController < ApplicationController
 
             @partner_answer = nil
 
-            if partners_answers.length > 0
+            if partners_answers.length == 2
+
+              partner_answer_1 = partners_answers[0]
+              user_id_1 = partner_answer_1.user_id
+              partner_1_answers = Answer.where("corrector_id = ? OR corrector_id_2 = ?", user_id_1, user_id_1).where(homework_id: @homework.id)
+
+              partner_answer_2 = partners_answers[1]
+              user_id_2 = partner_answer_2.user_id
+              partner_2_answers = Answer.where("corrector_id = ? OR corrector_id_2 = ?", user_id_2, user_id_2).where(homework_id: @homework.id)
+
+              if partner_1_answers.length == 0
+                @partner_answer = partner_answer_1
+              elsif partner_2_answers.length == 0
+                @partner_answer = partner_answer_2
+              else
+                @partner_answer = partners_answers.sample
+              end
+
+            elsif partners_answers.length > 0
               @partner_answer = partners_answers.sample
             end
 
@@ -183,8 +199,6 @@ class AnswersController < ApplicationController
           #Random distribution
           control_group_ids = User.select(:id).where(argument: 1)
           partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 0, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
-          puts(current_user.id)
-          puts(partners_answers)
 
           if partners_answers.length == 0
             partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 1, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
@@ -192,7 +206,25 @@ class AnswersController < ApplicationController
 
           @partner_answer = nil
 
-          if partners_answers.length > 0
+          if partners_answers.length == 2
+
+            partner_answer_1 = partners_answers[0]
+            user_id_1 = partner_answer_1.user_id
+            partner_1_answers = Answer.where("corrector_id = ? OR corrector_id_2 = ?", user_id_1, user_id_1).where(homework_id: @homework.id)
+
+            partner_answer_2 = partners_answers[1]
+            user_id_2 = partner_answer_2.user_id
+            partner_2_answers = Answer.where("corrector_id = ? OR corrector_id_2 = ?", user_id_2, user_id_2).where(homework_id: @homework.id)
+
+            if partner_1_answers.length == 0
+              @partner_answer = partner_answer_1
+            elsif partner_2_answers.length == 0
+              @partner_answer = partner_answer_2
+            else
+              @partner_answer = partners_answers.sample
+            end
+
+          elsif partners_answers.length > 0
             @partner_answer = partners_answers.sample
           end
 
@@ -236,7 +268,7 @@ class AnswersController < ApplicationController
       @homework.answers << @answer
       @answer.homework = @homework
     end
-    if params["commit"] == "Enviar Respuesta" or params["commit"] == "Enviar Argumentos" or params["commit"] == "Enviar Argumentación 2"
+    if params["commit"] == "Ir a \'Enviar Respuesta\'" or params["commit"] == "Ir a \'Enviar Argumentos\'" or params["commit"] == "Enviar Argumentación 2"
       redirect_to homework_answers_path(@homework)
     else
       redirect_to homework_answers_path(@homework)
@@ -467,7 +499,11 @@ class AnswersController < ApplicationController
           answer << "\nFase Responder"
           answer << "Respuesta entregada"
           answer << @student_answer.responder.to_s
-          answer << "\nFase Argumentar"
+          if alumno.argument == 1
+            answer << "\nFase Argumentar:"
+          else
+            answer << "\nSíntesis:"
+          end
           answer << nombre_corrector
           answer << argumentar
 
@@ -491,7 +527,13 @@ class AnswersController < ApplicationController
           answer << responder
 
           if @homework.actual_phase != "responder"
-            answer << "\nFase Argumentar:"
+
+            if alumno.argument == 1
+              answer << "\nFase Argumentar:"
+            else
+              answer << "\nSíntesis:"
+            end
+
             if @student_answer.corrector_id != nil and @student_answer.corrector_id != 0
               if @student_answer.argumentar == nil
                 if nombre_corrector == ""
@@ -538,7 +580,8 @@ class AnswersController < ApplicationController
               end
 
             else
-              answer << ""
+              sintesis = Sinthesy.where("homework_id = ? AND phase = ?", @student_answer.homework_id, "responder").last
+              answer << sintesis.sinthesys
             end
 
             if @homework.actual_phase != "argumentar"
@@ -618,7 +661,13 @@ class AnswersController < ApplicationController
             answer << "\nFase Responder"
             answer << "Respuesta entregada"
             answer << @student_answer.responder.to_s
-            answer << "\nFase Argumentar"
+
+            if alumno.argument == 1
+              answer << "\nFase Argumentar:"
+            else
+              answer << "\nSíntesis:"
+            end
+
             answer << nombre_corrector
             answer << argumentar
 
@@ -642,7 +691,13 @@ class AnswersController < ApplicationController
             answer << responder
 
             if @homework.actual_phase != "responder"
-              answer << "\nFase Argumentar:"
+
+              if alumno.argument == 1
+                answer << "\nFase Argumentar:"
+              else
+                answer << "\nSíntesis:"
+              end
+
     	        if @student_answer.corrector_id != nil and @student_answer.corrector_id != 0
     	          if @student_answer.argumentar == nil
                   if nombre_corrector == ""
@@ -689,7 +744,8 @@ class AnswersController < ApplicationController
     	          end
 
     	        else
-    	          answer << ""
+                sintesis = Sinthesy.where("homework_id = ? AND phase = ?", @student_answer.homework_id, "responder").last
+    	          answer << sintesis
     	        end
 
               if @homework.actual_phase != "argumentar"

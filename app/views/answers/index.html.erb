@@ -44,20 +44,20 @@
 						<% if @partner_answer.argumentar != nil and @partner_answer.corrector_id == @my_answer.user_id or @partner_answer.argumentar_2 != nil and @partner_answer.corrector_id_2 == @my_answer.user_id %>
 							<%= submit_tag "Editar Argumentos y Nota", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
 						<% else %>
-							<%= submit_tag "Enviar Argumentos", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
+							<%= submit_tag "Ir a \'Enviar Argumentos\'", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
 						<% end %>
 					<% end %>
 				<% elsif @homework.actual_phase == "rehacer" %>
 					<% if @my_answer.rehacer != nil %>
 						<%= submit_tag "Editar Respuesta", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
 					<% else %>
-						<%= submit_tag "Enviar Respuesta", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
+						<%= submit_tag "Ir a \'Enviar Respuesta\'", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
 					<% end %>
 				<% elsif @homework.upload %>
 					<% if @my_answer.responder != nil %>
 						<%= submit_tag "Editar Respuesta", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
 						<% else %>
-							<%= submit_tag "Enviar Respuesta", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
+							<%= submit_tag "Ir a \'Enviar Respuesta\'", name: 'tag_in_index', class: "btn btn-primary", action:"show", style:"height:35px; width:15em"%>
 					<% end %>
 				<%end%>
 			<%end%>
