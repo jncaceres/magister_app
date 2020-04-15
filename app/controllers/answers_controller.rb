@@ -286,7 +286,7 @@ class AnswersController < ApplicationController
       rescue
       end
       respond_to do |format|
-        if params["commit"] == "Enviar Argumentación"
+        if params["commit"] == "Enviar argumentos y nota"
           partner_id = params["answer"]['partner_answer_id']
           answer_1 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id = ?", @homework.id, partner_id, current_user.id)
 
