@@ -30,7 +30,7 @@
                 <h4>Elija calificación a asignar</h4>
                 <%= form_for @my_answer, :url => { :action => "update", :id => @my_answer.id }, authenticity_token: true do |f| %>
                 <div class="field">
-                  <%= f.select :grade_sinthesys, options_for_select(1..7)%>
+                  <%= f.select :grade_sinthesys, options_for_select(1..7, selected=@my_answer.grade_sinthesys)%>
                 </div>
                 <div class="field" style='padding: 2%;'>
                   <% if @my_answer.grade_sinthesys == nil %>
@@ -71,7 +71,7 @@
               <h4>Elija calificación a asignar</h4>
               <%= form_for @my_answer, :url => { :action => "update", :id => @my_answer.id }, authenticity_token: true do |f| %>
               <div class="field">
-                <%= f.select :grade_eval_1, options_for_select(1..7)%>
+                <%= f.select :grade_eval_1, options_for_select(1..7, selected=@my_answer.grade_argue_1)%>
               </div>
               <div class="field">
                 <% if @my_answer.grade_argue_1 == nil %>
@@ -112,7 +112,7 @@
               <h4>Elija calificación a asignar</h4>
               <%= form_for @my_answer, :url => { :action => "update", :id => @my_answer.id }, authenticity_token: true do |f| %>
               <div class="field">
-                <%= f.select :grade_eval_2, options_for_select(1..7)%>
+                <%= f.select :grade_eval_2, options_for_select(1..7, selected=@my_answer.grade_argue_2)%>
               </div>
               <div class="field">
                 <% if @my_answer.grade_argue_2 == nil %>

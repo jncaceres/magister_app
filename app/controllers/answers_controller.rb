@@ -414,7 +414,6 @@ class AnswersController < ApplicationController
 
   end
 
-
   def favorite
     @answer = Answer.find_by homework_id: params[:homework_id], user_id: params[:user_id]
     @answer.update(favorite: params[:favorite])
@@ -599,7 +598,7 @@ class AnswersController < ApplicationController
           end
 
           lista << answer
-          nombre = @homework.name + ".pdf"
+          nombre = mail[0] + ".pdf"
           lista_num_alum << nombre
         end
       end

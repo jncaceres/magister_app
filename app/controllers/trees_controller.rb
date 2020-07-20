@@ -23,11 +23,7 @@ class TreesController < ApplicationController
     @username = params['lis_person_sourcedid']
     @showed_user = User.find(current_user.id)
     @performance = @tree.user_tree_performances.find_by(user_id: current_user.id)
-    puts " "
-    puts "aca muestro el performanceeeeeeeeeeeeeeeeeeeeeeeeeeeeee y sus datos son"
-    puts @performance.inspect
-    puts " "
-    
+
     #puts params[:type].to_s
 
     if params[:content_choices]
@@ -52,7 +48,7 @@ class TreesController < ApplicationController
         return
       end
     end
-  
+
     if params[:type].to_s == "initial"
 
 
@@ -64,8 +60,8 @@ class TreesController < ApplicationController
             return
           end
         end
-      
-        if @tree.user_tree_performances.where(user_id: current_user.id).blank?              
+
+        if @tree.user_tree_performances.where(user_id: current_user.id).blank?
           @performance = @tree.user_tree_performances.create(user_id: current_user.id)
         end
         @performance.start_tree_time = Time.now
@@ -81,7 +77,7 @@ class TreesController < ApplicationController
              @correct_content= true
              @correct_ct= true
 
-             
+
              params[:content_choices].each_with_index.select {|element, i|
               if params[:content_choices][i]
                #puts "id: " + i.to_s + " boolean: " + params[:content_choices][i][].last
@@ -91,15 +87,15 @@ class TreesController < ApplicationController
 
             @tree.initial_content_question.content_choices.each do |choice|
 
-                
+
                 #puts "controller_ choice id:"
                 #puts choice.id
                 #puts "controller: arreglo de choice id:"
                 #puts "el valor es: " + params[:content_choices][choice.id.to_s]
                 #puts params[:content_choices][choice.id][].last
 
-                if params[:content_choices] && params[:content_choices][choice.id.to_s]               
-                  
+                if params[:content_choices] && params[:content_choices][choice.id.to_s]
+
                   if choice.right.to_s != params[:content_choices][choice.id.to_s]
                     @correct_content = false
                     break
@@ -134,14 +130,14 @@ class TreesController < ApplicationController
                     @performance.content_sc = 1
                   else
                     @performance.content_sc = @performance.content_sc + 1
-                  end 
+                  end
 
                   if @performance.content_n.nil?
                     @performance.content_n = 1
                   else
                     @performance.content_n = @performance.content_n.to_i + 1
-                  end 
-                    
+                  end
+
 
                   @tree.initial_ct_question.ct_habilities.each do |hab|
                     puts hab.name.to_s
@@ -150,35 +146,35 @@ class TreesController < ApplicationController
                         if @performance.interpretation_sc.nil?
                           @performance.interpretation_sc = 1
                         else
-                          @performance.interpretation_sc = @performance.interpretation_sc + 1                           
+                          @performance.interpretation_sc = @performance.interpretation_sc + 1
                         end
                         if @performance.interpretation_n.nil?
                           @performance.interpretation_n = 1
                         else
                           @performance.interpretation_n = @performance.interpretation_n.to_i + 1
-                        end                      
+                        end
                       elsif hab.name.to_s == "Análisis"
                         if @performance.analysis_sc.nil?
                           @performance.analysis_sc = 1
                         else
-                          @performance.analysis_sc = @performance.analysis_sc + 1                           
+                          @performance.analysis_sc = @performance.analysis_sc + 1
                         end
                         if @performance.analysis_n.nil?
                           @performance.analysis_n = 1
                         else
                           @performance.analysis_n = @performance.analysis_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Evaluación"
                         if @performance.evaluation_sc.nil?
                           @performance.evaluation_sc = 1
                         else
-                          @performance.evaluation_sc = @performance.evaluation_sc + 1                          
+                          @performance.evaluation_sc = @performance.evaluation_sc + 1
                         end
                         if @performance.evaluation_n.nil?
                           @performance.evaluation_n = 1
                         else
                           @performance.evaluation_n = @performance.evaluation_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Inferencia"
                         if @performance.inference_sc.nil?
                           @performance.inference_sc = 1
@@ -189,7 +185,7 @@ class TreesController < ApplicationController
                           @performance.inference_n = 1
                         else
                           @performance.inference_n = @performance.inference_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Explicación"
                         if @performance.explanation_sc.nil?
                           @performance.explanation_sc = 1
@@ -211,12 +207,12 @@ class TreesController < ApplicationController
                           @performance.selfregulation_n = 1
                         else
                           @performance.selfregulation_n = @performance.selfregulation_n.to_i + 1
-                        end 
+                        end
                       end
                     end
                   end
                 end
-                
+
                 render "edx_view", :locals => {:content_question => @tree.initial_content_question, :ct_question => @tree.initial_ct_question,
                 :feedback_simple=> @tree.initial_simple_feedback, :feedback_complex => @tree.initial_complex_feedback,
                  :type => "initial", :state =>"answered", :feedback_quality => "none", :n => 0, :content_choices => @content_choices, :ct_choices => @ct_choices, :initial_time => Time.now.to_i}
@@ -238,15 +234,15 @@ class TreesController < ApplicationController
                     @performance.content_sc = 1
                   else
                     @performance.content_sc = @performance.content_sc + 1
-                  end  
+                  end
                   if @performance.content_n.nil?
                     @performance.content_n = 1
                   else
                     @performance.content_n = @performance.content_n.to_i + 1
-                  end 
+                  end
 
                   @tree.initial_ct_question.ct_habilities.each do |hab|
-                    
+
                     puts hab.name.to_s
                     if hab.active
                       if hab.name.to_s == "Interpretación"
@@ -259,7 +255,7 @@ class TreesController < ApplicationController
                           @performance.interpretation_n = 1
                         else
                           @performance.interpretation_n = @performance.interpretation_n.to_i + 1
-                        end                       
+                        end
                       elsif hab.name.to_s == "Análisis"
                         if @performance.analysis_sc.nil?
                           @performance.analysis_sc = 0
@@ -270,7 +266,7 @@ class TreesController < ApplicationController
                           @performance.analysis_n = 1
                         else
                           @performance.analysis_n = @performance.analysis_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Evaluación"
                         if @performance.evaluation_sc.nil?
                           @performance.evaluation_sc = 0
@@ -281,7 +277,7 @@ class TreesController < ApplicationController
                           @performance.evaluation_n = 1
                         else
                           @performance.evaluation_n = @performance.evaluation_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Inferencia"
                         if @performance.inference_sc.nil?
                           @performance.inference_sc = 0
@@ -292,7 +288,7 @@ class TreesController < ApplicationController
                           @performance.inference_n = 1
                         else
                           @performance.inference_n = @performance.inference_n.to_i + 1
-                        end  
+                        end
                       elsif hab.name.to_s == "Explicación"
                         if @performance.explanation_sc.nil?
                           @performance.explanation_sc = 0
@@ -314,7 +310,7 @@ class TreesController < ApplicationController
                           @performance.selfregulation_n = 1
                         else
                           @performance.selfregulation_n = @performance.selfregulation_n.to_i + 1
-                        end 
+                        end
                       end
                     end
                   end
@@ -346,11 +342,11 @@ class TreesController < ApplicationController
                     @performance.content_n = 1
                   else
                     @performance.content_n = @performance.content_n.to_i + 1
-                  end  
+                  end
 
                   @tree.initial_ct_question.ct_habilities.each do |hab|
                     if hab.active
-                      
+
                       puts hab.name.to_s
                       if hab.name.to_s == "Interpretación"
                         if@performance.interpretation_sc.nil?
@@ -362,7 +358,7 @@ class TreesController < ApplicationController
                           @performance.interpretation_n = 1
                         else
                           @performance.interpretation_n = @performance.interpretation_n.to_i + 1
-                        end                      
+                        end
                       elsif hab.name.to_s == "Análisis"
                         if @performance.analysis_sc.nil?
                           @performance.analysis_sc = 0
@@ -373,7 +369,7 @@ class TreesController < ApplicationController
                           @performance.analysis_n = 1
                         else
                           @performance.analysis_n = @performance.analysis_n.to_i + 1
-                        end  
+                        end
                       elsif hab.name.to_s == "Evaluación"
                         if @performance.evaluation_sc.nil?
                           @performance.evaluation_sc = 0
@@ -384,7 +380,7 @@ class TreesController < ApplicationController
                           @performance.evaluation_n = 1
                         else
                           @performance.evaluation_n = @performance.evaluation_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Inferencia"
                         if @performance.inference_sc.nil?
                           @performance.inference_sc = 0
@@ -395,7 +391,7 @@ class TreesController < ApplicationController
                           @performance.inference_n = 1
                         else
                           @performance.inference_n = @performance.inference_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Explicación"
                         if @performance.explanation_sc.nil?
                           @performance.explanation_sc = 0
@@ -417,7 +413,7 @@ class TreesController < ApplicationController
                           @performance.selfregulation_n = 1
                         else
                           @performance.selfregulation_n = @performance.selfregulation_n.to_i + 1
-                        end 
+                        end
                       end
                     end
                   end
@@ -436,7 +432,7 @@ class TreesController < ApplicationController
                 :feedback_simple=> @tree.deeping_simple_feedback, :feedback_complex => @tree.deeping_complex_feedback,
                 :type => "deeping", :state =>"not_seen", :feedback_quality => "none", :n => 0, :content_choices => @content_choices, :ct_choices => @ct_choices, :initial_time => Time.now.to_i}
 
-          end    
+          end
 
       elsif params[:state].to_s == "feedback_seen"
           puts "le doy tiempo al initial fb que es: " + seconds_in.to_s + "------------------------------ feedbackseen  "
@@ -449,7 +445,7 @@ class TreesController < ApplicationController
     elsif params[:type] == "recuperative"
 
       if params[:state].to_s == "answered"
-       
+
         if params[:content_choices] && params[:content_choices]
                  @correct_content= true
                  @correct_ct= true
@@ -501,21 +497,21 @@ class TreesController < ApplicationController
                         @performance.recuperative_content2 = 1.0
                         @performance.recuperative_ct2 = 1.0
                       end
-                      
+
 
                       if @performance.content_sc.nil?
                         @performance.content_sc = 1
                         puts "le di el valor de 1 ------------------"
                       else
                         @performance.content_sc = @performance.content_sc + 1
-                      end 
+                      end
 
                       if @performance.content_n.nil?
                         @performance.content_n = 1
                       else
                         @performance.content_n = @performance.content_n.to_i + 1
-                      end 
-                        
+                      end
+
 
                       @tree.recuperative_ct_question.ct_habilities.each do |hab|
                         puts "habilidades del recuperative ct questions------------------------"
@@ -525,35 +521,35 @@ class TreesController < ApplicationController
                             if @performance.interpretation_sc.nil?
                               @performance.interpretation_sc = 1
                             else
-                              @performance.interpretation_sc = @performance.interpretation_sc + 1                           
+                              @performance.interpretation_sc = @performance.interpretation_sc + 1
                             end
                             if @performance.interpretation_n.nil?
                               @performance.interpretation_n = 1
                             else
                               @performance.interpretation_n = @performance.interpretation_n.to_i + 1
-                            end                      
+                            end
                           elsif hab.name.to_s == "Análisis"
                             if @performance.analysis_sc.nil?
                               @performance.analysis_sc = 1
                             else
-                              @performance.analysis_sc = @performance.analysis_sc + 1                           
+                              @performance.analysis_sc = @performance.analysis_sc + 1
                             end
                             if @performance.analysis_n.nil?
                               @performance.analysis_n = 1
                             else
                               @performance.analysis_n = @performance.analysis_n.to_i + 1
-                            end 
+                            end
                           elsif hab.name.to_s == "Evaluación"
                             if @performance.evaluation_sc.nil?
                               @performance.evaluation_sc = 1
                             else
-                              @performance.evaluation_sc = @performance.evaluation_sc + 1                          
+                              @performance.evaluation_sc = @performance.evaluation_sc + 1
                             end
                             if @performance.evaluation_n.nil?
                               @performance.evaluation_n = 1
                             else
                               @performance.evaluation_n = @performance.evaluation_n.to_i + 1
-                            end 
+                            end
                           elsif hab.name.to_s == "Inferencia"
                             if @performance.inference_sc.nil?
                               @performance.inference_sc = 1
@@ -564,7 +560,7 @@ class TreesController < ApplicationController
                               @performance.inference_n = 1
                             else
                               @performance.inference_n = @performance.inference_n.to_i + 1
-                            end 
+                            end
                           elsif hab.name.to_s == "Explicación"
                             if @performance.explanation_sc.nil?
                               @performance.explanation_sc = 1
@@ -586,7 +582,7 @@ class TreesController < ApplicationController
                               @performance.selfregulation_n = 1
                             else
                               @performance.selfregulation_n = @performance.selfregulation_n.to_i + 1
-                            end 
+                            end
                           end
                         end
                       end
@@ -595,7 +591,7 @@ class TreesController < ApplicationController
                     render "edx_view", :locals => {:content_question => @tree.recuperative_content_question, :ct_question => @tree.recuperative_ct_question,
                     :feedback_simple=> @tree.recuperative_simple_feedback, :feedback_complex => @tree.recuperative_complex_feedback,
                      :type => "recuperative", :state =>"answered", :feedback_quality => "none", :n => params[:n].to_i, :content_choices => @content_choices, :ct_choices => @ct_choices, :initial_time => Time.now.to_i}
-                    
+
                   elsif @correct_content == true && @correct_ct == false
 
                     if @performance
@@ -610,21 +606,21 @@ class TreesController < ApplicationController
                         @performance.recuperative_content2 = 1.0
                         @performance.recuperative_ct2 = 0.0
                       end
-                                           
-                  
+
+
                       if @performance.content_sc.nil?
                         @performance.content_sc = 1
                       else
                         @performance.content_sc = @performance.content_sc + 1
-                      end  
+                      end
                       if @performance.content_n.nil?
                         @performance.content_n = 1
                       else
                         @performance.content_n = @performance.content_n.to_i + 1
-                      end 
+                      end
 
                       @tree.recuperative_ct_question.ct_habilities.each do |hab|
-                        
+
                         puts hab.name.to_s
                         if hab.active
                           if hab.name.to_s == "Interpretación"
@@ -637,7 +633,7 @@ class TreesController < ApplicationController
                               @performance.interpretation_n = 1
                             else
                               @performance.interpretation_n = @performance.interpretation_n.to_i + 1
-                            end                       
+                            end
                           elsif hab.name.to_s == "Análisis"
                             if @performance.analysis_sc.nil?
                               @performance.analysis_sc = 0
@@ -648,7 +644,7 @@ class TreesController < ApplicationController
                               @performance.analysis_n = 1
                             else
                               @performance.analysis_n = @performance.analysis_n.to_i + 1
-                            end 
+                            end
                           elsif hab.name.to_s == "Evaluación"
                             if @performance.evaluation_sc.nil?
                               @performance.evaluation_sc = 0
@@ -659,7 +655,7 @@ class TreesController < ApplicationController
                               @performance.evaluation_n = 1
                             else
                               @performance.evaluation_n = @performance.evaluation_n.to_i + 1
-                            end 
+                            end
                           elsif hab.name.to_s == "Inferencia"
                             if @performance.inference_sc.nil?
                               @performance.inference_sc = 0
@@ -670,7 +666,7 @@ class TreesController < ApplicationController
                               @performance.inference_n = 1
                             else
                               @performance.inference_n = @performance.inference_n.to_i + 1
-                            end  
+                            end
                           elsif hab.name.to_s == "Explicación"
                             if @performance.explanation_sc.nil?
                               @performance.explanation_sc = 0
@@ -692,7 +688,7 @@ class TreesController < ApplicationController
                               @performance.selfregulation_n = 1
                             else
                               @performance.selfregulation_n = @performance.selfregulation_n.to_i + 1
-                            end 
+                            end
                           end
                         end
                       end
@@ -730,8 +726,8 @@ class TreesController < ApplicationController
                           @performance.recuperative_ct2 = 0.0
                         end
                     end
-                     
-                      
+
+
                       if @performance.content_sc.nil?
                         @performance.content_sc = 0
                       else
@@ -741,11 +737,11 @@ class TreesController < ApplicationController
                         @performance.content_n = 1
                       else
                         @performance.content_n = @performance.content_n.to_i + 1
-                      end  
+                      end
 
                       @tree.recuperative_ct_question.ct_habilities.each do |hab|
                         if hab.active
-                          
+
                           puts hab.name.to_s
                           if hab.name.to_s == "Interpretación"
                             if@performance.interpretation_sc.nil?
@@ -757,7 +753,7 @@ class TreesController < ApplicationController
                               @performance.interpretation_n = 1
                             else
                               @performance.interpretation_n = @performance.interpretation_n.to_i + 1
-                            end                      
+                            end
                           elsif hab.name.to_s == "Análisis"
                             if @performance.analysis_sc.nil?
                               @performance.analysis_sc = 0
@@ -768,7 +764,7 @@ class TreesController < ApplicationController
                               @performance.analysis_n = 1
                             else
                               @performance.analysis_n = @performance.analysis_n.to_i + 1
-                            end  
+                            end
                           elsif hab.name.to_s == "Evaluación"
                             if @performance.evaluation_sc.nil?
                               @performance.evaluation_sc = 0
@@ -779,7 +775,7 @@ class TreesController < ApplicationController
                               @performance.evaluation_n = 1
                             else
                               @performance.evaluation_n = @performance.evaluation_n.to_i + 1
-                            end 
+                            end
                           elsif hab.name.to_s == "Inferencia"
                             if @performance.inference_sc.nil?
                               @performance.inference_sc = 0
@@ -790,7 +786,7 @@ class TreesController < ApplicationController
                               @performance.inference_n = 1
                             else
                               @performance.inference_n = @performance.inference_n.to_i + 1
-                            end 
+                            end
                           elsif hab.name.to_s == "Explicación"
                             if @performance.explanation_sc.nil?
                               @performance.explanation_sc = 0
@@ -812,7 +808,7 @@ class TreesController < ApplicationController
                               @performance.selfregulation_n = 1
                             else
                               @performance.selfregulation_n = @performance.selfregulation_n.to_i + 1
-                            end 
+                            end
                           end
                         end
                       end
@@ -822,7 +818,7 @@ class TreesController < ApplicationController
                     render "edx_view", :locals => {:content_question => @tree.recuperative_content_question, :ct_question => @tree.recuperative_ct_question,
                     :feedback_simple=> @tree.recuperative_simple_feedback, :feedback_complex => @tree.recuperative_complex_feedback,
                      :type => "recuperative", :state =>"answered", :feedback_quality => "complex", :n => params[:n].to_i, :content_choices => @content_choices, :ct_choices => @ct_choices, :initial_time => Time.now.to_i}
-                  
+
                     #else
                      #render "edx_view", :locals => {:content_question => @tree.recuperative_content_question, :ct_question => @tree.recuperative_ct_question,
                     #:feedback_simple=> @tree.recuperative_simple_feedback, :feedback_complex => @tree.recuperative_complex_feedback,
@@ -907,66 +903,66 @@ class TreesController < ApplicationController
                   if params[:n].to_i < 1
                     puts "el tiempo en la pregunta deeping 1 fue: " + seconds_in.to_s + " --------------------------------"
                     @performance.deeping_qt1_time = seconds_in
-                    @performance.deeping_content1 = 1.0                  
+                    @performance.deeping_content1 = 1.0
                     @performance.deeping_ct1 = 1.0
                   else
                     puts "el tiempo en la pregunta deeping 2 fue: " + seconds_in.to_s + " --------------------------------"
                     @performance.deeping_qt2_time = seconds_in
-                    @performance.deeping_content2 = 1.0                  
+                    @performance.deeping_content2 = 1.0
                     @performance.deeping_ct2 = 1.0
-                  end                  
-                  
+                  end
+
                   if @performance.content_sc.nil?
                     @performance.content_sc = 1
-                    
+
                   else
                     @performance.content_sc = @performance.content_sc + 1
-                  end 
+                  end
 
                   if @performance.content_n.nil?
                     @performance.content_n = 1
                   else
                     @performance.content_n = @performance.content_n.to_i + 1
-                  end 
-                    
+                  end
+
 
                   @tree.deeping_ct_question.ct_habilities.each do |hab|
-                    
+
                     puts hab.name.to_s
                     if hab.active
                       if hab.name.to_s == "Interpretación"
                         if @performance.interpretation_sc.nil?
                           @performance.interpretation_sc = 1
                         else
-                          @performance.interpretation_sc = @performance.interpretation_sc + 1                           
+                          @performance.interpretation_sc = @performance.interpretation_sc + 1
                         end
                         if @performance.interpretation_n.nil?
                           @performance.interpretation_n = 1
                         else
                           @performance.interpretation_n = @performance.interpretation_n.to_i + 1
-                        end                      
+                        end
                       elsif hab.name.to_s == "Análisis"
                         if @performance.analysis_sc.nil?
                           @performance.analysis_sc = 1
                         else
-                          @performance.analysis_sc = @performance.analysis_sc + 1                           
+                          @performance.analysis_sc = @performance.analysis_sc + 1
                         end
                         if @performance.analysis_n.nil?
                           @performance.analysis_n = 1
                         else
                           @performance.analysis_n = @performance.analysis_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Evaluación"
                         if @performance.evaluation_sc.nil?
                           @performance.evaluation_sc = 1
                         else
-                          @performance.evaluation_sc = @performance.evaluation_sc + 1                          
+                          @performance.evaluation_sc = @performance.evaluation_sc + 1
                         end
                         if @performance.evaluation_n.nil?
                           @performance.evaluation_n = 1
                         else
                           @performance.evaluation_n = @performance.evaluation_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Inferencia"
                         if @performance.inference_sc.nil?
                           @performance.inference_sc = 1
@@ -977,7 +973,7 @@ class TreesController < ApplicationController
                           @performance.inference_n = 1
                         else
                           @performance.inference_n = @performance.inference_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Explicación"
                         if @performance.explanation_sc.nil?
                           @performance.explanation_sc = 1
@@ -999,17 +995,17 @@ class TreesController < ApplicationController
                           @performance.selfregulation_n = 1
                         else
                           @performance.selfregulation_n = @performance.selfregulation_n.to_i + 1
-                        end 
+                        end
                       end
                     end
                   end
                 end
-                
+
                 render "edx_view", :locals => {:content_question => @tree.deeping_content_question, :ct_question => @tree.deeping_ct_question,
                 :feedback_simple=> @tree.deeping_simple_feedback, :feedback_complex => @tree.deeping_complex_feedback,
                  :type => "deeping", :state =>"answered", :feedback_quality => "none", :n => params[:n].to_i, :content_choices => params[:content_choices], :ct_choices => params[:ct_choices], :initial_time => Time.now.to_i}
 
-                
+
               elsif @correct_content == true && @correct_ct == false
 
                 if @performance
@@ -1023,22 +1019,22 @@ class TreesController < ApplicationController
                     @performance.deeping_qt2_time = seconds_in
                     @performance.deeping_content2 = 1.0
                     @performance.deeping_ct2 = 0.0
-                  end       
-                  
-                  
+                  end
+
+
                   if @performance.content_sc.nil?
                     @performance.content_sc = 1
                   else
                     @performance.content_sc = @performance.content_sc + 1
-                  end  
+                  end
                   if @performance.content_n.nil?
                     @performance.content_n = 1
                   else
                     @performance.content_n = @performance.content_n.to_i + 1
-                  end 
+                  end
 
                   @tree.deeping_ct_question.ct_habilities.each do |hab|
-                    
+
                     puts hab.name.to_s
                     if hab.active
                       if hab.name.to_s == "Interpretación"
@@ -1051,7 +1047,7 @@ class TreesController < ApplicationController
                           @performance.interpretation_n = 1
                         else
                           @performance.interpretation_n = @performance.interpretation_n.to_i + 1
-                        end                       
+                        end
                       elsif hab.name.to_s == "Análisis"
                         if @performance.analysis_sc.nil?
                           @performance.analysis_sc = 0
@@ -1062,7 +1058,7 @@ class TreesController < ApplicationController
                           @performance.analysis_n = 1
                         else
                           @performance.analysis_n = @performance.analysis_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Evaluación"
                         if @performance.evaluation_sc.nil?
                           @performance.evaluation_sc = 0
@@ -1073,7 +1069,7 @@ class TreesController < ApplicationController
                           @performance.evaluation_n = 1
                         else
                           @performance.evaluation_n = @performance.evaluation_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Inferencia"
                         if @performance.inference_sc.nil?
                           @performance.inference_sc = 0
@@ -1084,7 +1080,7 @@ class TreesController < ApplicationController
                           @performance.inference_n = 1
                         else
                           @performance.inference_n = @performance.inference_n.to_i + 1
-                        end  
+                        end
                       elsif hab.name.to_s == "Explicación"
                         if @performance.explanation_sc.nil?
                           @performance.explanation_sc = 0
@@ -1106,7 +1102,7 @@ class TreesController < ApplicationController
                           @performance.selfregulation_n = 1
                         else
                           @performance.selfregulation_n = @performance.selfregulation_n.to_i + 1
-                        end 
+                        end
                       end
                     end
                   end
@@ -1143,8 +1139,8 @@ class TreesController < ApplicationController
                     else
                       @performance.deeping_ct2 = 0.0
                     end
-                  end       
-                  
+                  end
+
 
                   if @performance.content_sc.nil?
                     @performance.content_sc = 0
@@ -1155,11 +1151,11 @@ class TreesController < ApplicationController
                     @performance.content_n = 1
                   else
                     @performance.content_n = @performance.content_n.to_i + 1
-                  end  
+                  end
 
                   @tree.deeping_ct_question.ct_habilities.each do |hab|
                     if hab.active
-                     
+
                       puts hab.name.to_s
                       if hab.name.to_s == "Interpretación"
                         if@performance.interpretation_sc.nil?
@@ -1171,7 +1167,7 @@ class TreesController < ApplicationController
                           @performance.interpretation_n = 1
                         else
                           @performance.interpretation_n = @performance.interpretation_n.to_i + 1
-                        end                      
+                        end
                       elsif hab.name.to_s == "Análisis"
                         if @performance.analysis_sc.nil?
                           @performance.analysis_sc = 0
@@ -1182,7 +1178,7 @@ class TreesController < ApplicationController
                           @performance.analysis_n = 1
                         else
                           @performance.analysis_n = @performance.analysis_n.to_i + 1
-                        end  
+                        end
                       elsif hab.name.to_s == "Evaluación"
                         if @performance.evaluation_sc.nil?
                           @performance.evaluation_sc = 0
@@ -1193,7 +1189,7 @@ class TreesController < ApplicationController
                           @performance.evaluation_n = 1
                         else
                           @performance.evaluation_n = @performance.evaluation_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Inferencia"
                         if @performance.inference_sc.nil?
                           @performance.inference_sc = 0
@@ -1204,7 +1200,7 @@ class TreesController < ApplicationController
                           @performance.inference_n = 1
                         else
                           @performance.inference_n = @performance.inference_n.to_i + 1
-                        end 
+                        end
                       elsif hab.name.to_s == "Explicación"
                         if @performance.explanation_sc.nil?
                           @performance.explanation_sc = 0
@@ -1226,12 +1222,12 @@ class TreesController < ApplicationController
                           @performance.selfregulation_n = 1
                         else
                           @performance.selfregulation_n = @performance.selfregulation_n.to_i + 1
-                        end 
+                        end
                       end
                     end
                   end
                 end
-                  
+
                # if params[:n].to_i == 0
                   render "edx_view", :locals => {:content_question => @tree.deeping_content_question, :ct_question => @tree.deeping_ct_question,
                 :feedback_simple=> @tree.deeping_simple_feedback, :feedback_complex => @tree.deeping_complex_feedback,
@@ -1267,7 +1263,7 @@ class TreesController < ApplicationController
       end
 
       elsif params[:state].to_s == "feedback_seen"
-        
+
         if params[:n].to_i < 2
           puts "le doy tiempo al deeping fb1 que es: " + seconds_in.to_s + "------------------------------ feedbackseed "
           @performance.deeping_fb1_time = seconds_in
@@ -1301,7 +1297,7 @@ class TreesController < ApplicationController
 
     if @performance.nil?
     else
-      
+
       learner_user = User.find(@performance.user_id)
       puts learner_user.role
       if(learner_user.role == "alumno")
@@ -1352,7 +1348,7 @@ class TreesController < ApplicationController
     4.times { @tree.initial_ct_question.ct_choices.build }
     #6.times { @tree.initial_ct_question.ct_habilities.build }
     build_habilities @tree.initial_ct_question
-    
+
     @tree.build_recuperative_content_question
     4.times { @tree.recuperative_content_question.content_choices.build }
 
@@ -1458,7 +1454,7 @@ class TreesController < ApplicationController
   def tree_performance
 
 
-    
+
     @users_sc = Hash.new
     @course = Course.find(params[:course_id])
     @tree = @course.trees.find(params[:tree_id])
@@ -1534,7 +1530,7 @@ class TreesController < ApplicationController
         deeping_simple_feedback_attributes: [:id, :text, :_destroy],
         deeping_complex_feedback_attributes: [:id, :text, :_destroy],
         user_tree_performances_attributes: [:id, :user_id, :tree_id, :content_sc, :interpretation_sc, :analysis_sc, :evaluation_sc, :inference_sc, :explanation_sc, :selfregulation_sc, :n]
-     ) 
+     )
     end
 
     def ct_question_params
