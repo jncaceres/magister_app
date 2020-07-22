@@ -11,10 +11,13 @@
 
     = f.hidden_field :phase, value: @actual_phase
     = f.hidden_field :partner_answer_id, value: @partner_answer_2.user_id
+    - @grade = nil
     - if @answer.user_id == @partner_answer_2.corrector_id
       - @answer.argumentar = @partner_answer_2.argumentar
+      - @grade = @partner_answer.grade_argue_1
     - else
       - @answer.argumentar = @partner_answer_2.argumentar_2
+      - @grade = @partner_answer.grade_argue_2
 
     h3.control-label.col-sm-9(for="question")
       b = @actual_phase
@@ -26,7 +29,7 @@
         h4
           b Nota respuesta compañera/o
       .col-md-4
-        = f.select :grade_argue_2, options_for_select(1..7)
+        = f.select :grade_argue_2, options_for_select(1..7, selected=@grade)
 
       .col-sm-10
         h4 Argumenta tu nota

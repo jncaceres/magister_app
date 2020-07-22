@@ -47,7 +47,7 @@
       <% end %>
     <% end %>
 
-    <% if @my_answer.argumentar != nil %>
+    <% if @my_answer.argumentar != nil && @user.argument == 1 %>
 
       <div class="card", style='box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);transition: 0.3s;padding:2%;'>
         <div class="container">
@@ -67,11 +67,10 @@
 
           <div class="row">
             <div class="col-sm-10 col-md-10 col-lg-10">
-              <h3><b>Califica el feedback de tu compañera/o</b></h3>
-              <h4>Elija calificación a asignar</h4>
+              <h4>Califica el feedback de tu compañera/o</h4>
               <%= form_for @my_answer, :url => { :action => "update", :id => @my_answer.id }, authenticity_token: true do |f| %>
               <div class="field">
-                <%= f.select :grade_eval_1, options_for_select(1..7, selected=@my_answer.grade_argue_1)%>
+                <%= f.select :grade_eval_1, options_for_select(1..7, selected=@my_answer.grade_eval_1)%>
               </div>
               <div class="field">
                 <% if @my_answer.grade_argue_1 == nil %>
@@ -89,11 +88,11 @@
 
     <% end %>
 
-    <% if @my_answer.argumentar_2 != nil %>
+    <% if @my_answer.argumentar_2 != nil && @user.argument == 1 %>
 
       <div class="card", style='box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);transition: 0.3s;padding:2%;'>
         <div class="container">
-          <h3><b>Argumentos compañera/o</b></h3>
+          <h3><b>Califica el feedback de tu compañera/o</b></h3>
           <div class="row">
             <div class="col-sm-10 col-md-10 col-lg-10">
               <%= simple_format(@my_answer.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
@@ -108,11 +107,10 @@
 
           <div class="row">
             <div class="col-sm-10 col-md-10 col-lg-10">
-              <h3><b>Califica el feedback de tu compañera/o</b></h3>
               <h4>Elija calificación a asignar</h4>
               <%= form_for @my_answer, :url => { :action => "update", :id => @my_answer.id }, authenticity_token: true do |f| %>
               <div class="field">
-                <%= f.select :grade_eval_2, options_for_select(1..7, selected=@my_answer.grade_argue_2)%>
+                <%= f.select :grade_eval_2, options_for_select(1..7, selected=@my_answer.grade_eval_2)%>
               </div>
               <div class="field">
                 <% if @my_answer.grade_argue_2 == nil %>

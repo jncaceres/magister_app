@@ -344,11 +344,11 @@ class AnswersController < ApplicationController
 
           if params["commit"] == "Editar nota de feedback 1" or params["commit"] == "Calificar feedback 1"
             @answer.update(grade_eval_1: params['answer']['grade_eval_1'])
-            format.html { redirect_to homework_answers_path(@homework)}
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
             format.json { render :show, status: :ok, location: @homework }
           else
             if @answer.phase.downcase != @homework.actual_phase
-              format.html { redirect_to homework_answers_path(@homework)}
+              format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
               format.json { render :show, status: :ok, location: @homework }
             else
               #format.js
@@ -359,11 +359,11 @@ class AnswersController < ApplicationController
 
           if params["commit"] == "Editar nota de feedback 2" or params["commit"] == "Calificar feedback 2"
             @answer.update(grade_eval_2: params['answer']['grade_eval_2'])
-            format.html { redirect_to homework_answers_path(@homework)}
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
             format.json { render :show, status: :ok, location: @homework }
           else
             if @answer.phase.downcase != @homework.actual_phase
-              format.html { redirect_to homework_answers_path(@homework)}
+              format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
               format.json { render :show, status: :ok, location: @homework }
             else
               #format.js
@@ -374,8 +374,9 @@ class AnswersController < ApplicationController
 
           if params["commit"] == "Editar nota síntesis" or params["commit"] == "Agregar nota síntesis"
             @answer.update(grade_sinthesys: params['answer']['grade_sinthesys'])
-            format.html { redirect_to homework_answers_path(@homework)}
-            format.json { render :show, status: :ok, location: @homework }
+            #format.js
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
+            format.json { render json: @homework.errors, status: :unprocessable_entity }
           else
             if @answer.phase.downcase != @homework.actual_phase
               format.html { redirect_to homework_answers_path(@homework)}
