@@ -2,10 +2,7 @@
 <div style="text-align: left">
 	<div style="text-align:left">
 		<h1><%= @homework.name %></h1>
-		<h2>Etapa: <%= @etapa %></h2>
-		<br>
-		<%= link_to 'Volver', homeworks_path, :class=>"btn btn-primary", :style=>'color:white' %>
-		<br></br>
+		<h2><b>Etapa: <%= @homework.actual_phase.capitalize %></b></h2>
 		<div class="thumbnail">
 			<%= render 'full_0' %>
 		</div>
@@ -14,19 +11,18 @@
 	<% @students.sort_by{|e| e[:last_name]}.each do |user| %>
 			<% begin %>
 			<% @my_answer = user.answers.find_by_homework_id(@homework.id) %>
-			<% @corrector = User.find_by_id(@my_answer.corrector_id) %>
-			<% @partner_answer = @corrector.answers.find_by_homework_id(@homework) %>
 			<% rescue %>
 			<% @my_answer = nil %>
-			<% @corrector = nil %>
-			<% @partner_answer = nil %>
 			<% end %>
 			<div class="thumbnail">
 				<% begin %>
-				<%= "Respuesta: " + user.first_name + " " + user.last_name%>
-				</br>
-				<%= "Argumentador: " + @corrector.first_name + " " + @corrector.last_name%>
-				</br>
+				<div class="container-fluid">
+					<div class="row">
+			      <div class="col-sm-10 col-md-10 col-lg-10">
+			        <%= simple_format("Nombre: " + user.first_name + " " + user.last_name, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+			      </div>
+					</div>
+				</div>
 				<%= render 'full_1' %>
 				<% rescue %>
 				<% end %>
@@ -53,5 +49,8 @@
 				<br>
 			</div>
 	<%end%>
+	<br>
+	<%= link_to 'Volver', homeworks_path, :class=>"btn btn-primary", :style=>'color:white' %>
+	<br></br>
 	<br>
 </div>

@@ -4,7 +4,7 @@
 			<%= render 'part0_pregunta' %>
 		</div>
 		<div class="thumbnail">
-		<% if @partner_answer != nil && @my_answer != nil %>
+		<% if @my_answer != nil %>
 			<% if @homework.actual_phase != "responder" %>
 				<%= render 'part1_responder' %>
 				<% if @homework.actual_phase != "argumentar" %>
@@ -21,7 +21,15 @@
 				<% end %>
 			<% end %>
 		<% end %>
-		<%= render 'form' %>
+
+		<% if @homework.actual_phase == "argumentar"%>
+			<%= render 'arguments' %>
+		<% elsif @homework.actual_phase == "rehacer"%>
+			<%= render 'rehacer' %>
+			<%= render 'form' %>
+		<% else %>
+			<%= render 'form' %>
+		<% end %>
 		</div>
-	<%end%>
+	<% end %>
 </div>

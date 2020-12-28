@@ -25,7 +25,7 @@ module Associator
           password_confirmation: @rut
         )
       end
-  
+
       @user.courses << course if course
       @user.save
     end
@@ -36,11 +36,13 @@ module Associator
 
     private
     def cap str
-      str
-        .split
-        .map(&:mb_chars)
-        .map(&:capitalize)
-        .join(" ")
+      if str != nil
+        str
+          .split
+          .map(&:mb_chars)
+          .map(&:capitalize)
+          .join(" ")
+      end
     end
   end
 
@@ -60,9 +62,11 @@ module Associator
 
     def call
       CSV.parse(file) do |row|
+        puts "ROW"
         if row.first.to_s.match /\d+/
           student    = Student.new *row
           @students << student
+          puts "SALI"
         end
       end
 

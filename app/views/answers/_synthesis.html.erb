@@ -1,0 +1,31 @@
+<div class="container-fluid">
+  <% if @synthesis != nil %>
+    <h3><b>Síntesis de las respuesta de tus compañeros y compañeras</b></h3>
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <%= simple_format(@synthesis.sinthesys, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10", style:"font-size:15px; line-height:1.5", align:"justify">
+          <% if @answer.grade_sinthesys != nil %>
+            <h4><b>Nota síntesis actual:</b> <%= @my_answer.grade_sinthesys %></h4>
+            <h4>¿Deseas cambiar la nota actual?</h4>
+          <% end %>
+          <h4>Elija calificación a asignar</h4>
+          <%= form_for @answer, :url => { :action => "update", :student_id => @my_answer.user_id }, authenticity_token: true do |f| %>
+          <div class="field">
+            <%= f.select :grade_sinthesys, options_for_select(1..7)%>
+          </div>
+          <div class="field">
+            <% if @my_answer.grade_sinthesys == nil %>
+              <%= f.submit "Agregar nota síntesis", class: "btn be-red white"%>
+            <% else %>
+              <%= f.submit "Editar nota síntesis", class: "btn be-red white"%>
+            <% end %>
+          </div>
+          <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

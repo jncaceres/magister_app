@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191227025045) do
+ActiveRecord::Schema.define(version: 20200408031046) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,15 @@ ActiveRecord::Schema.define(version: 20191227025045) do
     t.integer  "image_integrar_2_file_size"
     t.datetime "image_integrar_2_updated_at"
     t.boolean  "favorite",                        default: false
+    t.integer  "counter_argue",                   default: 0
+    t.integer  "corrector_id_2",                  default: 0
+    t.text     "argumentar_2"
+    t.integer  "grade_argue_1"
+    t.integer  "grade_argue_2"
+    t.integer  "grade_eval_1"
+    t.integer  "grade_eval_2"
+    t.integer  "sinthesys_id"
+    t.integer  "grade_sinthesys"
   end
 
   add_index "answers", ["user_id", "homework_id"], name: "index_answers_on_user_id_and_homework_id", using: :btree
@@ -200,12 +209,16 @@ ActiveRecord::Schema.define(version: 20191227025045) do
     t.boolean  "current"
     t.boolean  "partners"
     t.integer  "course_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.string   "image_file_name"
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
+    t.integer  "distribution"
+    t.string   "responder_instruction"
+    t.string   "argumentar_instruction"
+    t.string   "rehacer_instruction"
   end
 
   create_table "homeworks_users", id: false, force: :cascade do |t|
@@ -369,6 +382,7 @@ ActiveRecord::Schema.define(version: 20191227025045) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.integer  "argument"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

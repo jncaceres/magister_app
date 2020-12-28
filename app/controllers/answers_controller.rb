@@ -10,27 +10,113 @@ class AnswersController < ApplicationController
   def index
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Realizar Actividad"]
 
-    @corregido = User.find_by_id(current_user.corregido)
-    @corrector = User.find_by_id(current_user.corrector)
+    @user_id = current_user.id
+    @user = User.find_by_id(current_user.id)
 
-    own_answer = current_user.answers.find_by(homework_id: @homework.id)
+    @my_answer = current_user.answers.find_by_homework_id(@homework.id)
+    own_answer = @my_answer
+    @partner_answer = nil
+    @partner_answer_2 = nil
 
     if @homework.responder? or (own_answer and check_answer(own_answer, 'responder')) then
+
       if @homework.argumentar? or @homework.evaluar?
-        @my_answer      = @corregido.answers.find_by(homework_id: @homework.id) || @homework.answers.build
         @partner_answer = own_answer
         if Course.find(current_user.current_course_id).course_type == "Resumen"
           @partner_answer.argumentar = @homework.sinthesy.where(phase: "responder").last.sinthesys
         end
         @answer         = @partner_answer
+
+        if @homework.actual_phase == "argumentar"
+
+          #Random distribution of students in groups
+          if @homework.distribution.nil?
+            all_answers = Answer.where(homework_id: @homework.id)
+            if all_answers.length % 2 == 0
+              sample_number = all_answers.length / 2
+            else
+              sample_number = 1 + all_answers.length / 2
+            end
+            control_group = all_answers.sample(sample_number)
+
+            all_answers.each do |answer|
+              user = User.find_by_id(answer.user_id)
+              if control_group.include?(answer)
+                user.update(argument: 1)
+              else
+                user.update(argument: 0)
+              end
+            end
+            @homework.update(distribution: 1)
+          end
+
+          assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
+          @n_assigned = assigned
+          if assigned.length > 0
+            @partner_answer = assigned[0]
+          else
+            #Random distribution
+            control_group_ids = User.select(:id).where(argument: 1)
+            partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 0, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
+
+            if partners_answers.length == 0
+              partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 1, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
+            end
+
+            @partner_answer = nil
+
+            if partners_answers.length == 2
+
+              partner_answer_1 = partners_answers[0]
+              user_id_1 = partner_answer_1.user_id
+              partner_1_answers = Answer.where("corrector_id = ? OR corrector_id_2 = ?", user_id_1, user_id_1).where(homework_id: @homework.id)
+
+              partner_answer_2 = partners_answers[1]
+              user_id_2 = partner_answer_2.user_id
+              partner_2_answers = Answer.where("corrector_id = ? OR corrector_id_2 = ?", user_id_2, user_id_2).where(homework_id: @homework.id)
+
+              if partner_1_answers.length == 0
+                @partner_answer = partner_answer_1
+              elsif partner_2_answers.length == 0
+                @partner_answer = partner_answer_2
+              else
+                @partner_answer = partners_answers.sample
+              end
+
+            elsif partners_answers.length > 0
+              @partner_answer = partners_answers.sample
+            end
+
+            if @partner_answer != nil
+              @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
+
+              if @partner_answer.counter_argue == 2
+                @partner_answer.update(corrector_id_2: current_user.id)
+              else
+                @partner_answer.update(corrector_id: current_user.id)
+              end
+            end
+          end
+
+          if @partner_answer != nil
+            if @partner_answer.corrector_id == current_user.id
+              @my_argue = @partner_answer.argumentar
+            else
+              @my_argue = @partner_answer.argumentar_2
+            end
+          else
+            @my_argue = nil
+          end
+        end
+
       elsif @homework.rehacer? or @homework.integrar?
         @my_answer      = own_answer
-        @partner_answer = @corrector.answers.find_by(homework_id: @homework.id) || @homework.answers.build
         @answer         = @my_answer
       else
         @my_answer      = own_answer
         @answer         = @my_answer
       end
+
     else
       render 'late' and return
     end
@@ -39,11 +125,14 @@ class AnswersController < ApplicationController
       if @answer.nil?
         redirect_to new_homework_answer_path @homework
       elsif @answer.send(@homework.actual_phase).nil?
-        redirect_to edit_homework_answer_path @homework, @answer
+        if @homework.actual_phase != "argumentar" and @user.argument != 0
+          redirect_to edit_homework_answer_path @homework, @answer
+        end
       end
     else
       redirect_to users_path
     end
+
   end
 
   def show
@@ -62,20 +151,106 @@ class AnswersController < ApplicationController
   end
 
   def edit
+
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Realizar Actividad"]
-    @corregido = User.find_by_id(current_user.corregido)
-    @corrector = User.find_by_id(current_user.corrector)
-    if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
-      @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
+    @bit_argue = current_user.argument
+    @my_answer = current_user.answers.find_by_homework_id(@homework.id)
+
+    if @homework.actual_phase == "evaluar"
       if Course.find(current_user.current_course_id).course_type == "Resumen"
         @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
         @sintesis = @partner_answer
       else
-        @partner_answer = current_user.answers.find_by_homework_id(@homework.id)
+      	@partner_answer = current_user.answers.find_by_homework_id(@homework.id)
+      end
+
+    elsif @homework.actual_phase == "argumentar"
+
+      #Random distribution of students in groups
+      if @homework.distribution.nil?
+        all_answers = Answer.where(homework_id: @homework.id)
+        if all_answers.length % 2 == 0
+          sample_number = all_answers.length / 2
+        else
+          sample_number = 1 + all_answers.length / 2
+        end
+        control_group = all_answers.sample(sample_number)
+
+        all_answers.each do |answer|
+          user = User.find_by_id(answer.user_id)
+          if control_group.include?(answer)
+            user.update(argument: 1)
+          else
+            user.update(argument: 0)
+          end
+        end
+        @homework.update(distribution: 1)
+      end
+
+      if Course.find(current_user.current_course_id).course_type == "Resumen"
+        @partner_answer = @homework.sinthesy.where(phase: "responder").last.sinthesys
+        @sintesis = @partner_answer
+      else
+        assigned = Answer.where(homework_id: @homework.id).where("corrector_id = ? OR corrector_id_2 = ?", current_user.id, current_user.id).order(:user_id)
+        @n_assigned = assigned
+        if assigned.length > 0
+          @partner_answer = assigned[0]
+        else
+          #Random distribution
+          control_group_ids = User.select(:id).where(argument: 1)
+          partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 0, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
+
+          if partners_answers.length == 0
+            partners_answers = Answer.where(homework_id: @homework.id, counter_argue: 1, user_id: control_group_ids).where.not(user_id: current_user.id, corrector_id: current_user.id, corrector_id_2: current_user.id)
+          end
+
+          @partner_answer = nil
+
+          if partners_answers.length == 2
+
+            partner_answer_1 = partners_answers[0]
+            user_id_1 = partner_answer_1.user_id
+            partner_1_answers = Answer.where("corrector_id = ? OR corrector_id_2 = ?", user_id_1, user_id_1).where(homework_id: @homework.id)
+
+            partner_answer_2 = partners_answers[1]
+            user_id_2 = partner_answer_2.user_id
+            partner_2_answers = Answer.where("corrector_id = ? OR corrector_id_2 = ?", user_id_2, user_id_2).where(homework_id: @homework.id)
+
+            if partner_1_answers.length == 0
+              @partner_answer = partner_answer_1
+            elsif partner_2_answers.length == 0
+              @partner_answer = partner_answer_2
+            else
+              @partner_answer = partners_answers.sample
+            end
+
+          elsif partners_answers.length > 0
+            @partner_answer = partners_answers.sample
+          end
+
+          if @partner_answer != nil
+            @partner_answer.update(counter_argue: @partner_answer.counter_argue + 1)
+
+            if @partner_answer.counter_argue == 2
+              @partner_answer.update(corrector_id_2: current_user.id)
+            else
+              @partner_answer.update(corrector_id: current_user.id)
+            end
+          end
+        end
+
+        if @partner_answer != nil
+          if @partner_answer.corrector_id == current_user.id
+            @my_argue = @partner_answer.argumentar
+          else
+            @my_argue = @partner_answer.argumentar_2
+          end
+        else
+          @my_argue = nil
+        end
       end
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
       @my_answer = current_user.answers.find_by_homework_id(@homework.id)
-      @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
       if Course.find(current_user.current_course_id).course_type == "Resumen"
         @partner_answer.argumentar = @homework.sinthesy.where(phase: "responder").last.sinthesys
       end
@@ -93,30 +268,115 @@ class AnswersController < ApplicationController
       @homework.answers << @answer
       @answer.homework = @homework
     end
-    if params["commit"] == "Enviar Respuesta"
+    if params["commit"] == "Ir a \'Enviar Respuesta\'" or params["commit"] == "Ir a \'Enviar Argumentos\'" or params["commit"] == "Enviar Argumentación 2"
       redirect_to homework_answers_path(@homework)
     else
-      redirect_to edit_homework_answer_path(@homework, @answer)
+      redirect_to homework_answers_path(@homework)
     end
   end
 
   def update
+    #@my_answer = current_user.answers.find_by_homework_id(@homework.id)
     if @homework.upload
       begin
         user = User.find_by_id(@answer.user_id)
-        corrector = User.find_by_id(user.corrector)
-        @answer.corrector_id = corrector.id
-        @answer.save
+        #corrector = User.find_by_id(user.corrector)
+        #@answer.corrector_id = corrector.id
+        #@answer.save
       rescue
       end
       respond_to do |format|
-        @answer.update(answer_params)
-        if @answer.save
-          if params["commit"] == "Enviar Respuesta"
+        if params["commit"] == "Enviar argumentos y nota"
+          partner_id = params["answer"]['partner_answer_id']
+          answer_1 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id = ?", @homework.id, partner_id, current_user.id)
+
+          #If I'm the first corrector
+          if answer_1.length == 1
+            @partner_answer = answer_1[0]
+            @partner_answer.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+            @partner_answer.update(grade_argue_1: params["answer"]['grade_argue_1'])
+          else
+            answer_2 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id_2 = ?", @homework.id, partner_id, current_user.id)
+            @partner_answer = answer_2[0]
+            @partner_answer.update(argumentar_2: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+            @partner_answer.update(grade_argue_2: params["answer"]['grade_argue_1'])
+          end
+
+          if @partner_answer.save
             data = Register.new(button_id:35, user_id:current_user.id)
             data.save
-            format.html { redirect_to homework_answers_path(@homework)}
+            format.html { redirect_to homework_answers_path(@homework) }
             format.json { render :show, status: :ok, location: @homework }
+          else
+            format.html { redirect_to homework_answers_path(@homework) }
+            #format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
+            format.json { render json: @homework.errors, status: :unprocessable_entity }
+          end
+
+        elsif params["commit"] == "Enviar Argumentación 2"
+
+          partner_id = params["answer"]['partner_answer_id']
+          answer_1 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id = ?", @homework.id, partner_id, current_user.id)
+
+          #If I'm the first corrector
+          if answer_1.length == 1
+            @partner_answer_2 = answer_1[0]
+            @partner_answer_2.update(argumentar: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+            @partner_answer_2.update(grade_argue_1: params["answer"]['grade_argue_2'])
+          else
+            answer_2 = Answer.where("homework_id = ? AND user_id = ? AND corrector_id_2 = ?", @homework.id, partner_id, current_user.id)
+            @partner_answer_2 = answer_2[0]
+            @partner_answer_2.update(argumentar_2: params["answer"]["argumentar"], phase: params["answer"]["phase"])
+            @partner_answer_2.update(grade_argue_2: params["answer"]['grade_argue_2'])
+          end
+
+          if @answer.save
+            data = Register.new(button_id:35, user_id:current_user.id)
+            data.save
+            format.html { redirect_to homework_answers_path(@homework) }
+            format.json { render :show, status: :ok, location: @homework }
+          else
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
+            format.json { render json: @homework.errors, status: :unprocessable_entity }
+          end
+
+        elsif params["commit"] == "Editar nota de feedback 1" or params["commit"] == "Calificar feedback 1"
+
+          if params["commit"] == "Editar nota de feedback 1" or params["commit"] == "Calificar feedback 1"
+            @answer.update(grade_eval_1: params['answer']['grade_eval_1'])
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
+            format.json { render :show, status: :ok, location: @homework }
+          else
+            if @answer.phase.downcase != @homework.actual_phase
+              format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
+              format.json { render :show, status: :ok, location: @homework }
+            else
+              #format.js
+            end
+          end
+
+        elsif params["commit"] == "Editar nota de feedback 2" or params["commit"] == "Calificar feedback 2"
+
+          if params["commit"] == "Editar nota de feedback 2" or params["commit"] == "Calificar feedback 2"
+            @answer.update(grade_eval_2: params['answer']['grade_eval_2'])
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
+            format.json { render :show, status: :ok, location: @homework }
+          else
+            if @answer.phase.downcase != @homework.actual_phase
+              format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
+              format.json { render :show, status: :ok, location: @homework }
+            else
+              #format.js
+            end
+          end
+
+        elsif params["commit"] == "Editar nota síntesis" or params["commit"] == "Agregar nota síntesis"
+
+          if params["commit"] == "Editar nota síntesis" or params["commit"] == "Agregar nota síntesis"
+            @answer.update(grade_sinthesys: params['answer']['grade_sinthesys'])
+            #format.js
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer)}
+            format.json { render json: @homework.errors, status: :unprocessable_entity }
           else
             if @answer.phase.downcase != @homework.actual_phase
               format.html { redirect_to homework_answers_path(@homework)}
@@ -125,14 +385,34 @@ class AnswersController < ApplicationController
               #format.js
             end
           end
+
         else
-          format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
-          format.json { render json: @homework.errors, status: :unprocessable_entity }
+          @answer.update(answer_params)
+          if @answer.save
+            if params["commit"] == "Enviar Respuesta"
+              data = Register.new(button_id:35, user_id:current_user.id)
+              data.save
+              format.html { redirect_to homework_answers_path(@homework)}
+              format.json { render :show, status: :ok, location: @homework }
+            else
+              if @answer.phase.downcase != @homework.actual_phase
+                format.html { redirect_to homework_answers_path(@homework)}
+                format.json { render :show, status: :ok, location: @homework }
+              else
+                #format.js
+              end
+            end
+          else
+            format.html { redirect_to edit_homework_answer_path(@homework, @answer) }
+            format.json { render json: @homework.errors, status: :unprocessable_entity }
+          end
         end
       end
+
     else
       redirect_to homework_answers_path(@homework)
     end
+
   end
 
   def favorite
@@ -174,106 +454,323 @@ class AnswersController < ApplicationController
   end
 
   def generate_pdf
+
     regex = /[^\u1F600-\u1F6FF\s]/i
     nombre_tarea = @homework.name
     lista = []
     lista_num_alum = []
     id_curso = @homework.course_id
     @curso = Course.find_by_id(id_curso)
-    @curso.users.each do |alumno|
-      @corregido = User.find_by_id(alumno.id)
-      @corrector = User.find_by_id(alumno.corrector)
-      if alumno.role == "alumno" and alumno.corrector and alumno.answers.find_by_homework_id(@homework.id)# and @corrector.answers.find_by_homework_id(@homework.id)
-        if params['names'] == 'true'
-            nombre_usuario = @corregido.first_name + " " + @corregido.last_name
-            nombre_corrector = @corrector.first_name + " " + @corrector.last_name
-        else
-            nombre_usuario = ""
-            nombre_corrector = ""
-        end
+    if params['student'] == 'true'
+      alumno = current_user
+      @student = User.find_by_id(current_user.id)
+      @student_answer = @student.answers.find_by_homework_id(@homework.id)
+
+      if alumno.role == "alumno" and alumno.corrector and alumno.answers.find_by_homework_id(@homework.id)
+
+        nombre_usuario = ""
+        nombre_corrector = ""
+        nombre_corrector_2 = ""
+
         if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
-          @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-          @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
-          if @my_answer.evaluar.nil?
-            @my_answer.evaluar = ""
+
+          if @student_answer.evaluar.nil?
+            evaluar = ""
+          else
+            evaluar = @student_answer.evaluar.to_s
           end
-          if @my_answer.argumentar.nil?
-            @my_answer.argumentar = ""
+
+          if @student_answer.argumentar.nil?
+            argumentar = ""
+          else
+            argumentar = @student_answer.argumentar.to_s
           end
+
+          if @student_answer.argumentar_2.nil?
+            argumentar_2 = ""
+          else
+            argumentar_2 = @student_answer.argumentar_2.to_s
+          end
+
           answer = []
           mail = @corregido.email.split("@")
           # answer << "Numero de alumno: " + mail[0]
-          answer << "Nombre usuario: " + nombre_usuario
-          answer << "Nombre corrector: " + nombre_corrector
-          answer << "Responder:"
-          answer << @partner_answer.responder.to_s
-          answer << "\nArgumentar:"
-          answer << @my_answer.argumentar.to_s
-          #answer << "\nRehacer:"
-          #answer << @partner_answer.rehacer
-          #answer << "\nEvaluar:"
-          #answer << @my_answer.evaluar
-          lista << answer
-          lista_num_alum << mail[0] + ".pdf"
-        elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar" ||  @homework.actual_phase == "responder"
-          @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-    	    if @my_answer.responder.nil?
-            @my_answer.responder = ""
-    	    end
-    	    if @my_answer.rehacer.nil?
-            @my_answer.rehacer = ""
+          answer << nombre_usuario
+          answer << "\nFase Responder"
+          answer << "Respuesta entregada"
+          answer << @student_answer.responder.to_s
+          if alumno.argument == 1
+            answer << "\nFase Argumentar:"
+          else
+            answer << "\nSíntesis:"
           end
-          #@my_answer = Answer.first
-          @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
-          #@partner_answer = Answer.first
+          answer << nombre_corrector
+          answer << argumentar
+
+        elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar" ||  @homework.actual_phase == "responder"
+
+          if @student_answer.rehacer.nil?
+            rehacer = ""
+          end
+
+          if @student_answer.responder.nil?
+            responder = ""
+          else
+            responder = @student_answer.responder.to_s
+          end
+
           answer = []
-    	    mail = @corregido.email.split("@")
+          mail = @student.email.split("@")
           # answer << "Numero de alumno: " + mail[0]
-	        answer << "Nombre usuario: " + nombre_usuario
-          answer << "Nombre corrector: " + nombre_corrector
-          answer << "Responder:"
-	        responder1 = @my_answer.responder.to_s
-	        responder2 = responder1.each_char.select { |char| char.bytesize < 3 }.join  #responder1.gsub(regex, '')  #.gsub(/[^0-9A-Za-z]/, ' ')
-          answer << responder2  #responder1.gsub(regex, '')
+          answer << nombre_usuario
+          answer << "\n Fase Responder:\n"
+          answer << responder
+
           if @homework.actual_phase != "responder"
-            answer << "\nArgumentar:"
-  	        if @partner_answer != nil
-  	          if @partner_answer.argumentar == nil
-  		          answer << ""
-  	          else
-  	      	    argumentar1 = @partner_answer.argumentar.to_s
-  	      	    argumentar2 = argumentar1.each_char.select { |char| char.bytesize < 3 }.join
-                answer << argumentar2 # argumentar1.gsub(regex, '')  #.gsub(/[^0-9A-Za-z]/, ' ')
-  	          end
-  	        else
-  	          answer << ""
-  	        end
-            answer << "\nRehacer:"
-  	        if @my_answer != nil
-              if @my_answer.rehacer == nil
+
+            if alumno.argument == 1
+              answer << "\nFase Argumentar:"
+            else
+              answer << "\nSíntesis:"
+            end
+
+            if @student_answer.corrector_id != nil and @student_answer.corrector_id != 0
+              if @student_answer.argumentar == nil
+                if nombre_corrector == ""
+                  answer << "\nArgumentos compañero 1\n"
+                else
+                  answer << nombre_corrector
+                end
                 answer << ""
               else
-                respuesta = @my_answer.rehacer.to_s
-                respuesta2 = respuesta.each_char.select { |char| char.bytesize < 3 }.join
-                answer << respuesta2 # respuesta.gsub(regex, '')
+                if nombre_corrector == ""
+                  answer << "\nArgumentos compañero 1\n"
+                else
+                  answer << nombre_corrector
+                end
+
+                argumentar = @student_answer.argumentar.to_s
+                argumentar_1 = argumentar.each_char.select { |char| char.bytesize < 3 }.join
+                answer << argumentar_1
               end
+
+              if @student_answer.argumentar_2 == nil
+                if nombre_corrector_2 != ""
+                  if nombre_corrector_2 != nil
+
+                    if nombre_corrector == ""
+                      answer << "\nArgumentos compañero 2\n"
+                    else
+                      answer << "\n" + nombre_corrector_2
+                    end
+                    answer << ""
+                  end
+                end
+              else
+
+                if nombre_corrector == ""
+                  answer << "\nArgumentos compañero 2\n"
+                else
+                  answer << "\n" + nombre_corrector_2
+                end
+
+                argumentar2 = @student_answer.argumentar_2.to_s
+                argumentar_2 = argumentar2.each_char.select { |char| char.bytesize < 3 }.join
+                answer << argumentar_2
+              end
+
             else
-              answer << ""
+              sintesis = Sinthesy.where("homework_id = ? AND phase = ?", @student_answer.homework_id, "responder").last
+              answer << sintesis.sinthesys
+            end
+
+            if @homework.actual_phase != "argumentar"
+
+              answer << "\nFase Rehacer:\n"
+
+                if @student_answer.rehacer == nil
+                  answer << ""
+                else
+                  rehacer = @student_answer.rehacer.to_s
+                  rehacer2 = rehacer.each_char.select { |char| char.bytesize < 3 }.join
+                  answer << rehacer2
+                end
             end
           end
-          # respuesta = @my_answer.rehacer.to_s
-	        # respuesta2 = respuesta.each_char.select { |char| char.bytesize < 4 }.join
-          # answer << respuesta2 #respuesta.gsub(regex, '') #.gsub(/[^0-9A-Za-z]/, ' ')
-          #answer << "\nEvaluar:"
-          #answer << @partner_answer.evaluar
-          #answer << "\nIntegrar:"
-          #answer << @my_answer.integrar
+
           lista << answer
-	        nombre = mail[0] + ".pdf"
+          nombre = mail[0] + ".pdf"
           lista_num_alum << nombre
         end
       end
+    else
+      @curso.users.each do |alumno|
+
+        @student = User.find_by_id(alumno.id)
+        @student_answer = @student.answers.find_by_homework_id(@homework.id)
+
+        if alumno.role == "alumno" and alumno.corrector and alumno.answers.find_by_homework_id(@homework.id)
+
+          if params['names'] == 'true' and @homework.actual_phase != "responder"
+              @corrector = User.find_by_id(@student_answer.corrector_id)
+              nombre_usuario = "Nombre usuario: " + @student.first_name + " " + @student.last_name
+
+              if @corrector.nil?
+                nombre_corrector = ""
+              else
+                nombre_corrector = "Nombre corrector 1: " + @corrector.first_name + " " + @corrector.last_name
+              end
+
+              if @student_answer.corrector_id_2 != nil and @student_answer.corrector_id_2 != 0
+                @corrector_2 = User.find_by_id(@student_answer.corrector_id_2)
+                nombre_corrector_2 = "Nombre corrector 2: " +@corrector_2.first_name + " " + @corrector_2.last_name
+              end
+
+          elsif params['names'] == 'true' and @homework.actual_phase == "responder"
+              nombre_usuario = "Nombre usuario: " + @student.first_name + " " + @student.last_name
+          else
+              nombre_usuario = ""
+              nombre_corrector = ""
+              nombre_corrector_2 = ""
+          end
+
+          if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
+
+            if @student_answer.evaluar.nil?
+              evaluar = ""
+            else
+              evaluar = @student_answer.evaluar.to_s
+            end
+
+            if @student_answer.argumentar.nil?
+              argumentar = ""
+            else
+              argumentar = @student_answer.argumentar.to_s
+            end
+
+            if @student_answer.argumentar_2.nil?
+              argumentar_2 = ""
+            else
+              argumentar_2 = @student_answer.argumentar_2.to_s
+            end
+
+            answer = []
+            mail = @corregido.email.split("@")
+            # answer << "Numero de alumno: " + mail[0]
+            answer << nombre_usuario
+            answer << "\nFase Responder"
+            answer << "Respuesta entregada"
+            answer << @student_answer.responder.to_s
+
+            if alumno.argument == 1
+              answer << "\nFase Argumentar:"
+            else
+              answer << "\nSíntesis:"
+            end
+
+            answer << nombre_corrector
+            answer << argumentar
+
+          elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar" ||  @homework.actual_phase == "responder"
+
+      	    if @student_answer.rehacer.nil?
+              rehacer = ""
+            end
+
+            if @student_answer.responder.nil?
+              responder = ""
+            else
+              responder = @student_answer.responder.to_s
+            end
+
+            answer = []
+      	    mail = @student.email.split("@")
+            # answer << "Numero de alumno: " + mail[0]
+  	        answer << nombre_usuario
+            answer << "\n Fase Responder:\n"
+            answer << responder
+
+            if @homework.actual_phase != "responder"
+
+              if alumno.argument == 1
+                answer << "\nFase Argumentar:"
+              else
+                answer << "\nSíntesis:"
+              end
+
+    	        if @student_answer.corrector_id != nil and @student_answer.corrector_id != 0
+    	          if @student_answer.argumentar == nil
+                  if nombre_corrector == ""
+                    answer << "\nArgumentos compañero 1\n"
+                  else
+                    answer << nombre_corrector
+                  end
+    		          answer << ""
+    	          else
+                  if nombre_corrector == ""
+                    answer << "\nArgumentos compañero 1\n"
+                  else
+                    answer << nombre_corrector
+                  end
+
+    	      	    argumentar = @student_answer.argumentar.to_s
+    	      	    argumentar_1 = argumentar.each_char.select { |char| char.bytesize < 3 }.join
+                  answer << argumentar_1
+    	          end
+
+                if @student_answer.argumentar_2 == nil
+                  if nombre_corrector_2 != ""
+                    if nombre_corrector_2 != nil
+
+                      if nombre_corrector == ""
+                        answer << "\nArgumentos compañero 2\n"
+                      else
+                        answer << "\n" + nombre_corrector_2
+                      end
+        		          answer << ""
+                    end
+                  end
+    	          else
+
+                  if nombre_corrector == ""
+                    answer << "\nArgumentos compañero 2\n"
+                  else
+                    answer << "\n" + nombre_corrector_2
+                  end
+
+    	      	    argumentar2 = @student_answer.argumentar_2.to_s
+    	      	    argumentar_2 = argumentar2.each_char.select { |char| char.bytesize < 3 }.join
+                  answer << argumentar_2
+    	          end
+
+    	        else
+                sintesis = Sinthesy.where("homework_id = ? AND phase = ?", @student_answer.homework_id, "responder").last
+    	          answer << sintesis
+    	        end
+
+              if @homework.actual_phase != "argumentar"
+
+                answer << "\nFase Rehacer:\n"
+
+                  if @student_answer.rehacer == nil
+                    answer << ""
+                  else
+                    rehacer = @student_answer.rehacer.to_s
+                    rehacer2 = rehacer.each_char.select { |char| char.bytesize < 3 }.join
+                    answer << rehacer2
+                  end
+              end
+            end
+
+            lista << answer
+  	        nombre = mail[0] + ".pdf"
+            lista_num_alum << nombre
+          end
+        end
+
+      end
     end
+
     a = 0
     b = lista.length/3
     c = lista.length*2/3
@@ -288,9 +785,9 @@ class AnswersController < ApplicationController
     th1.join()
     th2.join()
     th3.join()
-    folder = "/home/patricio/Documentos/Magister/magister_app/pdfs"
+    folder = "/home/savelozo/Desktop/magister_app/pdfs"
     input_filenames = lista_num_alum
-    zipfile_name = "/home/patricio/Documentos/Magister/magister_app/" + nombre_tarea + ".zip"
+    zipfile_name = "/home/savelozo/Desktop/magister_app/" + nombre_tarea + ".zip"
     Zip.continue_on_exists_proc = true
     Zip.unicode_names = true
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
@@ -306,6 +803,7 @@ class AnswersController < ApplicationController
     send_data(zipfile, :type => "application/zip", :filename => nombre_tarea + ".zip")
     File.delete(zipfile_name)
     #redirect_to :back
+
  end
 
 
@@ -346,9 +844,11 @@ class AnswersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def answer_params
-      params.require(:answer).permit(:phase, :upload, :responder, :argumentar,
+      params.require(:answer).permit(:id, :phase, :upload, :responder, :argumentar,
        :rehacer, :evaluar, :integrar, :image_responder_1, :image_responder_2,
        :image_argumentar_1, :image_argumentar_2, :image_rehacer_1,  :image_rehacer_2,
-       :image_evaluar_1, :image_evaluar_2, :image_integrar_1, :image_integrar_2, :corrector_id)
+       :image_evaluar_1, :image_evaluar_2, :image_integrar_1, :image_integrar_2,
+       :corrector_id, :argumentar_2, :grade_argue_1, :grade_argue_2, :grade_eval_1,
+       :grade_eval_2)
     end
 end

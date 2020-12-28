@@ -3,7 +3,7 @@ class HomeworksController < ApplicationController
   before_action :set_homework, only: [:show, :edit, :update, :close_activity, :destroy, :change_phase, :asistencia, :full_answers]
   before_action :set_course
   before_action :set_unavailable
-  skip_before_action :set_unavailable, only: [:show, :change_phase, :answers]
+  skip_before_action :set_unavailable, only: [:show, :change_phase, :answers, :get_add_grades, :post_add_grades]
   before_action :set_miscursos_visible, only: :index
   before_action :set_ef_visible, only: :index
   before_action :set_actividades_visible, only: [:index, :show, :asistencia, :edit, :new, :answers]
@@ -14,6 +14,7 @@ class HomeworksController < ApplicationController
   before_action :set_videos_visible, only: :index
 
   def index
+
     redirect_to courses_path unless @course
     if params["format"]
       if params["format"]["volver"]
@@ -65,8 +66,8 @@ class HomeworksController < ApplicationController
   end
 
   def change_phase
-    if params["phase"] != nil and have_answered(@homework)
-      if params[:next]
+    if params["phase"] != nil
+      if params[:next] and have_answered(@homework)
         if @homework.actual_phase == "responder"
           asistentes
           generate_partner
@@ -98,7 +99,7 @@ class HomeworksController < ApplicationController
           data = Register.new(button_id:25, user_id:current_user.id)
         end
         @homework.upload = true
-      elsif params[:discussion]
+      elsif params[:discussion] and have_answered(@homework)
         data = Register.new(button_id: Homework.actual_phases[@homework.actual_phase] + 27, user_id: current_user.id)
         @homework.upload = false
       end
@@ -172,28 +173,21 @@ class HomeworksController < ApplicationController
   end
 
   def answers
-    @etapa = ""
 
     @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Actividades Colaborativas", "Realizar Actividad", "Respuesta Alumno"]
     @homework = Homework.where(id:params["homework_id"].to_i)[0]
 
     @etapa = @homework.actual_phase.capitalize
 
-    @user = User.find_by_id(params["user_id"])
-    @corregido = User.find_by_id(@user.corregido)
-    @corrector = User.find_by_id(@user.corrector)
+    @student_user = User.find_by_id(params["user_id"])
+    @student_answer = Answer.where('user_id = ? AND homework_id = ?', @student_user.id, @homework.id)[0]
+
     if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
-      @my_answer = @corregido.answers.find_by_homework_id(@homework.id)
-      @partner_answer = @user.answers.find_by_homework_id(@homework.id)
-      @answer = @partner_answer
+      @answer = @student_answer
     elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
-      @my_answer = @user.answers.find_by_homework_id(@homework.id)
-      @partner_answer = @corrector.answers.find_by_homework_id(@homework.id)
-      @answer = @my_answer
+      @answer = @student_answer
     else
-      @my_answer = @user.answers.find_by_homework_id(@homework.id)
-      @partner_answer = @corregido.answers.find_by_homework_id(@homework.id)
-      @answer = @my_answer
+      @answer = @student_answer
     end
     data = Register.new(button_id:33, user_id:current_user.id)
     data.save
@@ -206,7 +200,7 @@ class HomeworksController < ApplicationController
       data.save
       @homework = Homework.where(id:params["actualizar"]["homework"])[0]
       answers = current_user.answers.find_by_homework_id([@homework.id])
-      if params["tag_in_index"] == "Editar Respuesta" && @homework.upload
+      if params["tag_in_index"] == "Editar Respuesta" && @homework.upload or params["tag_in_index"] == "Enviar Respuesta" && @homework.upload or params["tag_in_index"] == "Editar Argumentos y Nota" or params["tag_in_index"] == "Enviar Argumentos" && @homework.upload or params["tag_in_index"]
         redirect_to edit_homework_answer_path(@homework, answers)
       else
         redirect_to homework_answers_path(@homework)
@@ -231,17 +225,86 @@ class HomeworksController < ApplicationController
   end
 
   def update
-    data = Register.new(button_id:13, user_id:current_user.id)
-    data.save
-    respond_to do |format|
-      if @homework.update(homework_params)
-        format.html { redirect_to homeworks_path } # REDIRECT TO INDEX
-        format.json { render :index, status: :ok }
-      else
-        format.html { render :edit }
-        format.json { render json: @homework.errors, status: :unprocessable_entity }
+
+    if @homework.actual_phase == 'argumentar' or @homework.actual_phase == 'rehacer'
+      if @homework.actual_phase == 'argumentar'
+        if params['commit'] == 'Agregar nota argumento 2' or params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1' or params['commit'] == 'Editar nota argumento 2'
+          @student_answer = Answer.where('homework_id = ? AND user_id = ?', @homework.id, params['student_id'])[0]
+          if params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1'
+            @student_answer.update(grade_argue_1: params['answer']['grade_argue_1'])
+          else
+            @student_answer.update(grade_argue_2: params['answer']['grade_argue_2'])
+          end
+          redirect_to homework_path(@homework)
+
+        else
+          data = Register.new(button_id:13, user_id:current_user.id)
+          data.save
+          respond_to do |format|
+            if @homework.update(homework_params)
+              format.html { redirect_to homeworks_path } # REDIRECT TO INDEX
+              format.json { render :index, status: :ok }
+            else
+              format.html { render :edit }
+              format.json { render json: @homework.errors, status: :unprocessable_entity }
+            end
+          end
+        end
+
+      elsif @homework.actual_phase == 'rehacer'
+        @student_answer = Answer.where('homework_id = ? AND user_id = ?', @homework.id, params['student_id'])[0]
+        if params['commit'] == 'Agregar nota para argumento 2' or params['commit'] == 'Agregar nota para argumento 1' or params['commit'] == 'Editar nota para argumento 1' or params['commit'] == 'Editar nota para argumento 2'
+
+          if params['commit'] == 'Agregar nota para argumento 1' or params['commit'] == 'Editar nota para argumento 1'
+            @student_answer.update(grade_eval_1: params['answer']['grade_eval_1'])
+          else
+            @student_answer.update(grade_eval_2: params['answer']['grade_eval_2'])
+          end
+          redirect_to homework_path(@homework)
+
+        elsif params['commit'] == 'Agregar nota argumento 2' or params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1' or params['commit'] == 'Editar nota argumento 2'
+
+          if params['commit'] == 'Agregar nota argumento 1' or params['commit'] == 'Editar nota argumento 1'
+            @student_answer.update(grade_argue_1: params['answer']['grade_argue_1'])
+          else
+            @student_answer.update(grade_argue_2: params['answer']['grade_argue_2'])
+          end
+          redirect_to homework_path(@homework)
+
+        elsif params['commit'] == 'Agregar nota síntesis' or params['commit'] == 'Editar nota síntesis'
+
+          @student_answer.update(grade_sinthesys: params['answer']['grade_sinthesys'])
+          redirect_to homework_path(@homework)
+
+        else
+          data = Register.new(button_id:13, user_id:current_user.id)
+          data.save
+          respond_to do |format|
+            if @homework.update(homework_params)
+              format.html { redirect_to homeworks_path } # REDIRECT TO INDEX
+              format.json { render :index, status: :ok }
+            else
+              format.html { render :edit }
+              format.json { render json: @homework.errors, status: :unprocessable_entity }
+            end
+          end
+        end
+      end
+
+    else
+      data = Register.new(button_id:13, user_id:current_user.id)
+      data.save
+      respond_to do |format|
+        if @homework.update(homework_params)
+          format.html { redirect_to homeworks_path } # REDIRECT TO INDEX
+          format.json { render :index, status: :ok }
+        else
+          format.html { render :edit }
+          format.json { render json: @homework.errors, status: :unprocessable_entity }
+        end
       end
     end
+
   end
 
   def destroy
@@ -290,6 +353,59 @@ class HomeworksController < ApplicationController
   def full_answers
     @students = @course.users.where(role:0)
     render 'full-answers'
+  end
+
+  def get_add_grades
+
+    @etapa = ""
+
+    @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Actividades Colaborativas", "Realizar Actividad", "Respuesta Alumno"]
+    @homework = Homework.where(id:params["homework_id"].to_i)[0]
+
+    @etapa = @homework.actual_phase.capitalize
+
+    @student_user = User.find_by_id(params["user_id"])
+
+    if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
+      @student_answer = Answer.where('user_id = ? AND homework_id = ?', @student_user.id, @homework.id)[0]
+      @answer = @student_answer
+
+    elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
+      @student_answer = Answer.where('user_id = ? AND homework_id = ?', @student_user.id, @homework.id)[0]
+      @answer = @student_answer
+
+    else
+      @student_answer = Answer.where('user_id = ? AND homework_id = ?', @student_answer.id, @homework.id)[0]
+      @answer = @student_answer
+    end
+
+    render 'addgradetostudentanswer'
+
+  end
+
+  def post_add_grades
+
+    @etapa = ""
+
+    @breadcrumbs = ["Mis Cursos", Course.find(current_user.current_course_id).name, "Actividades Colaborativas", "Realizar Actividad", "Respuesta Alumno"]
+    @homework = Homework.where(id:params["homework_id"].to_i)[0]
+
+    @etapa = @homework.actual_phase.capitalize
+
+    if @homework.actual_phase == "argumentar" || @homework.actual_phase == "evaluar"
+      @student_answer = Answer.where('user_id = ? AND homework_id = ?', current_user.id, @homework.id)
+      @answer = @student_answer
+    elsif @homework.actual_phase == "rehacer" || @homework.actual_phase == "integrar"
+      @student_answer = Answer.where('user_id = ? AND homework_id = ?', current_user.id, @homework.id)
+      @answer = @student_answer
+    else
+      @student_answer = Answer.where('user_id = ? AND homework_id = ?', current_user.id, @homework.id)
+      @answer = @student_answer
+    end
+    data = Register.new(button_id:33, user_id:current_user.id)
+    data.save
+
+    render 'addgradetostudentanswer'
   end
 
   private
@@ -345,14 +461,15 @@ class HomeworksController < ApplicationController
 
       if homework.answers.select do |a| a.send(phase + "?") or a.send("image_#{phase}_1?") end.count > 2
         return true
+      elsif phase == 'argumentar'
+        return true
       else
         flash.alert = "Se necesita que respondan al menos 3 alumnos para hacer el sorteo."
-
         return false
       end
     end
 
     def homework_params
-      params.require(:homework).permit(:name, :content, :actual_phase, :upload, :courses, :image, :current)
+      params.require(:homework).permit(:name, :content, :responder_instruction, :argumentar_instruction, :rehacer_instruction, :actual_phase, :upload, :courses, :image, :current)
     end
 end

@@ -1,0 +1,35 @@
+.text-left
+	h1 = @homework.name
+	h2
+		| Etapa: 
+		= @etapa
+
+	br
+
+		.col-md-1
+			/ = button_to favorite_answer_path(homework_id: @homework.id, user_id: @my_answer.user_id, favorite: !@my_answer.favorite), class: "btn btn-primary" do
+			/ 	= fav_tag @answer.favorite, true
+
+	br
+	.thumbnail
+		= render 'part0_pregunta'
+
+	br
+	- if @student_answer.responder != nil
+		.thumbnail
+			= render 'add_grade_responder'
+			br
+
+			- user = User.find_by_id(@student_answer.user_id)
+			= render 'add_grade_argumentar'
+			br
+
+			- if @student_answer.rehacer != nil and @homework.actual_phase == "rehacer"
+				= render 'add_grade_rehacer'
+				br
+
+		br
+
+	 	.row
+	 		.col-md-11
+	 			= button_to 'Volver',[@homework], class: "btn btn-primary"

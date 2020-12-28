@@ -1,53 +1,84 @@
 <div class="container-fluid">
-  <% if @my_answer.rehacer != nil %>
-    <h3>Rehacer</h3>
-    <div class="row">
-      <div class="col-sm-10 col-md-10 col-lg-10">
-        <%= simple_format(@my_answer.rehacer, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
-      </div>
-      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
-        <% if @my_answer.image_rehacer_1?%>
-          <button data-toggle="modal" data-target=".bs-rehacer_1-modal-lg">
-            <%= image_tag @my_answer.image_rehacer_1.url(:medium), style: "height: 100px; width: 100px" %>
-          </button>
-
-          <div class="modal fade bs-rehacer_1-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <p><%= image_tag @my_answer.image_rehacer_1.url(:medium) %></p>
-                </div>
-              </div>
+  <% if @user.argument == 0 %>
+  <div class="card", style='box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);transition: 0.3s;padding:2%;'>
+    <div class="container">
+      <div class="row" style='padding: 2%;'>
+        <h3><b>Síntesis</b></h3>
+        <div class="col-sm-10 col-md-10 col-lg-10", style="font-size:15px; line-height:1.5", align="justify">
+            <% synthesis = Sinthesy.where("homework_id = ? AND phase = ?", @my_answer.homework_id, "responder").last %>
+            <div class="col-sm-10 col-md-10 col-lg-10">
+              <% if synthesis != nil %>
+                <%= simple_format(synthesis.sinthesys, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+              <% end %>
             </div>
+        </div>
+        <div class="col-sm-10 col-md-10 col-lg-10", style="font-size:15px; line-height:1.5", align="justify">
+            <% if @my_answer.grade_sinthesys != nil %>
+              <h4><b>Nota síntesis:</b> <%= @my_answer.grade_sinthesys %></h4>
+            <% else %>
+              <h4><b>Nota síntesis:</b> Sin nota </h4>
+            <% end %>
           </div>
-        <%else%>
-        <button>
-          <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
-        </button>
-        <%end%>
-
-        <br></br>
-
-        <% if @my_answer.image_rehacer_2?%>
-          <button data-toggle="modal" data-target=".bs-rehacer_2-modal-lg">
-            <%= image_tag @my_answer.image_rehacer_2.url(:medium), style: "height: 100px; width: 100px" %>
-          </button>
-
-          <div class="modal fade bs-rehacer_2-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-            <div class="modal-dialog modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-body">
-                  <p><%= image_tag @my_answer.image_rehacer_2.url(:medium) %></p>
-                </div>
-              </div>
-            </div>
-          </div>
-        <%else%>
-        <button>
-          <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
-        </button>
-        <%end%>
       </div>
-    </div>
+      </div>
+  </div>
+
   <% end %>
+
+  <% if @my_answer.rehacer != nil && @user.argument == 1 %>
+
+    <% if @my_answer.argumentar != nil %>
+
+      <div class="card", style='box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);transition: 0.3s;padding:2%;'>
+        <div class="container">
+          <h3><b>Argumentos compañera/o</b></h3>
+
+          <div class="row">
+            <div class="col-sm-10 col-md-10 col-lg-10">
+              <%= simple_format(@my_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-10 col-md-10 col-lg-10">
+              <h3><b>Evaluación argumentos compañera/o: <%= @my_answer.grade_eval_1 %></b></h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <% end %>
+
+    <% if @my_answer.argumentar_2 != nil && @user.argument == 1 %>
+
+      <div class="card", style='box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);transition: 0.3s;padding:2%;'>
+        <div class="container">
+          <h3><b>Argumentos compañera/o</b></h3>
+          <div class="row">
+            <div class="col-sm-10 col-md-10 col-lg-10">
+              <%= simple_format(@my_answer.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-10 col-md-10 col-lg-10">
+
+              <h3><b>Evaluación argumentos compañera/o: <%= @my_answer.grade_eval_2 %></b></h3>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <% end %>
+
+  <% end %>
+
+  <div class="row" style='padding: 2%;'>
+    <div class="col-sm-10 col-md-10 col-lg-10">
+      <h3><b>Tu nueva respuesta</b></h3>
+      <%= simple_format(@my_answer.rehacer, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+    </div>
+  </div>
+
 </div>

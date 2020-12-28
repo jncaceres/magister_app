@@ -1,0 +1,113 @@
+<div class="container-fluid">
+  <% user = User.find_by_id(@student_answer.user_id) %>
+
+  <% if user.argument == 1 %>
+
+    <% if @student_answer.argumentar != nil %>
+      <h4><b>Nota compañero/a 1: <%= @student_answer.grade_argue_1%></b></h4>
+      <h3><b>Argumento compañero/a 1</b></h3>
+      <div class="row">
+        <div class="col-sm-10 col-md-10 col-lg-10">
+          <%= simple_format(@student_answer.argumentar, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+        </div>
+      </div>
+
+      <h4>¿Desea editar nota argumentación 1?</h4>
+      <h4>Elija calificación a asignar</h4>
+      <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+      <div class="field">
+        <%= f.select :grade_argue_1, options_for_select(1..7)%>
+      </div>
+
+      <div class="field">
+        <% if @student_answer.grade_argue_1 == nil %>
+          <%= f.submit "Agregar nota argumento 1", class: "btn be-red white"%>
+        <% else %>
+          <%= f.submit "Editar nota argumento 1", class: "btn be-red white"%>
+        <% end %>
+      </div>
+      <% end %>
+
+    <% else %>
+
+      <h4>Sin argumentación de compañero/a 1</h4>
+      <% if @student_answer.grade_argue_1 == nil %>
+        <h4>Agregar nota argumentación 1</h4>
+      <% else %>
+        <h4>Nota ingresada por ayudante / profesor: <%= @student_answer.grade_argue_1 %></h4>
+        <h4>Editar nota argumentación 1</h4>
+      <% end %>
+
+        <h4>Elija calificación a asignar</h4>
+        <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+        <div class="field">
+          <%= f.select :grade_argue_1, options_for_select(1..7)%>
+        </div>
+
+        <div class="field">
+          <% if @student_answer.grade_argue_1 == nil %>
+            <%= f.submit "Agregar nota argumento 1", class: "btn be-red white"%>
+          <% else %>
+            <%= f.submit "Editar nota argumento 1", class: "btn be-red white"%>
+          <% end %>
+        </div>
+        <% end %>
+
+    <% end %>
+
+    <% if @student_answer.argumentar_2 != nil %>
+
+      <h4><b>Nota compañero/a 2: <%= @student_answer.grade_argue_2%></b></h4>
+      <h3><b>Argumento compañero/a 2</b></h3>
+      <div class="row">
+        <div class="col-sm-10 col-md-10 col-lg-10">
+          <%= simple_format(@student_answer.argumentar_2, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+        </div>
+      </div>
+
+      <h4>¿Desea editar nota argumentación 2?</h4>
+      <h4>Elija calificación a asignar</h4>
+      <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+      <div class="field">
+        <%= f.select :grade_argue_2, options_for_select(1..7)%>
+      </div>
+
+      <div class="field">
+        <% if @student_answer.grade_argue_2 == nil %>
+          <%= f.submit "Agregar nota argumento 2", class: "btn be-red white"%>
+        <% else %>
+          <%= f.submit "Editar nota argumento 2", class: "btn be-red white"%>
+        <% end %>
+      </div>
+      <% end %>
+
+    <% else %>
+      <h4>Sin argumentación de compañero/a 2</h4>
+      <% if @student_answer.grade_argue_2 == nil %>
+        <h4>Agregar nota argumentación 2</h4>
+      <% else %>
+        <h4>Nota ingresada por ayudante / profesor: <%= @student_answer.grade_argue_2 %></h4>
+        <h4>Editar nota argumentación 2</h4>
+      <% end %>
+
+        <h4>Elija calificación a asignar</h4>
+        <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+        <div class="field">
+          <%= f.select :grade_argue_2, options_for_select(1..7)%>
+        </div>
+
+        <div class="field">
+          <% if @student_answer.grade_argue_1 == nil %>
+            <%= f.submit "Agregar nota argumento 2", class: "btn be-red white"%>
+          <% else %>
+            <%= f.submit "Editar nota argumento 2", class: "btn be-red white"%>
+          <% end %>
+        </div>
+        <% end %>
+
+    <% end %>
+  <% else %>
+      <h4><b>Estudiante no recibe notas en Fase Argumentar</b></h4>
+  <% end %>
+
+</div>

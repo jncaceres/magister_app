@@ -3,23 +3,19 @@
 	h2
 		| Etapa:
 		= @etapa
-	
+
 	br
 	
-	.row
-		.col-md-11
-			= button_to 'Volver',[@homework], class: "btn btn-primary"
-		
 		.col-md-1
-			/ = button_to favorite_answer_path(homework_id: @homework.id, user_id: @my_answer.user_id, favorite: !@my_answer.favorite), class: "btn btn-primary" do
+			/ = button_to favorite_answer_path(homework_id: @homework.id, user_id: @student_answer.user_id, favorite: !@student_answer.favorite), class: "btn btn-primary" do
 			/ 	= fav_tag @answer.favorite, true
-		
+
 	br
 	.thumbnail
 		= render 'part0_pregunta'
-	
+
 	br
-	- if @my_answer and @partner_answer then
+	- if @student_answer and @student_answer.responder then
 		.thumbnail
 			= render 'part1_responder'
 			br
@@ -31,3 +27,9 @@
 				- unless @homework.argumentar?
 					= render 'part3_rehacer'
 					br
+
+		br
+
+		.row
+			.col-md-11
+				= button_to 'Volver',[@homework], class: "btn btn-primary"

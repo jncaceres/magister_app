@@ -1,0 +1,129 @@
+<div class="container-fluid">
+
+  <% if @student_answer.argumentar != nil %>
+    <% if @student_answer.grade_eval_1 != nil %>
+      <h4><b>Nota para argumentos de compañero/a 1: <%= @student_answer.grade_eval_1%></b></h4>
+      <h4>¿Desea editar nota para argumento 1?</h4>
+    <% else %>
+      <h4>Sin calificación a compañero/a 1</h4>
+    <% end %>
+    <h4>Elija calificación a asignar</h4>
+    <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+    <div class="field">
+      <%= f.select :grade_eval_1, options_for_select(1..7)%>
+    </div>
+
+    <div class="field">
+      <% if @student_answer.grade_eval_1 == nil %>
+        <%= f.submit "Agregar nota para argumento 1", class: "btn be-red white"%>
+      <% else %>
+        <%= f.submit "Editar nota para argumento 1", class: "btn be-red white"%>
+      <% end %>
+    </div>
+    <% end %>
+  <% end %>
+
+  <% if @student_answer.argumentar_2 != nil %>
+    <% if @student_answer.grade_eval_2 != nil %>
+      <h4><b>Nota para argumentos de compañero/a 2: <%= @student_answer.grade_eval_2%></b></h4>
+      <h4>¿Desea editar nota para argumento 2?</h4>
+    <% else %>
+      <h4>Sin calificación a compañero/a 2</h4>
+    <% end %>
+    <h4>Elija calificación a asignar</h4>
+    <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+    <div class="field">
+      <%= f.select :grade_eval_2, options_for_select(1..7)%>
+    </div>
+
+    <div class="field">
+      <% if @student_answer.grade_eval_1 == nil %>
+        <%= f.submit "Agregar nota para argumento 2", class: "btn be-red white"%>
+      <% else %>
+        <%= f.submit "Editar nota para argumento 2", class: "btn be-red white"%>
+      <% end %>
+    </div>
+    <% end %>
+  <% end %>
+
+  <% student = User.find_by_id(@student_answer.user_id) %>
+  <% if student.argument == 0 and @student_answer.grade_sinthesys == nil %>
+    <h4>Sin calificación de síntesis</h4>
+  <% elsif student.argument == 0 and @student_answer.grade_sinthesys != nil %>
+    <h4><b>Nota síntesis actual:</b> <%= @student_answer.grade_sinthesys %></h4>
+    <h4>¿Desea editar la nota de síntesis?</h4>
+  <% end %>
+
+  <% if student.argument == 0 %>
+    <h4>Elija calificación a asignar</h4>
+    <%= form_for @answer, :url => { :action => "update", :student_id => @student_answer.user_id }, authenticity_token: true do |f| %>
+    <div class="field">
+      <%= f.select :grade_sinthesys, options_for_select(1..7)%>
+    </div>
+
+    <div class="field">
+      <% if @student_answer.grade_sinthesys == nil %>
+        <%= f.submit "Agregar nota síntesis", class: "btn be-red white"%>
+      <% else %>
+        <%= f.submit "Editar nota síntesis", class: "btn be-red white"%>
+      <% end %>
+    </div>
+    <% end %>
+
+  <% end %>
+
+  <% if @student_answer.rehacer != nil %>
+    <h3><b>Rehacer</b></h3>
+    <div class="row">
+      <div class="col-sm-10 col-md-10 col-lg-10">
+        <%= simple_format(@student_answer.rehacer, {style:"font-size:15px; line-height:1.5", align:"justify"})%>
+      </div>
+      <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+        <% if @student_answer.image_rehacer_1?%>
+          <button data-toggle="modal" data-target=".bs-rehacer_1-modal-lg">
+            <%= image_tag @student_answer.image_rehacer_1.url(:medium), style: "height: 100px; width: 100px" %>
+          </button>
+
+          <div class="modal fade bs-rehacer_1-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <p><%= image_tag @student_answer.image_rehacer_1.url(:medium) %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        <%else%>
+        <button>
+          <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
+        </button>
+        <%end%>
+
+        <br></br>
+
+        <% if @student_answer.image_rehacer_2?%>
+          <button data-toggle="modal" data-target=".bs-rehacer_2-modal-lg">
+            <%= image_tag @student_answer.image_rehacer_2.url(:medium), style: "height: 100px; width: 100px" %>
+          </button>
+
+          <div class="modal fade bs-rehacer_2-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-body">
+                  <p><%= image_tag @student_answer.image_rehacer_2.url(:medium) %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        <%else%>
+        <button>
+          <%= image_tag('image_file.png', style: "height: 100px; width: 100px;") %>
+        </button>
+        <%end%>
+      </div>
+  <% else %>
+    <h3><b>Sin respuesta en etapa Rehacer</b></h3>
+    </div>
+  <% end %>
+
+</div>

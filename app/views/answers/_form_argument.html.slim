@@ -1,0 +1,46 @@
+.text-left
+  = form_for [@homework, @answer], html: { multipart: true }, authenticity_token: true do |f|
+    - if @answer.errors.any?
+      #error_explanation
+        h2
+          = pluralize(@answer.errors.count, "error")
+          | prohibited this answer from being saved:
+          ul
+            - @answer.errors.full_messages.each do |message|
+              li = message
+
+    = f.hidden_field :phase, value: @actual_phase
+    = f.hidden_field :partner_answer_id, value: @partner_answer.user_id
+    - @grade = nil
+    - if @answer.user_id == @partner_answer.corrector_id
+      - @answer.argumentar = @partner_answer.argumentar
+      - @grade = @partner_answer.grade_argue_1
+    - else
+      - @answer.argumentar = @partner_answer.argumentar_2
+      - @grade = @partner_answer.grade_argue_2
+
+    h3.control-label.col-sm-9(for="question")
+      b = @actual_phase
+
+    .form-group
+
+    .row
+      .col-md-8
+        h4
+          b Nota respuesta compañera/o
+      .col-md-4
+        = f.select :grade_argue_1, options_for_select(1..7, selected=@grade)
+      .col-md-8
+        h4
+          b Argumenta tu nota
+    .row
+      .col-md-12
+        = f.text_area @homework.actual_phase.to_sym, cols: 20, rows: 15, id: 'answer', class: 'form-control', placeholder: "Ingrese respuesta", style: 'font-size: 15px; line-height: 1.5'
+        br
+
+    .row
+      .span4
+        .spacer10
+
+    .actions
+      = f.submit 'Enviar argumentos y nota', class: 'btn btn-primary'

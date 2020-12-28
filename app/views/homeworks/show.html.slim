@@ -4,7 +4,7 @@ h1 = @homework.name
   .alert.alert-danger = flash.alert
 
 h2
-  | Etapa:&nbsp;
+  b | Etapa:&nbsp;
   = @etapa
 p
   | Han respondido: &nbsp;
@@ -12,8 +12,23 @@ p
   | &nbsp;/&nbsp;
   = @total
 
-h3(align='justify') Pregunta
+h3(align='justify')
+  b Pregunta
+
 = simple_format @homework.content, { style:"font-size:20px; line-height:1.5", align:"justify" }
+
+h3(align='justify')
+  b | Instrucciones etapa:&nbsp;
+  = @etapa
+
+  - if @etapa == "Responder"
+    = simple_format @homework.responder_instruction, { style:"font-size:20px; line-height:1.5", align:"justify" }
+  - elsif @etapa == "Argumentar"
+    = simple_format @homework.argumentar_instruction, { style:"font-size:20px; line-height:1.5", align:"justify" }
+  - elsif @etapa == "Rehacer"
+    = simple_format @homework.rehacer_instruction, { style:"font-size:20px; line-height:1.5", align:"justify" }
+
+  br
 
 = form_tag controller: 'homeworks', action: 'change_phase', method: :post do
   .row

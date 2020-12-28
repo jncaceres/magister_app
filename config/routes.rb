@@ -99,6 +99,9 @@ Rails.application.routes.draw do
   post 'homework/:id/favorite', to: 'homeworks#favorite', as: :favorite_homework
   delete 'homework/:id/favorite', to: 'homeworks#favorite'
 
+  patch 'homeworks/:homework_id/answers/:id/edit', to: 'answers#update'
+  #get 'homeworks/:homework_id/answers', to: 'answers#update'
+
   #### lti
   get 'lti/launch'
   post 'lti/launch'
@@ -113,6 +116,8 @@ Rails.application.routes.draw do
 
   #get 'homeworks/:id/studentanswer', to:"homeworks#answers"
   get 'homeworks/:id/studentanswer', to:"homeworks#answers", as: "studentanswer"
+  get 'homeworks/:id/studentanswer/edit', to:"homeworks#get_add_grades", as: "addgradetostudentanswer"
+  post 'homeworks/:id/studentanswer/edit', to:"homeworks#post_add_grades"
 
   get 'homeworks/:id/full-answer', to:"homeworks#full_answers", as: "full_answers"
   post 'answers/favorite', to: 'answers#favorite', as: :favorite_answer
